@@ -2,7 +2,45 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import Layout from "@/components/layout/Layout";
 
+// Import gallery images
+import laYuqawam from "@/assets/gallery/la-yuqawam.png";
+import oud24Hours from "@/assets/gallery/oud-24-hours.png";
+import samaaAlOud from "@/assets/gallery/samaa-al-oud.jpeg";
+import dirhamOud from "@/assets/gallery/dirham-oud.jpeg";
+import vitalOud from "@/assets/gallery/vital-oud.png";
+import blueMoon from "@/assets/gallery/blue-moon.png";
+
 const galleryImages = [
+  {
+    src: laYuqawam,
+    alt: "La Yuqawam Tobacco Blaze by Rasasi",
+    category: "Arabian Perfumes",
+  },
+  {
+    src: oud24Hours,
+    alt: "Oud 24 Hours perfume set",
+    category: "Arabian Perfumes",
+  },
+  {
+    src: samaaAlOud,
+    alt: "Samaa al Oud by Almas Perfumes",
+    category: "Arabian Perfumes",
+  },
+  {
+    src: dirhamOud,
+    alt: "Dirham Oud perfume",
+    category: "Arabian Perfumes",
+  },
+  {
+    src: vitalOud,
+    alt: "Vital Oud Eau de Parfum",
+    category: "Arabian Perfumes",
+  },
+  {
+    src: blueMoon,
+    alt: "Blue Moon luxury perfume",
+    category: "Arabian Perfumes",
+  },
   {
     src: "https://images.unsplash.com/photo-1541643600914-78b084683601?w=800&h=600&fit=crop",
     alt: "Arabian perfume collection display",
