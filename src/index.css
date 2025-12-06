@@ -157,6 +157,7 @@
   }
 
   .animate-scale-in {
+    opacity: 0;
     animation: scaleIn var(--transition-smooth) ease-out forwards;
   }
 
