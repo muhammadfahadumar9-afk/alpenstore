@@ -115,10 +115,9 @@ const Gallery = () => {
               <button
                 key={index}
                 onClick={() => setSelectedImage(image.src)}
-                className={`card-alpen overflow-hidden cursor-pointer animate-scale-in ${
+                className={`card-alpen overflow-hidden cursor-pointer hover:scale-[1.02] transition-transform ${
                   index % 3 === 1 ? "sm:row-span-2" : ""
                 }`}
-                style={{ opacity: 0, animationDelay: `${index * 100}ms` }}
               >
                 <div className={`relative ${index % 3 === 1 ? "aspect-[4/5]" : "aspect-[4/3]"} overflow-hidden`}>
                   <img
