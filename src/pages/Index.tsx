@@ -99,8 +99,7 @@ const Index = () => {
               <Link
                 key={category.title}
                 to="/shop"
-                className={`card-alpen group animate-slide-up stagger-${index + 1}`}
-                style={{ opacity: 0 }}
+                className="card-alpen group hover:scale-[1.02] transition-transform"
               >
                 <div className="aspect-square overflow-hidden">
                   <img
@@ -137,8 +136,7 @@ const Index = () => {
             {features.map((feature, index) => (
               <div
                 key={feature.title}
-                className={`text-center p-6 rounded-xl bg-accent/50 animate-scale-in stagger-${index + 1}`}
-                style={{ opacity: 0 }}
+                className="text-center p-6 rounded-xl bg-accent/50 hover:bg-accent transition-colors"
               >
                 <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 text-primary mb-4">
                   <feature.icon className="h-6 w-6" />
