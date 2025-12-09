@@ -5,7 +5,7 @@ import logo from "@/assets/alpenstore-logo.png";
 const branches = [
   { name: "Head Office", address: "No CO8 Gwarzo Road, Along Kabuga, behind F.C.E, Kano." },
   { name: "Branch 1", address: "No 3 Sale Mai Gwnjo Plaza, Hajj Camp Market, Kano." },
-  { name: "Branch 2", address: "No 6 Zoo Road, Opposite Ado Bayero Mall, Kano." },
+  { name: "Branch 2", address: "No 22 Zoo Road, Ado Bayero Mall, Kano." },
   { name: "Branch 3", address: "No 1 Audu Bako Way, Kano." },
 ];
 
