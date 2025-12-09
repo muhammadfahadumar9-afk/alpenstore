@@ -11,25 +11,25 @@ const branches = [
     name: "Head Office",
     address: "No CO8 Gwarzo Road, Along Kabuga, behind F.C.E, Kano.",
     phone: "0802371764",
-    hours: "Mon-Sat: 9am - 8pm",
+    hours: "Mon-Sat: 9am - 10pm",
   },
   {
     name: "Hajj Camp Branch",
     address: "No 3 Sale Mai Gwnjo Plaza, Hajj Camp Market, Kano.",
     phone: "0802371764",
-    hours: "Mon-Sat: 9am - 7pm",
+    hours: "Mon-Sat: 9am - 9pm",
   },
   {
     name: "Zoo Road Branch",
     address: "No 6 Zoo Road, Opposite Ado Bayero Mall, Kano.",
     phone: "0802371764",
-    hours: "Mon-Sat: 9am - 8pm",
+    hours: "Mon-Sat: 9am - 11pm",
   },
   {
     name: "Audu Bako Branch",
     address: "No 1 Audu Bako Way, Kano.",
     phone: "0802371764",
-    hours: "Mon-Sat: 9am - 7pm",
+    hours: "Mon-Sat: 9am - 11pm",
   },
 ];
 
