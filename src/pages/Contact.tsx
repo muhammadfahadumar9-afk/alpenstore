@@ -21,7 +21,7 @@ const branches = [
   },
   {
     name: "Zoo Road Branch",
-    address: "No 6 Zoo Road, Opposite Ado Bayero Mall, Kano.",
+    address: "No 22 Zoo Road, Ado Bayero Mall, Kano.",
     phone: "0802371764",
     hours: "Mon-Sat: 9am - 11pm",
   },
