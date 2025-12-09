@@ -102,11 +102,11 @@ const Footer = () => {
                 WhatsApp: 0802371764
               </a>
               <a
-                href="mailto:info@alpenstores.com"
+                href="mailto:info@alpenstore.com.ng"
                 className="flex items-center gap-3 text-sm text-background/70 hover:text-primary transition-colors"
               >
                 <Mail className="h-4 w-4 flex-shrink-0" />
-                info@alpenstores.com
+                info@alpenstore.com.ng
               </a>
             </div>
           </div>

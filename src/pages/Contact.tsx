@@ -190,7 +190,7 @@ const Contact = () => {
                     </div>
                   </a>
                   <a
-                    href="mailto:info@alpenstores.com"
+                    href="mailto:info@alpenstore.com.ng"
                     className="flex items-center gap-4 p-3 rounded-lg bg-accent hover:bg-accent/80 transition-colors"
                   >
                     <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
@@ -198,7 +198,7 @@ const Contact = () => {
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Email</p>
-                      <p className="font-medium">info@alpenstores.com</p>
+                      <p className="font-medium">info@alpenstore.com.ng</p>
                     </div>
                   </a>
                 </div>
