@@ -10,25 +10,25 @@ const branches = [
   {
     name: "Head Office",
     address: "No CO8 Gwarzo Road, Along Kabuga, behind F.C.E, Kano.",
-    phone: "0802371764",
+    phone: "09168877858",
     hours: "Mon-Sat: 9am - 10pm",
   },
   {
     name: "Hajj Camp Branch",
     address: "No 3 Sale Mai Gwnjo Plaza, Hajj Camp Market, Kano.",
-    phone: "0802371764",
+    phone: "09168877858",
     hours: "Mon-Sat: 9am - 9pm",
   },
   {
     name: "Zoo Road Branch",
     address: "No 22 Zoo Road, Ado Bayero Mall, Kano.",
-    phone: "0802371764",
+    phone: "09168877858",
     hours: "Mon-Sat: 9am - 11pm",
   },
   {
     name: "Audu Bako Branch",
     address: "No 1 Audu Bako Way, Kano.",
-    phone: "0802371764",
+    phone: "09168877858",
     hours: "Mon-Sat: 9am - 11pm",
   },
 ];
@@ -162,7 +162,7 @@ const Contact = () => {
                 <h3 className="font-serif text-xl font-semibold mb-4">Quick Contact</h3>
                 <div className="space-y-4">
                   <a
-                    href="tel:0802371764"
+                    href="tel:09168877858"
                     className="flex items-center gap-4 p-3 rounded-lg bg-accent hover:bg-accent/80 transition-colors"
                   >
                     <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
@@ -170,11 +170,11 @@ const Contact = () => {
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Call Us</p>
-                      <p className="font-medium">0802371764</p>
+                      <p className="font-medium">09168877858</p>
                     </div>
                   </a>
                   <a
-                    href="https://wa.me/2348023717640"
+                    href="https://wa.me/2349168877858"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-4 p-3 rounded-lg bg-accent hover:bg-accent/80 transition-colors"
@@ -186,7 +186,7 @@ const Contact = () => {
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">WhatsApp</p>
-                      <p className="font-medium">0802371764</p>
+                      <p className="font-medium">09168877858</p>
                     </div>
                   </a>
                   <a
