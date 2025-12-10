@@ -45,8 +45,8 @@ export default function Admin() {
   }
 
   const adminModules = [
-    { title: 'Dashboard', description: 'Overview and analytics', icon: LayoutDashboard, href: '#' },
-    { title: 'Products', description: 'Manage your product catalog', icon: Package, href: '#' },
+    { title: 'Dashboard', description: 'Overview and analytics', icon: LayoutDashboard, href: '/admin' },
+    { title: 'Products', description: 'Manage your product catalog', icon: Package, href: '/admin/products' },
     { title: 'Users', description: 'Manage user accounts', icon: Users, href: '#' },
     { title: 'Pages', description: 'Edit website pages', icon: FileText, href: '#' },
     { title: 'Gallery', description: 'Manage product images', icon: Image, href: '#' },
@@ -86,6 +86,7 @@ export default function Admin() {
             <Card 
               key={module.title} 
               className="hover:shadow-lg transition-shadow cursor-pointer group"
+              onClick={() => module.href !== '#' && navigate(module.href)}
             >
               <CardHeader>
                 <div className="flex items-center gap-3">
@@ -99,8 +100,12 @@ export default function Admin() {
                 </div>
               </CardHeader>
               <CardContent>
-                <Button variant="secondary" className="w-full">
-                  Open {module.title}
+                <Button 
+                  variant="secondary" 
+                  className="w-full"
+                  disabled={module.href === '#'}
+                >
+                  {module.href === '#' ? 'Coming Soon' : `Open ${module.title}`}
                 </Button>
               </CardContent>
             </Card>
