@@ -9,7 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 const branches = [
   {
     name: "Head Office",
-    address: "No CO8 Gwarzo Road, Along Kabuga, behind F.C.E, Kano.",
+    address: "No CO8 Gwarzo Road, Along Kabuga, Behind F.C.E, Kano.",
     phone: "09168877858",
     hours: "Mon-Sat: 9am - 10pm",
   },
@@ -21,7 +21,7 @@ const branches = [
   },
   {
     name: "Zoo Road Branch",
-    address: "No 22 Zoo Road, Ado Bayero Mall, Kano.",
+    address: "No 6 Zoo Road, Ado Bayero Mall, Kano.",
     phone: "09168877858",
     hours: "Mon-Sat: 9am - 11pm",
   },
