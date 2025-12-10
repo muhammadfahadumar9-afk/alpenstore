@@ -152,42 +152,47 @@ const Shop = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {filteredProducts.map((product) => (
                   <div key={product.id} className="card-alpen group">
-                    <div className="relative aspect-square overflow-hidden bg-muted">
-                      {product.image_url ? (
-                        <img
-                          src={product.image_url}
-                          alt={product.name}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          <Package className="w-16 h-16 text-muted-foreground/50" />
-                        </div>
-                      )}
-                      {product.featured && (
-                        <span className="absolute top-4 left-4 px-3 py-1 bg-primary text-primary-foreground text-xs font-medium rounded-full">
-                          Featured
-                        </span>
-                      )}
-                      {!product.in_stock && (
-                        <span className="absolute top-4 left-4 px-3 py-1 bg-destructive text-destructive-foreground text-xs font-medium rounded-full">
-                          Out of Stock
-                        </span>
-                      )}
-                      <button
-                        className="absolute top-4 right-4 p-2 bg-background/80 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-background"
-                        aria-label="Add to wishlist"
-                      >
-                        <Heart className="h-4 w-4" />
-                      </button>
-                    </div>
+                    <Link to={`/shop/${product.id}`} className="block">
+                      <div className="relative aspect-square overflow-hidden bg-muted">
+                        {product.image_url ? (
+                          <img
+                            src={product.image_url}
+                            alt={product.name}
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <Package className="w-16 h-16 text-muted-foreground/50" />
+                          </div>
+                        )}
+                        {product.featured && (
+                          <span className="absolute top-4 left-4 px-3 py-1 bg-primary text-primary-foreground text-xs font-medium rounded-full">
+                            Featured
+                          </span>
+                        )}
+                        {!product.in_stock && (
+                          <span className="absolute top-4 left-4 px-3 py-1 bg-destructive text-destructive-foreground text-xs font-medium rounded-full">
+                            Out of Stock
+                          </span>
+                        )}
+                        <button
+                          className="absolute top-4 right-4 p-2 bg-background/80 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-background"
+                          aria-label="Add to wishlist"
+                          onClick={(e) => e.preventDefault()}
+                        >
+                          <Heart className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </Link>
                     <div className="p-5">
                       <p className="text-xs text-muted-foreground mb-1">
                         {categoryMap[product.category] || product.category}
                       </p>
-                      <h3 className="font-serif font-semibold mb-2 group-hover:text-primary transition-colors">
-                        {product.name}
-                      </h3>
+                      <Link to={`/shop/${product.id}`}>
+                        <h3 className="font-serif font-semibold mb-2 group-hover:text-primary transition-colors">
+                          {product.name}
+                        </h3>
+                      </Link>
                       {product.description && (
                         <p className="text-sm text-muted-foreground mb-2 line-clamp-2">
                           {product.description}
