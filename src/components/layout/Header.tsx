@@ -40,8 +40,16 @@ const Header = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3">
-            <img src={logo} alt="ALPEN STORE LTD Logo" className="h-14 w-auto" />
-            <span className="font-serif text-2xl font-bold text-primary hidden sm:block">
+            <img 
+              src={logo} 
+              alt="ALPEN STORE LTD Logo" 
+              className="h-14 w-auto"
+              onError={(e) => {
+                // Hide broken image
+                (e.target as HTMLImageElement).style.display = 'none';
+              }}
+            />
+            <span className="font-serif text-xl sm:text-2xl font-bold text-primary">
               ALPEN STORE LTD
             </span>
           </Link>
