@@ -1,87 +1,70 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Search, Filter, ShoppingCart, Heart } from "lucide-react";
+import { Search, ShoppingCart, Heart, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Layout from "@/components/layout/Layout";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
-const categories = ["All", "Arabian Perfumes", "Islamic Wellness", "Cosmetics", "Gift Sets"];
+interface Product {
+  id: string;
+  name: string;
+  description: string | null;
+  price: number;
+  category: string;
+  image_url: string | null;
+  in_stock: boolean;
+  featured: boolean;
+}
 
-const products = [
-  {
-    id: 1,
-    name: "Royal Oud Perfume",
-    category: "Arabian Perfumes",
-    price: 25000,
-    originalPrice: 30000,
-    image: "https://images.unsplash.com/photo-1594035910387-fea47794261f?w=400&h=400&fit=crop",
-    badge: "Best Seller",
-  },
-  {
-    id: 2,
-    name: "Amber Musk Collection",
-    category: "Arabian Perfumes",
-    price: 18000,
-    image: "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=400&h=400&fit=crop",
-  },
-  {
-    id: 3,
-    name: "Black Seed Oil",
-    category: "Islamic Wellness",
-    price: 5000,
-    image: "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=400&h=400&fit=crop",
-    badge: "Popular",
-  },
-  {
-    id: 4,
-    name: "Luxury Gift Set",
-    category: "Gift Sets",
-    price: 45000,
-    originalPrice: 55000,
-    image: "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&h=400&fit=crop",
-    badge: "Limited",
-  },
-  {
-    id: 5,
-    name: "Rose Face Serum",
-    category: "Cosmetics",
-    price: 12000,
-    image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop",
-  },
-  {
-    id: 6,
-    name: "Arabian Nights Attar",
-    category: "Arabian Perfumes",
-    price: 32000,
-    image: "https://images.unsplash.com/photo-1595425970377-c9703cf48b6d?w=400&h=400&fit=crop",
-  },
-  {
-    id: 7,
-    name: "Honey & Herbs Set",
-    category: "Islamic Wellness",
-    price: 8500,
-    image: "https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=400&h=400&fit=crop",
-  },
-  {
-    id: 8,
-    name: "Premium Skincare Kit",
-    category: "Cosmetics",
-    price: 22000,
-    originalPrice: 28000,
-    image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&h=400&fit=crop",
-    badge: "Sale",
-  },
-];
+const categoryMap: Record<string, string> = {
+  perfumes: "Arabian Perfumes",
+  wellness: "Islamic Wellness",
+  cosmetics: "Cosmetics & Beauty",
+  gifts: "Luxury Gift Sets",
+};
+
+const categories = ["All", "Arabian Perfumes", "Islamic Wellness", "Cosmetics & Beauty", "Luxury Gift Sets"];
 
 const Shop = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .order('featured', { ascending: false })
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setProducts(data || []);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load products. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const filteredProducts = products.filter((product) => {
-    const matchesCategory = selectedCategory === "All" || product.category === selectedCategory;
-    const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const categoryLabel = categoryMap[product.category] || product.category;
+    const matchesCategory = selectedCategory === "All" || categoryLabel === selectedCategory;
+    const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         (product.description?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false);
     return matchesCategory && matchesSearch;
   });
 
@@ -148,58 +131,96 @@ const Shop = () => {
             ))}
           </div>
 
-          {/* Products Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {filteredProducts.map((product) => (
-              <div key={product.id} className="card-alpen group">
-                <div className="relative aspect-square overflow-hidden">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                  {product.badge && (
-                    <span className="absolute top-4 left-4 px-3 py-1 bg-primary text-primary-foreground text-xs font-medium rounded-full">
-                      {product.badge}
-                    </span>
-                  )}
-                  <button
-                    className="absolute top-4 right-4 p-2 bg-background/80 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-background"
-                    aria-label="Add to wishlist"
-                  >
-                    <Heart className="h-4 w-4" />
-                  </button>
-                </div>
-                <div className="p-5">
-                  <p className="text-xs text-muted-foreground mb-1">{product.category}</p>
-                  <h3 className="font-serif font-semibold mb-2 group-hover:text-primary transition-colors">
-                    {product.name}
-                  </h3>
-                  <div className="flex items-center gap-2 mb-4">
-                    <span className="text-lg font-bold text-primary">{formatPrice(product.price)}</span>
-                    {product.originalPrice && (
-                      <span className="text-sm text-muted-foreground line-through">
-                        {formatPrice(product.originalPrice)}
-                      </span>
-                    )}
+          {/* Loading State */}
+          {loading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                <div key={i} className="card-alpen animate-pulse">
+                  <div className="aspect-square bg-muted"></div>
+                  <div className="p-5 space-y-3">
+                    <div className="h-3 bg-muted rounded w-1/3"></div>
+                    <div className="h-5 bg-muted rounded w-2/3"></div>
+                    <div className="h-4 bg-muted rounded w-1/4"></div>
+                    <div className="h-9 bg-muted rounded"></div>
                   </div>
-                  <Button
-                    onClick={() => handleAddToCart(product.name)}
-                    className="w-full"
-                    size="sm"
-                  >
-                    <ShoppingCart className="h-4 w-4 mr-2" />
-                    Add to Cart
-                  </Button>
                 </div>
-              </div>
-            ))}
-          </div>
-
-          {filteredProducts.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground">No products found matching your criteria.</p>
+              ))}
             </div>
+          ) : (
+            <>
+              {/* Products Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {filteredProducts.map((product) => (
+                  <div key={product.id} className="card-alpen group">
+                    <div className="relative aspect-square overflow-hidden bg-muted">
+                      {product.image_url ? (
+                        <img
+                          src={product.image_url}
+                          alt={product.name}
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                          <Package className="w-16 h-16 text-muted-foreground/50" />
+                        </div>
+                      )}
+                      {product.featured && (
+                        <span className="absolute top-4 left-4 px-3 py-1 bg-primary text-primary-foreground text-xs font-medium rounded-full">
+                          Featured
+                        </span>
+                      )}
+                      {!product.in_stock && (
+                        <span className="absolute top-4 left-4 px-3 py-1 bg-destructive text-destructive-foreground text-xs font-medium rounded-full">
+                          Out of Stock
+                        </span>
+                      )}
+                      <button
+                        className="absolute top-4 right-4 p-2 bg-background/80 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-background"
+                        aria-label="Add to wishlist"
+                      >
+                        <Heart className="h-4 w-4" />
+                      </button>
+                    </div>
+                    <div className="p-5">
+                      <p className="text-xs text-muted-foreground mb-1">
+                        {categoryMap[product.category] || product.category}
+                      </p>
+                      <h3 className="font-serif font-semibold mb-2 group-hover:text-primary transition-colors">
+                        {product.name}
+                      </h3>
+                      {product.description && (
+                        <p className="text-sm text-muted-foreground mb-2 line-clamp-2">
+                          {product.description}
+                        </p>
+                      )}
+                      <div className="flex items-center gap-2 mb-4">
+                        <span className="text-lg font-bold text-primary">{formatPrice(product.price)}</span>
+                      </div>
+                      <Button
+                        onClick={() => handleAddToCart(product.name)}
+                        className="w-full"
+                        size="sm"
+                        disabled={!product.in_stock}
+                      >
+                        <ShoppingCart className="h-4 w-4 mr-2" />
+                        {product.in_stock ? "Add to Cart" : "Out of Stock"}
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {filteredProducts.length === 0 && (
+                <div className="text-center py-12">
+                  <Package className="w-16 h-16 mx-auto text-muted-foreground/50 mb-4" />
+                  <p className="text-muted-foreground">
+                    {products.length === 0 
+                      ? "No products available yet. Check back soon!"
+                      : "No products found matching your criteria."}
+                  </p>
+                </div>
+              )}
+            </>
           )}
         </div>
       </section>
