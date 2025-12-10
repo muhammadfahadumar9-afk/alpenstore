@@ -23,9 +23,9 @@ const Header = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3">
-            <img src={logo} alt="Alpenstore Logo" className="h-14 w-auto" />
+            <img src={logo} alt="ALPEN STORE LTD Logo" className="h-14 w-auto" />
             <span className="font-serif text-2xl font-bold text-primary hidden sm:block">
-              Alpenstore
+              ALPEN STORE LTD
             </span>
           </Link>
 
@@ -48,9 +48,9 @@ const Header = () => {
 
           {/* CTA Buttons */}
           <div className="hidden lg:flex items-center gap-4">
-            <a href="tel:0802371764" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+            <a href="tel:09168877858" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
               <Phone className="h-4 w-4" />
-              0802371764
+              09168877858
             </a>
             <Button asChild>
               <Link to="/shop">Shop Now</Link>

@@ -25,7 +25,7 @@ const Privacy = () => {
               <section>
                 <h2 className="text-2xl font-serif font-bold mb-4">1. Information We Collect</h2>
                 <p className="text-muted-foreground leading-relaxed">
-                  At Alpenstore, we collect information you provide directly to us, including:
+                  At ALPEN STORE LTD, we collect information you provide directly to us, including:
                 </p>
                 <ul className="mt-4 space-y-2 text-muted-foreground">
                   <li>Name and contact information (phone number, email address)</li>
@@ -99,8 +99,8 @@ const Privacy = () => {
                   If you have any questions about this Privacy Policy, please contact us:
                 </p>
                 <ul className="mt-4 space-y-2 text-muted-foreground">
-                  <li><strong>Email:</strong> info@alpenstores.com</li>
-                  <li><strong>Phone/WhatsApp:</strong> 0802371764</li>
+                  <li><strong>Email:</strong> info@alpenstore.com.ng</li>
+                  <li><strong>Phone/WhatsApp:</strong> 09168877858</li>
                   <li><strong>Address:</strong> No CO8 Gwarzo Road, Along Kabuga, behind F.C.E, Kano.</li>
                 </ul>
               </section>

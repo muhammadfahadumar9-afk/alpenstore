@@ -17,8 +17,8 @@ const Footer = () => {
           {/* Brand */}
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <img src={logo} alt="Alpenstore" className="h-12 w-auto brightness-0 invert" />
-              <span className="font-serif text-xl font-bold">Alpenstore</span>
+              <img src={logo} alt="ALPEN STORE LTD" className="h-12 w-auto brightness-0 invert" />
+              <span className="font-serif text-xl font-bold">ALPEN STORE LTD</span>
             </div>
             <p className="text-background/70 text-sm leading-relaxed">
               10+ years serving Kano with authentic Arabian perfumes, Islamic wellness and premium beauty products.
@@ -131,7 +131,7 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="mt-12 pt-8 border-t border-background/10 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-sm text-background/60">
-            © {new Date().getFullYear()} Alpenstore. All rights reserved.
+            © {new Date().getFullYear()} ALPEN STORE LTD. All rights reserved.
           </p>
           <div className="flex gap-6">
             <Link to="/privacy" className="text-sm text-background/60 hover:text-primary transition-colors">

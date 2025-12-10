@@ -44,7 +44,7 @@ const About = () => {
               Our Story
             </span>
             <h1 className="text-4xl md:text-5xl font-serif font-bold mb-6">
-              About <span className="text-primary">Alpenstore</span>
+              About <span className="text-primary">ALPEN STORE LTD</span>
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed">
               A decade of excellence in Arabian perfumes, Islamic wellness, and premium beauty products.
@@ -63,7 +63,7 @@ const About = () => {
               </h2>
               <div className="space-y-4 text-muted-foreground leading-relaxed">
                 <p>
-                  Alpenstore is a premium retail brand in Kano, Nigeria with over 10 years of experience 
+                  ALPEN STORE LTD is a premium retail brand in Kano, Nigeria with over 10 years of experience 
                   in Arabian perfumes, Islamic wellness, and high-quality cosmetics.
                 </p>
                 <p>
@@ -71,7 +71,7 @@ const About = () => {
                   premium fragrance collections, and excellent customer care.
                 </p>
                 <p>
-                  Whether you visit us in-store or order online, Alpenstore ensures quality, honesty, 
+                  Whether you visit us in-store or order online, ALPEN STORE LTD ensures quality, honesty, 
                   and a premium shopping experience that keeps our customers coming back.
                 </p>
               </div>
@@ -83,7 +83,7 @@ const About = () => {
               <div className="aspect-square rounded-2xl overflow-hidden shadow-card">
                 <img
                   src="https://images.unsplash.com/photo-1615634260167-c8cdede054de?w=600&h=600&fit=crop"
-                  alt="Alpenstore premium products"
+                  alt="ALPEN STORE LTD premium products"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -104,7 +104,7 @@ const About = () => {
               Our <span className="text-primary">Values</span>
             </h2>
             <p className="text-muted-foreground">
-              The principles that guide everything we do at Alpenstore.
+              The principles that guide everything we do at ALPEN STORE LTD.
             </p>
           </div>
 
@@ -162,7 +162,7 @@ const About = () => {
       <section className="section-padding bg-primary text-primary-foreground">
         <div className="container-alpen text-center">
           <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4">
-            Experience the Alpenstore Difference
+            Experience the ALPEN STORE LTD Difference
           </h2>
           <p className="text-primary-foreground/80 mb-8 max-w-2xl mx-auto">
             Visit any of our branches or shop online to discover our premium collection.
