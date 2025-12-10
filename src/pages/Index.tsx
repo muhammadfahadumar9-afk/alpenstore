@@ -2,8 +2,8 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Star, Truck, Shield, MapPin, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout/Layout";
+import FeaturedProducts from "@/components/FeaturedProducts";
 import heroImage from "@/assets/hero-perfumes.jpg";
-
 const categories = [
   {
     title: "Arabian Perfumes",
@@ -119,6 +119,9 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Featured Products */}
+      <FeaturedProducts />
 
       {/* Why Choose Us */}
       <section className="section-padding">
