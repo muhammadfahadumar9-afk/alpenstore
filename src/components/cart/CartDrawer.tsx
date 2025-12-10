@@ -1,4 +1,5 @@
-import { X, Minus, Plus, ShoppingCart, Trash2, MessageCircle } from "lucide-react";
+import { Link } from "react-router-dom";
+import { X, Minus, Plus, ShoppingCart, Trash2, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -19,28 +20,6 @@ const CartDrawer = () => {
       currency: "NGN",
       minimumFractionDigits: 0,
     }).format(price);
-  };
-
-  const generateWhatsAppMessage = () => {
-    if (items.length === 0) return "";
-    
-    let message = "Hello ALPEN STORE LTD! I would like to place an order:\n\n";
-    
-    items.forEach((item, index) => {
-      message += `${index + 1}. ${item.name}\n`;
-      message += `   Qty: ${item.quantity} × ${formatPrice(item.price)} = ${formatPrice(item.price * item.quantity)}\n\n`;
-    });
-    
-    message += `─────────────────\n`;
-    message += `Total: ${formatPrice(totalPrice)}\n\n`;
-    message += `Please confirm availability and delivery details. Thank you!`;
-    
-    return encodeURIComponent(message);
-  };
-
-  const handleCheckout = () => {
-    const message = generateWhatsAppMessage();
-    window.open(`https://wa.me/2349168877858?text=${message}`, "_blank");
   };
 
   return (
@@ -154,12 +133,14 @@ const CartDrawer = () => {
               </div>
 
               <Button
-                onClick={handleCheckout}
+                asChild
                 className="w-full gap-2"
                 size="lg"
+                onClick={() => setIsOpen(false)}
               >
-                <MessageCircle className="h-5 w-5" />
-                Order via WhatsApp
+                <Link to="/checkout">
+                  Proceed to Checkout <ArrowRight className="h-5 w-5" />
+                </Link>
               </Button>
 
               <div className="flex gap-2">
