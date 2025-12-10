@@ -49,10 +49,10 @@ export default function Admin() {
     { title: 'Dashboard', description: 'Overview and analytics', icon: LayoutDashboard, href: '/admin' },
     { title: 'Products', description: 'Manage your product catalog', icon: Package, href: '/admin/products' },
     { title: 'Orders', description: 'View and manage orders', icon: ShoppingBag, href: '/admin/orders' },
-    { title: 'Users', description: 'Manage user accounts', icon: Users, href: '#' },
-    { title: 'Pages', description: 'Edit website pages', icon: FileText, href: '#' },
-    { title: 'Gallery', description: 'Manage product images', icon: Image, href: '#' },
-    { title: 'Settings', description: 'Configure site settings', icon: Settings, href: '#' },
+    { title: 'Users', description: 'Manage user accounts', icon: Users, href: '/admin/users' },
+    { title: 'Pages', description: 'Edit website pages', icon: FileText, href: '/admin/pages' },
+    { title: 'Gallery', description: 'Manage product images', icon: Image, href: '/admin/gallery' },
+    { title: 'Settings', description: 'Configure site settings', icon: Settings, href: '/admin/settings' },
   ];
 
   return (

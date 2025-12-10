@@ -17,6 +17,10 @@ import Admin from "./pages/Admin";
 import AdminAuth from "./pages/AdminAuth";
 import AdminProducts from "./pages/AdminProducts";
 import AdminOrders from "./pages/AdminOrders";
+import AdminUsers from "./pages/AdminUsers";
+import AdminGallery from "./pages/AdminGallery";
+import AdminPages from "./pages/AdminPages";
+import AdminSettings from "./pages/AdminSettings";
 import CustomerAuth from "./pages/CustomerAuth";
 import Account from "./pages/Account";
 import Checkout from "./pages/Checkout";
@@ -48,6 +52,10 @@ const App = () => (
               <Route path="/admin/login" element={<AdminAuth />} />
               <Route path="/admin/products" element={<AdminProducts />} />
               <Route path="/admin/orders" element={<AdminOrders />} />
+              <Route path="/admin/users" element={<AdminUsers />} />
+              <Route path="/admin/gallery" element={<AdminGallery />} />
+              <Route path="/admin/pages" element={<AdminPages />} />
+              <Route path="/admin/settings" element={<AdminSettings />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
