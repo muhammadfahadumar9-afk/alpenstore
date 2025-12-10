@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Layout from "@/components/layout/Layout";
 import { useToast } from "@/hooks/use-toast";
+import { useCart } from "@/contexts/CartContext";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Product {
@@ -30,6 +31,7 @@ const ProductDetail = () => {
   const { productId } = useParams<{ productId: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { addItem } = useCart();
   const [product, setProduct] = useState<Product | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -94,6 +96,16 @@ const ProductDetail = () => {
 
   const handleAddToCart = () => {
     if (!product) return;
+    addItem(
+      {
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image_url: product.image_url,
+        category: product.category,
+      },
+      quantity
+    );
     toast({
       title: "Added to Cart",
       description: `${quantity}x ${product.name} has been added to your cart.`,
