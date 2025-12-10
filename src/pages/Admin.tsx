@@ -11,7 +11,8 @@ import {
   FileText, 
   Image, 
   LogOut,
-  ShieldCheck
+  ShieldCheck,
+  ShoppingBag
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -47,6 +48,7 @@ export default function Admin() {
   const adminModules = [
     { title: 'Dashboard', description: 'Overview and analytics', icon: LayoutDashboard, href: '/admin' },
     { title: 'Products', description: 'Manage your product catalog', icon: Package, href: '/admin/products' },
+    { title: 'Orders', description: 'View and manage orders', icon: ShoppingBag, href: '/admin/orders' },
     { title: 'Users', description: 'Manage user accounts', icon: Users, href: '#' },
     { title: 'Pages', description: 'Edit website pages', icon: FileText, href: '#' },
     { title: 'Gallery', description: 'Manage product images', icon: Image, href: '#' },
