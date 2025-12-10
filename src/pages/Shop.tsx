@@ -215,7 +215,7 @@ const Shop = () => {
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Button asChild variant="outline">
-                <a href="https://wa.me/2348023717640?text=Hello%20Alpenstore!%20I%20would%20like%20to%20place%20an%20order." target="_blank" rel="noopener noreferrer">
+                <a href="https://wa.me/2349168877858?text=Hello%20ALPEN%20STORE%20LTD!%20I%20would%20like%20to%20place%20an%20order." target="_blank" rel="noopener noreferrer">
                   Order via WhatsApp
                 </a>
               </Button>

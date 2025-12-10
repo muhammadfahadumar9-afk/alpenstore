@@ -61,7 +61,7 @@ const Index = () => {
               10+ Years of Excellence
             </span>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-background leading-tight">
-              Alpenstore
+              ALPEN STORE LTD
               <span className="block text-primary mt-2">Arabian Perfumes & Islamic Wellness</span>
             </h1>
             <p className="text-lg text-background/80 leading-relaxed">
@@ -125,7 +125,7 @@ const Index = () => {
         <div className="container-alpen">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4">
-              Why Choose <span className="text-primary">Alpenstore?</span>
+              Why Choose <span className="text-primary">ALPEN STORE LTD?</span>
             </h2>
             <p className="text-muted-foreground">
               We are committed to providing the best products and shopping experience.

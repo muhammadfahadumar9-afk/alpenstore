@@ -62,7 +62,7 @@ export default function Admin() {
               <ShieldCheck className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <h1 className="text-xl font-serif font-semibold">Alpenstore Admin</h1>
+              <h1 className="text-xl font-serif font-semibold">ALPEN STORE LTD Admin</h1>
               <p className="text-sm text-muted-foreground">{user.email}</p>
             </div>
           </div>
