@@ -40,23 +40,44 @@ const Contact = () => {
     phone: "",
     message: "",
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  
   const { toast } = useToast();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
+    
+    // Validate required fields
+    if (!formData.name.trim() || !formData.phone.trim() || !formData.message.trim()) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
+      });
+      return;
+    }
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    // Build WhatsApp message
+    const whatsappMessage = `*New Customer Message*
+
+*Name:* ${formData.name.trim()}
+*Phone:* ${formData.phone.trim()}
+${formData.email ? `*Email:* ${formData.email.trim()}` : ""}
+
+*Message:*
+${formData.message.trim()}`;
+
+    // Encode message for URL
+    const encodedMessage = encodeURIComponent(whatsappMessage);
+    
+    // Open WhatsApp with the message
+    window.open(`https://wa.me/2349168877858?text=${encodedMessage}`, "_blank");
 
     toast({
-      title: "Message Sent!",
-      description: "Thank you for contacting us. We'll get back to you soon.",
+      title: "Redirecting to WhatsApp",
+      description: "Your message is ready to send!",
     });
 
     setFormData({ name: "", email: "", phone: "", message: "" });
-    setIsSubmitting(false);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -143,15 +164,9 @@ const Contact = () => {
                     placeholder="How can we help you?"
                   />
                 </div>
-                <Button type="submit" size="lg" disabled={isSubmitting} className="w-full sm:w-auto">
-                  {isSubmitting ? (
-                    "Sending..."
-                  ) : (
-                    <>
-                      <Send className="h-4 w-4 mr-2" />
-                      Send Message
-                    </>
-                  )}
+                <Button type="submit" size="lg" className="w-full sm:w-auto">
+                  <Send className="h-4 w-4 mr-2" />
+                  Send via WhatsApp
                 </Button>
               </form>
             </div>
