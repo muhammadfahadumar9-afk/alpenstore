@@ -123,6 +123,67 @@ export default function AdminUsers() {
     }
   };
 
+  const handlePromoteToAdmin = async (userId: string, userName: string | null) => {
+    setActionLoading(userId);
+    try {
+      // Check if user already has a role entry
+      const { data: existingRole } = await supabase
+        .from('user_roles')
+        .select('id')
+        .eq('user_id', userId)
+        .single();
+
+      if (existingRole) {
+        // Update existing role
+        const { error } = await supabase
+          .from('user_roles')
+          .update({ role: 'admin', is_blocked: false })
+          .eq('user_id', userId);
+        if (error) throw error;
+      } else {
+        // Insert new role
+        const { error } = await supabase
+          .from('user_roles')
+          .insert({ user_id: userId, role: 'admin', is_blocked: false });
+        if (error) throw error;
+      }
+
+      setUsers(prev => prev.map(u => 
+        u.user_id === userId ? { ...u, role: 'admin', is_blocked: false } : u
+      ));
+      
+      toast.success(`${userName || 'User'} has been promoted to admin`);
+    } catch (error) {
+      console.error('Error promoting user:', error);
+      toast.error('Failed to promote user');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleDemoteToUser = async (userId: string, userName: string | null) => {
+    setActionLoading(userId);
+    try {
+      const { error } = await supabase
+        .from('user_roles')
+        .update({ role: 'user', is_blocked: false })
+        .eq('user_id', userId);
+
+      if (error) throw error;
+
+      setUsers(prev => prev.map(u => 
+        u.user_id === userId ? { ...u, role: 'user', is_blocked: false } : u
+      ));
+      
+      toast.success(`${userName || 'User'} has been demoted to regular user`);
+    } catch (error) {
+      console.error('Error demoting user:', error);
+      toast.error('Failed to demote user');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-NG', {
       year: 'numeric',
@@ -149,7 +210,7 @@ export default function AdminUsers() {
   const blockedAdmins = adminUsers.filter(u => u.is_blocked);
   const regularUsers = users.filter(u => u.role === 'user' || !u.role);
 
-  const renderUserTable = (userList: UserProfile[], showActions: boolean = false) => (
+  const renderUserTable = (userList: UserProfile[], isAdminTable: boolean = false) => (
     <Table>
       <TableHeader>
         <TableRow>
@@ -159,7 +220,7 @@ export default function AdminUsers() {
           <TableHead>Role</TableHead>
           <TableHead>Status</TableHead>
           <TableHead>Joined</TableHead>
-          {showActions && <TableHead className="text-right">Actions</TableHead>}
+          <TableHead className="text-right">Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -194,10 +255,12 @@ export default function AdminUsers() {
               )}
             </TableCell>
             <TableCell>{formatDate(userProfile.created_at)}</TableCell>
-            {showActions && (
-              <TableCell className="text-right">
-                {userProfile.user_id !== user?.id && (
-                  userProfile.is_blocked ? (
+            <TableCell className="text-right">
+              {userProfile.user_id === user?.id ? (
+                <span className="text-sm text-muted-foreground">You</span>
+              ) : isAdminTable ? (
+                <div className="flex items-center justify-end gap-2">
+                  {userProfile.is_blocked ? (
                     <Button
                       size="sm"
                       variant="outline"
@@ -206,7 +269,7 @@ export default function AdminUsers() {
                       disabled={actionLoading === userProfile.user_id}
                     >
                       <UserCheck className="w-4 h-4 mr-1" />
-                      {actionLoading === userProfile.user_id ? 'Processing...' : 'Unblock'}
+                      {actionLoading === userProfile.user_id ? '...' : 'Unblock'}
                     </Button>
                   ) : (
                     <Button
@@ -216,15 +279,31 @@ export default function AdminUsers() {
                       disabled={actionLoading === userProfile.user_id}
                     >
                       <UserX className="w-4 h-4 mr-1" />
-                      {actionLoading === userProfile.user_id ? 'Processing...' : 'Block'}
+                      {actionLoading === userProfile.user_id ? '...' : 'Block'}
                     </Button>
-                  )
-                )}
-                {userProfile.user_id === user?.id && (
-                  <span className="text-sm text-muted-foreground">You</span>
-                )}
-              </TableCell>
-            )}
+                  )}
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleDemoteToUser(userProfile.user_id, userProfile.full_name)}
+                    disabled={actionLoading === userProfile.user_id}
+                  >
+                    <ShieldX className="w-4 h-4 mr-1" />
+                    Demote
+                  </Button>
+                </div>
+              ) : (
+                <Button
+                  size="sm"
+                  variant="default"
+                  onClick={() => handlePromoteToAdmin(userProfile.user_id, userProfile.full_name)}
+                  disabled={actionLoading === userProfile.user_id}
+                >
+                  <ShieldCheck className="w-4 h-4 mr-1" />
+                  {actionLoading === userProfile.user_id ? '...' : 'Make Admin'}
+                </Button>
+              )}
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>
