@@ -349,6 +349,14 @@ export default function AdminUsers() {
       </header>
 
       <main className="container mx-auto px-4 py-8 space-y-6">
+        {/* Admin Request Note */}
+        <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 flex items-start gap-3">
+          <ShieldAlert className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+          <p className="text-sm text-muted-foreground">
+            <span className="font-medium text-foreground">Admin Access Policy:</span> To request admin access, a user must first register and have an active customer account. Admin privileges can only be granted to users with verified customer accounts.
+          </p>
+        </div>
+
         {/* Admin Access Control Section */}
         <Card>
           <CardHeader>
