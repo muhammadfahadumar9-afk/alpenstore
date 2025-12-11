@@ -174,18 +174,21 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          is_blocked: boolean
           role: Database["public"]["Enums"]["app_role"]
           user_id: string
         }
         Insert: {
           created_at?: string
           id?: string
+          is_blocked?: boolean
           role?: Database["public"]["Enums"]["app_role"]
           user_id: string
         }
         Update: {
           created_at?: string
           id?: string
+          is_blocked?: boolean
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
         }
@@ -203,6 +206,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_active_admin: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
