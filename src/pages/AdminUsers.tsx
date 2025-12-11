@@ -5,10 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Users, ShieldCheck, User } from 'lucide-react';
+import { ArrowLeft, Users, ShieldCheck, ShieldX, ShieldAlert, User, UserCheck, UserX } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface UserProfile {
   id: string;
@@ -18,6 +19,7 @@ interface UserProfile {
   city: string | null;
   created_at: string;
   role?: string;
+  is_blocked?: boolean;
 }
 
 export default function AdminUsers() {
@@ -25,6 +27,7 @@ export default function AdminUsers() {
   const navigate = useNavigate();
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [loading, setLoading] = useState(true);
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
 
   useEffect(() => {
     if (!authLoading && (!user || !isAdmin)) {
@@ -53,13 +56,14 @@ export default function AdminUsers() {
         (profiles || []).map(async (profile) => {
           const { data: roleData } = await supabase
             .from('user_roles')
-            .select('role')
+            .select('role, is_blocked')
             .eq('user_id', profile.user_id)
             .single();
           
           return {
             ...profile,
-            role: roleData?.role || 'user'
+            role: roleData?.role || 'user',
+            is_blocked: roleData?.is_blocked || false
           };
         })
       );
@@ -73,6 +77,52 @@ export default function AdminUsers() {
     }
   };
 
+  const handleBlockUser = async (userId: string, userName: string | null) => {
+    setActionLoading(userId);
+    try {
+      const { error } = await supabase
+        .from('user_roles')
+        .update({ is_blocked: true })
+        .eq('user_id', userId);
+
+      if (error) throw error;
+
+      setUsers(prev => prev.map(u => 
+        u.user_id === userId ? { ...u, is_blocked: true } : u
+      ));
+      
+      toast.success(`${userName || 'User'} has been blocked from admin access`);
+    } catch (error) {
+      console.error('Error blocking user:', error);
+      toast.error('Failed to block user');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleUnblockUser = async (userId: string, userName: string | null) => {
+    setActionLoading(userId);
+    try {
+      const { error } = await supabase
+        .from('user_roles')
+        .update({ is_blocked: false })
+        .eq('user_id', userId);
+
+      if (error) throw error;
+
+      setUsers(prev => prev.map(u => 
+        u.user_id === userId ? { ...u, is_blocked: false } : u
+      ));
+      
+      toast.success(`${userName || 'User'} has been unblocked`);
+    } catch (error) {
+      console.error('Error unblocking user:', error);
+      toast.error('Failed to unblock user');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-NG', {
       year: 'numeric',
@@ -81,7 +131,8 @@ export default function AdminUsers() {
     });
   };
 
-  const getRoleBadgeVariant = (role: string) => {
+  const getRoleBadgeVariant = (role: string, isBlocked: boolean) => {
+    if (isBlocked) return 'outline';
     switch (role) {
       case 'admin':
         return 'destructive';
@@ -91,6 +142,94 @@ export default function AdminUsers() {
         return 'outline';
     }
   };
+
+  // Filter users by role and status
+  const adminUsers = users.filter(u => u.role === 'admin' || u.role === 'moderator');
+  const activeAdmins = adminUsers.filter(u => !u.is_blocked);
+  const blockedAdmins = adminUsers.filter(u => u.is_blocked);
+  const regularUsers = users.filter(u => u.role === 'user' || !u.role);
+
+  const renderUserTable = (userList: UserProfile[], showActions: boolean = false) => (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Name</TableHead>
+          <TableHead>Phone</TableHead>
+          <TableHead>City</TableHead>
+          <TableHead>Role</TableHead>
+          <TableHead>Status</TableHead>
+          <TableHead>Joined</TableHead>
+          {showActions && <TableHead className="text-right">Actions</TableHead>}
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {userList.map((userProfile) => (
+          <TableRow key={userProfile.id} className={userProfile.is_blocked ? 'opacity-60' : ''}>
+            <TableCell className="font-medium">
+              {userProfile.full_name || 'No name'}
+            </TableCell>
+            <TableCell>{userProfile.phone || '-'}</TableCell>
+            <TableCell>{userProfile.city || '-'}</TableCell>
+            <TableCell>
+              <Badge variant={getRoleBadgeVariant(userProfile.role || 'user', userProfile.is_blocked || false)}>
+                {userProfile.is_blocked ? (
+                  <ShieldX className="w-3 h-3 mr-1" />
+                ) : userProfile.role === 'admin' ? (
+                  <ShieldCheck className="w-3 h-3 mr-1" />
+                ) : null}
+                {userProfile.role || 'user'}
+              </Badge>
+            </TableCell>
+            <TableCell>
+              {userProfile.is_blocked ? (
+                <Badge variant="destructive" className="bg-destructive/20 text-destructive border-destructive/30">
+                  <UserX className="w-3 h-3 mr-1" />
+                  Blocked
+                </Badge>
+              ) : (
+                <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30">
+                  <UserCheck className="w-3 h-3 mr-1" />
+                  Active
+                </Badge>
+              )}
+            </TableCell>
+            <TableCell>{formatDate(userProfile.created_at)}</TableCell>
+            {showActions && (
+              <TableCell className="text-right">
+                {userProfile.user_id !== user?.id && (
+                  userProfile.is_blocked ? (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="text-primary hover:text-primary"
+                      onClick={() => handleUnblockUser(userProfile.user_id, userProfile.full_name)}
+                      disabled={actionLoading === userProfile.user_id}
+                    >
+                      <UserCheck className="w-4 h-4 mr-1" />
+                      {actionLoading === userProfile.user_id ? 'Processing...' : 'Unblock'}
+                    </Button>
+                  ) : (
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      onClick={() => handleBlockUser(userProfile.user_id, userProfile.full_name)}
+                      disabled={actionLoading === userProfile.user_id}
+                    >
+                      <UserX className="w-4 h-4 mr-1" />
+                      {actionLoading === userProfile.user_id ? 'Processing...' : 'Block'}
+                    </Button>
+                  )
+                )}
+                {userProfile.user_id === user?.id && (
+                  <span className="text-sm text-muted-foreground">You</span>
+                )}
+              </TableCell>
+            )}
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
 
   if (authLoading || loading) {
     return (
@@ -130,47 +269,60 @@ export default function AdminUsers() {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8 space-y-6">
+        {/* Admin Access Control Section */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <ShieldAlert className="w-5 h-5" />
+              Admin Access Control
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Tabs defaultValue="active" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 max-w-md">
+                <TabsTrigger value="active" className="flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4" />
+                  Active Admins ({activeAdmins.length})
+                </TabsTrigger>
+                <TabsTrigger value="blocked" className="flex items-center gap-2">
+                  <ShieldX className="w-4 h-4" />
+                  Blocked Admins ({blockedAdmins.length})
+                </TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="active" className="mt-4">
+                {activeAdmins.length === 0 ? (
+                  <p className="text-center text-muted-foreground py-8">No active admin users</p>
+                ) : (
+                  renderUserTable(activeAdmins, true)
+                )}
+              </TabsContent>
+              
+              <TabsContent value="blocked" className="mt-4">
+                {blockedAdmins.length === 0 ? (
+                  <p className="text-center text-muted-foreground py-8">No blocked admin users</p>
+                ) : (
+                  renderUserTable(blockedAdmins, true)
+                )}
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+        </Card>
+
+        {/* Regular Users Section */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <User className="w-5 h-5" />
-              Registered Users
+              Customer Accounts ({regularUsers.length})
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {users.length === 0 ? (
-              <p className="text-center text-muted-foreground py-8">No users found</p>
+            {regularUsers.length === 0 ? (
+              <p className="text-center text-muted-foreground py-8">No customer accounts found</p>
             ) : (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Phone</TableHead>
-                    <TableHead>City</TableHead>
-                    <TableHead>Role</TableHead>
-                    <TableHead>Joined</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {users.map((userProfile) => (
-                    <TableRow key={userProfile.id}>
-                      <TableCell className="font-medium">
-                        {userProfile.full_name || 'No name'}
-                      </TableCell>
-                      <TableCell>{userProfile.phone || '-'}</TableCell>
-                      <TableCell>{userProfile.city || '-'}</TableCell>
-                      <TableCell>
-                        <Badge variant={getRoleBadgeVariant(userProfile.role || 'user')}>
-                          {userProfile.role === 'admin' && <ShieldCheck className="w-3 h-3 mr-1" />}
-                          {userProfile.role || 'user'}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>{formatDate(userProfile.created_at)}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              renderUserTable(regularUsers, false)
             )}
           </CardContent>
         </Card>

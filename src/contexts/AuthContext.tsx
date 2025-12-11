@@ -56,7 +56,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const { data, error } = await supabase
         .from('user_roles')
-        .select('role')
+        .select('role, is_blocked')
         .eq('user_id', userId)
         .eq('role', 'admin')
         .maybeSingle();
@@ -67,7 +67,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return;
       }
       
-      setIsAdmin(!!data);
+      // Only set admin if they have admin role AND are not blocked
+      setIsAdmin(!!data && !data.is_blocked);
     } catch (error) {
       console.error('Error checking admin status:', error);
       setIsAdmin(false);
