@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import Layout from "@/components/layout/Layout";
+import { supabase } from "@/integrations/supabase/client";
+import { Skeleton } from "@/components/ui/skeleton";
 
-// Import gallery images
+// Import gallery images (static)
 import laYuqawam from "@/assets/gallery/la-yuqawam.png";
 import oud24Hours from "@/assets/gallery/oud-24-hours.png";
 import samaaAlOud from "@/assets/gallery/samaa-al-oud.jpeg";
@@ -10,86 +12,56 @@ import dirhamOud from "@/assets/gallery/dirham-oud.jpeg";
 import vitalOud from "@/assets/gallery/vital-oud.png";
 import blueMoon from "@/assets/gallery/blue-moon.png";
 
-const galleryImages = [
-  {
-    src: laYuqawam,
-    alt: "La Yuqawam Tobacco Blaze by Rasasi",
-    category: "Arabian Perfumes",
-  },
-  {
-    src: oud24Hours,
-    alt: "Oud 24 Hours perfume set",
-    category: "Arabian Perfumes",
-  },
-  {
-    src: samaaAlOud,
-    alt: "Samaa al Oud by Almas Perfumes",
-    category: "Arabian Perfumes",
-  },
-  {
-    src: dirhamOud,
-    alt: "Dirham Oud perfume",
-    category: "Arabian Perfumes",
-  },
-  {
-    src: vitalOud,
-    alt: "Vital Oud Eau de Parfum",
-    category: "Arabian Perfumes",
-  },
-  {
-    src: blueMoon,
-    alt: "Blue Moon luxury perfume",
-    category: "Arabian Perfumes",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1541643600914-78b084683601?w=800&h=600&fit=crop",
-    alt: "Arabian perfume collection display",
-    category: "Products",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1594035910387-fea47794261f?w=800&h=800&fit=crop",
-    alt: "Premium oud perfume bottles",
-    category: "Products",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1615634260167-c8cdede054de?w=800&h=600&fit=crop",
-    alt: "Store interior display",
-    category: "Store",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=800&h=800&fit=crop",
-    alt: "Luxury fragrance bottles",
-    category: "Products",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=800&h=600&fit=crop",
-    alt: "Beauty and cosmetics selection",
-    category: "Products",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=800&h=800&fit=crop",
-    alt: "Wellness products display",
-    category: "Products",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=800&h=600&fit=crop",
-    alt: "Skincare essentials",
-    category: "Products",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1595425970377-c9703cf48b6d?w=800&h=800&fit=crop",
-    alt: "Traditional attar collection",
-    category: "Products",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=800&h=600&fit=crop",
-    alt: "Natural wellness ingredients",
-    category: "Products",
-  },
+interface GalleryImage {
+  src: string;
+  alt: string;
+  category: string;
+}
+
+const staticGalleryImages: GalleryImage[] = [
+  { src: laYuqawam, alt: "La Yuqawam Tobacco Blaze by Rasasi", category: "Arabian Perfumes" },
+  { src: oud24Hours, alt: "Oud 24 Hours perfume set", category: "Arabian Perfumes" },
+  { src: samaaAlOud, alt: "Samaa al Oud by Almas Perfumes", category: "Arabian Perfumes" },
+  { src: dirhamOud, alt: "Dirham Oud perfume", category: "Arabian Perfumes" },
+  { src: vitalOud, alt: "Vital Oud Eau de Parfum", category: "Arabian Perfumes" },
+  { src: blueMoon, alt: "Blue Moon luxury perfume", category: "Arabian Perfumes" },
 ];
 
 const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [uploadedImages, setUploadedImages] = useState<GalleryImage[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchUploadedImages();
+  }, []);
+
+  const fetchUploadedImages = async () => {
+    try {
+      const { data, error } = await supabase.storage
+        .from('product-images')
+        .list('', { limit: 100, sortBy: { column: 'created_at', order: 'desc' } });
+
+      if (error) throw error;
+
+      const imageList = (data || [])
+        .filter(file => file.name !== '.emptyFolderPlaceholder')
+        .map(file => ({
+          src: supabase.storage.from('product-images').getPublicUrl(file.name).data.publicUrl,
+          alt: file.name.replace(/^\d+-/, '').replace(/\.[^/.]+$/, '').replace(/-/g, ' '),
+          category: "Uploaded"
+        }));
+
+      setUploadedImages(imageList);
+    } catch (error) {
+      console.error('Error fetching images:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Combine static and uploaded images
+  const allImages = [...uploadedImages, ...staticGalleryImages];
 
   return (
     <Layout>
@@ -110,32 +82,40 @@ const Gallery = () => {
       {/* Gallery Grid */}
       <section className="section-padding">
         <div className="container-alpen">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {galleryImages.map((image, index) => (
-              <button
-                key={index}
-                onClick={() => setSelectedImage(image.src)}
-                className={`card-alpen overflow-hidden cursor-pointer hover:scale-[1.02] transition-transform ${
-                  index % 3 === 1 ? "sm:row-span-2" : ""
-                }`}
-              >
-                <div className={`relative ${index % 3 === 1 ? "aspect-[4/5]" : "aspect-[4/3]"} overflow-hidden`}>
-                  <img
-                    src={image.src}
-                    alt={image.alt}
-                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity">
-                    <div className="absolute bottom-4 left-4 text-background">
-                      <span className="text-xs font-medium bg-primary/80 px-3 py-1 rounded-full">
-                        {image.category}
-                      </span>
+          {loading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, i) => (
+                <Skeleton key={i} className="aspect-[4/3] rounded-lg" />
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {allImages.map((image, index) => (
+                <button
+                  key={index}
+                  onClick={() => setSelectedImage(image.src)}
+                  className={`card-alpen overflow-hidden cursor-pointer hover:scale-[1.02] transition-transform ${
+                    index % 3 === 1 ? "sm:row-span-2" : ""
+                  }`}
+                >
+                  <div className={`relative ${index % 3 === 1 ? "aspect-[4/5]" : "aspect-[4/3]"} overflow-hidden`}>
+                    <img
+                      src={image.src}
+                      alt={image.alt}
+                      className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity">
+                      <div className="absolute bottom-4 left-4 text-background">
+                        <span className="text-xs font-medium bg-primary/80 px-3 py-1 rounded-full">
+                          {image.category}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </button>
-            ))}
-          </div>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
