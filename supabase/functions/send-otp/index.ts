@@ -19,56 +19,77 @@ interface SendOTPRequest {
   phone: string;
 }
 
+function generateOTP(): string {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
 interface RateLimitRecord {
   phone: string;
   hourly_count: number;
   first_hourly_request: string;
 }
 
-function generateOTP(): string {
-  return Math.floor(100000 + Math.random() * 900000).toString();
-}
-
-// In-memory rate limit store (will reset on function restart)
-// For production, this should use a database table or Redis
-const rateLimits = new Map<string, RateLimitRecord>();
-
-function checkRateLimit(phone: string): { allowed: boolean; message?: string } {
+async function checkRateLimit(supabase: any, phone: string): Promise<{ allowed: boolean; message?: string }> {
   const now = new Date();
   const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
 
-  let record = rateLimits.get(phone);
+  // Get or create rate limit record
+  const { data: record, error: fetchError } = await supabase
+    .from("otp_rate_limits")
+    .select("phone, hourly_count, first_hourly_request")
+    .eq("phone", phone)
+    .maybeSingle() as { data: RateLimitRecord | null; error: any };
 
-  if (!record) {
-    record = {
-      phone,
-      hourly_count: 0,
-      first_hourly_request: now.toISOString(),
-    };
+  if (fetchError) {
+    console.error("Error fetching rate limit record:", fetchError);
+    // Allow request on error to avoid blocking legitimate users
+    return { allowed: true };
   }
 
-  // Reset hourly count if the first request was more than an hour ago
-  if (new Date(record.first_hourly_request) < oneHourAgo) {
-    record.hourly_count = 0;
-    record.first_hourly_request = now.toISOString();
+  let hourlyCount = 0;
+  let firstHourlyRequest = now.toISOString();
+
+  if (record) {
+    // Check if we need to reset the hourly window
+    if (new Date(record.first_hourly_request) < oneHourAgo) {
+      // Reset the window
+      hourlyCount = 0;
+      firstHourlyRequest = now.toISOString();
+    } else {
+      hourlyCount = record.hourly_count;
+      firstHourlyRequest = record.first_hourly_request;
+    }
   }
 
-  // Check limit
-  if (record.hourly_count >= MAX_REQUESTS_PER_HOUR) {
-    const resetTime = new Date(new Date(record.first_hourly_request).getTime() + 60 * 60 * 1000);
+  // Check limit before incrementing
+  if (hourlyCount >= MAX_REQUESTS_PER_HOUR) {
+    const resetTime = new Date(new Date(firstHourlyRequest).getTime() + 60 * 60 * 1000);
     const minutesLeft = Math.ceil((resetTime.getTime() - now.getTime()) / (60 * 1000));
-    console.log(`Rate limit exceeded for phone: ${phone}. Count: ${record.hourly_count}`);
+    console.log(`Rate limit exceeded for phone: ${phone}. Count: ${hourlyCount}/${MAX_REQUESTS_PER_HOUR}`);
     return {
       allowed: false,
       message: `Too many OTP requests. Please try again in ${minutesLeft} minutes.`,
     };
   }
 
-  record.hourly_count++;
-  rateLimits.set(phone, record);
+  // Increment count and upsert
+  const newCount = hourlyCount + 1;
+  const { error: upsertError } = await supabase
+    .from("otp_rate_limits")
+    .upsert({
+      phone,
+      hourly_count: newCount,
+      first_hourly_request: firstHourlyRequest,
+      updated_at: now.toISOString(),
+    }, {
+      onConflict: "phone"
+    });
 
-  console.log(`OTP request allowed for phone: ${phone}. Count: ${record.hourly_count}/${MAX_REQUESTS_PER_HOUR}`);
+  if (upsertError) {
+    console.error("Error updating rate limit record:", upsertError);
+  }
 
+  console.log(`OTP request allowed for phone: ${phone}. Count: ${newCount}/${MAX_REQUESTS_PER_HOUR}`);
   return { allowed: true };
 }
 
@@ -90,8 +111,11 @@ const handler = async (req: Request): Promise<Response> => {
     // Normalize phone number
     const normalizedPhone = phone.replace(/\s+/g, "").replace(/^0/, "+234");
 
+    // Create Supabase client
+    const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
+
     // Check rate limit BEFORE any other operations
-    const rateLimitCheck = checkRateLimit(normalizedPhone);
+    const rateLimitCheck = await checkRateLimit(supabase, normalizedPhone);
     if (!rateLimitCheck.allowed) {
       console.log(`Rate limit blocked request for: ${normalizedPhone}`);
       return new Response(
@@ -99,9 +123,6 @@ const handler = async (req: Request): Promise<Response> => {
         { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
-
-    // Create Supabase client
-    const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
 
     // Check if user exists with this phone number
     const { data: profile, error: profileError } = await supabase
