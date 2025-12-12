@@ -1,6 +1,6 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Search, ShoppingCart, Heart, Package, ArrowUpDown } from "lucide-react";
+import { Search, ShoppingCart, Heart, Package, ArrowUpDown, Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,6 +25,7 @@ interface Product {
   image_url: string | null;
   in_stock: boolean;
   featured: boolean;
+  created_at: string;
 }
 
 const categoryMap: Record<string, string> = {
@@ -36,6 +37,8 @@ const categoryMap: Record<string, string> = {
 
 const categories = ["All", "Arabian Perfumes", "Islamic Wellness", "Cosmetics & Beauty", "Luxury Gift Sets"];
 
+const PRODUCTS_PER_PAGE = 24;
+
 type SortOption = "newest" | "price-low" | "price-high";
 
 const Shop = () => {
@@ -44,25 +47,48 @@ const Shop = () => {
   const [sortBy, setSortBy] = useState<SortOption>("newest");
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [totalCount, setTotalCount] = useState(0);
   const { toast } = useToast();
   const { addItem } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async (offset = 0, append = false) => {
     try {
+      if (offset === 0) {
+        setLoading(true);
+      } else {
+        setLoadingMore(true);
+      }
+
+      // Get total count first
+      const { count, error: countError } = await supabase
+        .from('products')
+        .select('*', { count: 'exact', head: true });
+
+      if (countError) throw countError;
+      setTotalCount(count || 0);
+
+      // Fetch products with pagination
       const { data, error } = await supabase
         .from('products')
         .select('*')
         .order('featured', { ascending: false })
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .range(offset, offset + PRODUCTS_PER_PAGE - 1);
 
       if (error) throw error;
-      setProducts(data || []);
+      
+      const newProducts = data || [];
+      setHasMore(newProducts.length === PRODUCTS_PER_PAGE);
+      
+      if (append) {
+        setProducts(prev => [...prev, ...newProducts]);
+      } else {
+        setProducts(newProducts);
+      }
     } catch (error) {
       console.error('Error fetching products:', error);
       toast({
@@ -72,6 +98,17 @@ const Shop = () => {
       });
     } finally {
       setLoading(false);
+      setLoadingMore(false);
+    }
+  }, [toast]);
+
+  useEffect(() => {
+    fetchProducts(0, false);
+  }, [fetchProducts]);
+
+  const loadMoreProducts = () => {
+    if (!loadingMore && hasMore) {
+      fetchProducts(products.length, true);
     }
   };
 
@@ -92,7 +129,7 @@ const Shop = () => {
           return b.price - a.price;
         case "newest":
         default:
-          return 0; // Already sorted by created_at from DB
+          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
       }
     });
   }, [products, selectedCategory, searchQuery, sortBy]);
@@ -287,6 +324,30 @@ const Shop = () => {
                     {products.length === 0 
                       ? "No products available yet. Check back soon!"
                       : "No products found matching your criteria."}
+                  </p>
+                </div>
+              )}
+
+              {/* Load More Button */}
+              {hasMore && filteredProducts.length > 0 && selectedCategory === "All" && !searchQuery && (
+                <div className="text-center mt-8">
+                  <Button 
+                    variant="outline" 
+                    onClick={loadMoreProducts}
+                    disabled={loadingMore}
+                    className="min-w-[200px]"
+                  >
+                    {loadingMore ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        Loading...
+                      </>
+                    ) : (
+                      `Load More Products`
+                    )}
+                  </Button>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Showing {products.length} of {totalCount} products
                   </p>
                 </div>
               )}

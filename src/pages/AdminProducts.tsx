@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -12,7 +12,7 @@ import { Switch } from '@/components/ui/switch';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { ArrowLeft, Plus, Pencil, Trash2, Upload, Package, ShieldCheck, LogOut } from 'lucide-react';
+import { ArrowLeft, Plus, Pencil, Trash2, Upload, Package, ShieldCheck, LogOut, Search, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface Product {
@@ -35,6 +35,8 @@ const categories = [
   { value: 'gifts', label: 'Luxury Gift Sets' },
 ];
 
+const PRODUCTS_PER_PAGE = 50;
+
 export default function AdminProducts() {
   const { user, isAdmin, isLoading, signOut } = useAuth();
   const navigate = useNavigate();
@@ -44,6 +46,9 @@ export default function AdminProducts() {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -67,14 +72,27 @@ export default function AdminProducts() {
     if (user && isAdmin) {
       fetchProducts();
     }
-  }, [user, isAdmin]);
+  }, [user, isAdmin, currentPage]);
 
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     try {
+      setLoadingProducts(true);
+      
+      // Get total count
+      const { count, error: countError } = await supabase
+        .from('products')
+        .select('*', { count: 'exact', head: true });
+
+      if (countError) throw countError;
+      setTotalCount(count || 0);
+
+      // Fetch products with pagination
+      const offset = currentPage * PRODUCTS_PER_PAGE;
       const { data, error } = await supabase
         .from('products')
         .select('*')
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .range(offset, offset + PRODUCTS_PER_PAGE - 1);
 
       if (error) throw error;
       setProducts(data || []);
@@ -84,7 +102,14 @@ export default function AdminProducts() {
     } finally {
       setLoadingProducts(false);
     }
-  };
+  }, [currentPage]);
+
+  const totalPages = Math.ceil(totalCount / PRODUCTS_PER_PAGE);
+
+  const filteredProducts = products.filter(product =>
+    product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (product.description?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false)
+  );
 
   const handleSignOut = async () => {
     await signOut();
@@ -421,14 +446,30 @@ export default function AdminProducts() {
 
         <Card>
           <CardHeader>
-            <CardTitle>All Products ({products.length})</CardTitle>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <CardTitle>All Products ({totalCount})</CardTitle>
+              <div className="relative w-full sm:w-64">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search products..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-9"
+                />
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
             {loadingProducts ? (
-              <div className="text-center py-8 text-muted-foreground">Loading products...</div>
-            ) : products.length === 0 ? (
+              <div className="text-center py-8 text-muted-foreground flex items-center justify-center gap-2">
+                <Loader2 className="h-5 w-5 animate-spin" />
+                Loading products...
+              </div>
+            ) : filteredProducts.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
-                No products yet. Click "Add Product" to create your first product.
+                {products.length === 0 
+                  ? "No products yet. Click \"Add Product\" to create your first product."
+                  : "No products found matching your search."}
               </div>
             ) : (
               <div className="overflow-x-auto">
@@ -445,7 +486,7 @@ export default function AdminProducts() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {products.map((product) => (
+                    {filteredProducts.map((product) => (
                       <TableRow key={product.id}>
                         <TableCell>
                           {product.image_url ? (
@@ -520,6 +561,38 @@ export default function AdminProducts() {
                     ))}
                   </TableBody>
                 </Table>
+              </div>
+            )}
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-between mt-4 pt-4 border-t">
+                <p className="text-sm text-muted-foreground">
+                  Showing {currentPage * PRODUCTS_PER_PAGE + 1} - {Math.min((currentPage + 1) * PRODUCTS_PER_PAGE, totalCount)} of {totalCount} products
+                </p>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage(p => Math.max(0, p - 1))}
+                    disabled={currentPage === 0}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                    Previous
+                  </Button>
+                  <span className="text-sm text-muted-foreground">
+                    Page {currentPage + 1} of {totalPages}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage(p => Math.min(totalPages - 1, p + 1))}
+                    disabled={currentPage >= totalPages - 1}
+                  >
+                    Next
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
             )}
           </CardContent>
