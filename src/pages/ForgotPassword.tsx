@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Mail, ArrowLeft, Loader2, CheckCircle, Phone } from "lucide-react";
+import { Mail, ArrowLeft, Loader2, CheckCircle, Phone, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,6 +11,8 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import Layout from "@/components/layout/Layout";
 
+const RESEND_COOLDOWN = 60; // seconds
+
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -18,11 +20,24 @@ const ForgotPassword = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [resending, setResending] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
   const [resetMethod, setResetMethod] = useState<"email" | "phone">("email");
+  const [countdown, setCountdown] = useState(0);
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  // Countdown timer effect
+  useEffect(() => {
+    if (countdown <= 0) return;
+    
+    const timer = setInterval(() => {
+      setCountdown((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [countdown]);
 
   const validatePassword = (password: string): string | null => {
     if (password.length < 8) {
@@ -85,8 +100,8 @@ const ForgotPassword = () => {
     }
   };
 
-  const handleSendOtp = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSendOtp = async (e?: React.FormEvent, isResend = false) => {
+    if (e) e.preventDefault();
     
     if (!phone.trim()) {
       toast({
@@ -97,7 +112,12 @@ const ForgotPassword = () => {
       return;
     }
 
-    setLoading(true);
+    if (isResend) {
+      setResending(true);
+    } else {
+      setLoading(true);
+    }
+
     try {
       const { data, error } = await supabase.functions.invoke("send-otp", {
         body: { phone },
@@ -111,8 +131,10 @@ const ForgotPassword = () => {
         });
       } else {
         setOtpSent(true);
+        setCountdown(RESEND_COOLDOWN);
+        setOtp("");
         toast({
-          title: "OTP Sent!",
+          title: isResend ? "OTP Resent!" : "OTP Sent!",
           description: "Check your phone for the verification code.",
         });
       }
@@ -124,7 +146,12 @@ const ForgotPassword = () => {
       });
     } finally {
       setLoading(false);
+      setResending(false);
     }
+  };
+
+  const handleResendOtp = () => {
+    handleSendOtp(undefined, true);
   };
 
   const handleVerifyOtp = async (e: React.FormEvent) => {
@@ -389,19 +416,47 @@ const ForgotPassword = () => {
                       )}
                     </Button>
 
-                    <div className="text-center">
-                      <button 
+                    <div className="text-center space-y-2">
+                      <Button 
                         type="button"
-                        onClick={() => {
-                          setOtpSent(false);
-                          setOtp("");
-                          setNewPassword("");
-                          setConfirmPassword("");
-                        }} 
-                        className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleResendOtp}
+                        disabled={countdown > 0 || resending}
+                        className="text-sm"
                       >
-                        Didn't receive code? Try again
-                      </button>
+                        {resending ? (
+                          <>
+                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            Resending...
+                          </>
+                        ) : countdown > 0 ? (
+                          <>
+                            <RefreshCw className="w-4 h-4 mr-2" />
+                            Resend in {countdown}s
+                          </>
+                        ) : (
+                          <>
+                            <RefreshCw className="w-4 h-4 mr-2" />
+                            Resend OTP
+                          </>
+                        )}
+                      </Button>
+                      <div>
+                        <button 
+                          type="button"
+                          onClick={() => {
+                            setOtpSent(false);
+                            setOtp("");
+                            setNewPassword("");
+                            setConfirmPassword("");
+                            setCountdown(0);
+                          }} 
+                          className="text-xs text-muted-foreground hover:text-primary transition-colors"
+                        >
+                          Use a different phone number
+                        </button>
+                      </div>
                     </div>
                   </form>
                 )}
