@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Search, ShoppingCart, Heart, Package } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Layout from "@/components/layout/Layout";
@@ -35,6 +36,8 @@ const Shop = () => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
   const { addItem } = useCart();
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchProducts();
@@ -71,6 +74,17 @@ const Shop = () => {
   });
 
   const handleAddToCart = (product: Product) => {
+    if (!user) {
+      toast({
+        title: "Sign in required",
+        description: "You must sign up or log in to continue.",
+        variant: "destructive",
+      });
+      sessionStorage.setItem("redirectAfterAuth", `/shop/${product.id}`);
+      navigate("/auth");
+      return;
+    }
+    
     addItem({
       id: product.id,
       name: product.name,

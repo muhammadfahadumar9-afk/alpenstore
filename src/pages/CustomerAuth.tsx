@@ -91,7 +91,14 @@ const CustomerAuth = () => {
           title: "Welcome back!",
           description: "You have successfully logged in.",
         });
-        navigate("/account");
+        
+        const redirectUrl = sessionStorage.getItem("redirectAfterAuth");
+        if (redirectUrl) {
+          sessionStorage.removeItem("redirectAfterAuth");
+          navigate(redirectUrl);
+        } else {
+          navigate("/account");
+        }
       } else {
         const result = signupSchema.safeParse(formData);
         if (!result.success) {
@@ -106,13 +113,13 @@ const CustomerAuth = () => {
           return;
         }
 
-        const redirectUrl = `${window.location.origin}/`;
+        const emailRedirectUrl = `${window.location.origin}/`;
 
         const { error } = await supabase.auth.signUp({
           email: formData.email,
           password: formData.password,
           options: {
-            emailRedirectTo: redirectUrl,
+            emailRedirectTo: emailRedirectUrl,
             data: {
               full_name: formData.fullName,
             },
@@ -141,7 +148,14 @@ const CustomerAuth = () => {
           title: "Account created!",
           description: "Welcome to ALPEN STORE LTD!",
         });
-        navigate("/account");
+        
+        const redirectUrl = sessionStorage.getItem("redirectAfterAuth");
+        if (redirectUrl) {
+          sessionStorage.removeItem("redirectAfterAuth");
+          navigate(redirectUrl);
+        } else {
+          navigate("/account");
+        }
       }
     } catch {
       toast({

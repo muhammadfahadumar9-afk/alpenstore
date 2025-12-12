@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import Layout from "@/components/layout/Layout";
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/contexts/CartContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Product {
@@ -32,6 +33,7 @@ const ProductDetail = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { addItem } = useCart();
+  const { user } = useAuth();
   const [product, setProduct] = useState<Product | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -96,6 +98,18 @@ const ProductDetail = () => {
 
   const handleAddToCart = () => {
     if (!product) return;
+    
+    if (!user) {
+      toast({
+        title: "Sign in required",
+        description: "You must sign up or log in to continue.",
+        variant: "destructive",
+      });
+      sessionStorage.setItem("redirectAfterAuth", `/shop/${product.id}`);
+      navigate("/auth");
+      return;
+    }
+    
     addItem(
       {
         id: product.id,
