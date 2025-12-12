@@ -137,8 +137,8 @@ const Footer = () => {
             <Link to="/privacy" className="text-sm text-background/60 hover:text-primary transition-colors">
               Privacy Policy
             </Link>
-            <Link to="/contact" className="text-sm text-background/60 hover:text-primary transition-colors">
-              Terms of Service
+            <Link to="/privacy#refunds" className="text-sm text-background/60 hover:text-primary transition-colors">
+              Refund Policy
             </Link>
           </div>
         </div>
