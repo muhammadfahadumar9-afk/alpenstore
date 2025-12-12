@@ -98,6 +98,33 @@ export type Database = {
         }
         Relationships: []
       }
+      otp_rate_limits: {
+        Row: {
+          created_at: string
+          first_hourly_request: string
+          hourly_count: number
+          id: string
+          phone: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          first_hourly_request?: string
+          hourly_count?: number
+          id?: string
+          phone: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          first_hourly_request?: string
+          hourly_count?: number
+          id?: string
+          phone?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       password_reset_otps: {
         Row: {
           attempts: number
