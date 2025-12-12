@@ -22,6 +22,8 @@ import AdminGallery from "./pages/AdminGallery";
 import AdminPages from "./pages/AdminPages";
 import AdminSettings from "./pages/AdminSettings";
 import CustomerAuth from "./pages/CustomerAuth";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import Account from "./pages/Account";
 import Checkout from "./pages/Checkout";
 import NotFound from "./pages/NotFound";
@@ -46,6 +48,8 @@ const App = () => (
               <Route path="/contact" element={<Contact />} />
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/auth" element={<CustomerAuth />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/account" element={<Account />} />
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/admin" element={<Admin />} />

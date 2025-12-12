@@ -283,6 +283,17 @@ const CustomerAuth = () => {
                     ? "Sign In"
                     : "Create Account"}
                 </Button>
+
+                {isLogin && (
+                  <div className="text-right">
+                    <Link
+                      to="/forgot-password"
+                      className="text-sm text-primary hover:underline"
+                    >
+                      Forgot Password?
+                    </Link>
+                  </div>
+                )}
               </form>
 
               <div className="mt-6 text-center">
