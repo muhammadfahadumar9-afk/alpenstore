@@ -1,9 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Search, ShoppingCart, Heart, Package } from "lucide-react";
+import { Search, ShoppingCart, Heart, Package, ArrowUpDown } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import Layout from "@/components/layout/Layout";
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/contexts/CartContext";
@@ -29,9 +36,12 @@ const categoryMap: Record<string, string> = {
 
 const categories = ["All", "Arabian Perfumes", "Islamic Wellness", "Cosmetics & Beauty", "Luxury Gift Sets"];
 
+type SortOption = "newest" | "price-low" | "price-high";
+
 const Shop = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState<SortOption>("newest");
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
@@ -65,13 +75,27 @@ const Shop = () => {
     }
   };
 
-  const filteredProducts = products.filter((product) => {
-    const categoryLabel = categoryMap[product.category] || product.category;
-    const matchesCategory = selectedCategory === "All" || categoryLabel === selectedCategory;
-    const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         (product.description?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false);
-    return matchesCategory && matchesSearch;
-  });
+  const filteredProducts = useMemo(() => {
+    const filtered = products.filter((product) => {
+      const categoryLabel = categoryMap[product.category] || product.category;
+      const matchesCategory = selectedCategory === "All" || categoryLabel === selectedCategory;
+      const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                           (product.description?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false);
+      return matchesCategory && matchesSearch;
+    });
+
+    return [...filtered].sort((a, b) => {
+      switch (sortBy) {
+        case "price-low":
+          return a.price - b.price;
+        case "price-high":
+          return b.price - a.price;
+        case "newest":
+        default:
+          return 0; // Already sorted by created_at from DB
+      }
+    });
+  }, [products, selectedCategory, searchQuery, sortBy]);
 
   const handleAddToCart = (product: Product) => {
     if (!user) {
@@ -137,21 +161,39 @@ const Shop = () => {
       {/* Products Section */}
       <section className="section-padding">
         <div className="container-alpen">
-          {/* Category Filters */}
-          <div className="flex flex-wrap gap-3 mb-8 justify-center">
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${
-                  selectedCategory === category
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted text-muted-foreground hover:bg-accent"
-                }`}
-              >
-                {category}
-              </button>
-            ))}
+          {/* Filters Row */}
+          <div className="flex flex-col sm:flex-row gap-4 mb-8 items-center justify-between">
+            {/* Category Filters */}
+            <div className="flex flex-wrap gap-2 justify-center">
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                    selectedCategory === category
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-muted-foreground hover:bg-accent"
+                  }`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+
+            {/* Sort Dropdown */}
+            <div className="flex items-center gap-2">
+              <ArrowUpDown className="h-4 w-4 text-muted-foreground" />
+              <Select value={sortBy} onValueChange={(value: SortOption) => setSortBy(value)}>
+                <SelectTrigger className="w-[160px]">
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="newest">Newest First</SelectItem>
+                  <SelectItem value="price-low">Price: Low to High</SelectItem>
+                  <SelectItem value="price-high">Price: High to Low</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           {/* Loading State */}
