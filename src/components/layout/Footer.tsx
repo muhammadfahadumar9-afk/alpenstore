@@ -66,6 +66,7 @@ const Footer = () => {
                 { href: "/shop", label: "Shop" },
                 { href: "/gallery", label: "Gallery" },
                 { href: "/contact", label: "Contact" },
+                { href: "/orders", label: "Order History" },
                 { href: "/privacy", label: "Privacy Policy" },
               ].map((link) => (
                 <Link
