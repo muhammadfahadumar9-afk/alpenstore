@@ -230,6 +230,15 @@ const Account = () => {
             </Button>
           </div>
 
+          <div className="flex gap-3 mb-8">
+            <Button asChild variant="outline">
+              <Link to="/orders" className="gap-2">
+                <Package className="h-4 w-4" />
+                View All Orders
+              </Link>
+            </Button>
+          </div>
+
           <Tabs defaultValue="profile" className="space-y-6">
             <TabsList className="grid w-full grid-cols-2 max-w-md">
               <TabsTrigger value="profile" className="gap-2">
@@ -238,7 +247,7 @@ const Account = () => {
               </TabsTrigger>
               <TabsTrigger value="orders" className="gap-2">
                 <Package className="h-4 w-4" />
-                Orders
+                Recent Orders
               </TabsTrigger>
             </TabsList>
 
