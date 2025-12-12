@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import ProductReviews from "@/components/reviews/ProductReviews";
 
 interface Product {
   id: string;
@@ -314,6 +315,9 @@ const ProductDetail = () => {
               </div>
             </div>
           </div>
+
+          {/* Product Reviews */}
+          <ProductReviews productId={product.id} />
         </div>
       </section>
 
