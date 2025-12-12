@@ -14,7 +14,6 @@ const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
 // Rate limiting constants
 const MAX_REQUESTS_PER_HOUR = 3;
-const MAX_REQUESTS_PER_DAY = 10;
 
 interface SendOTPRequest {
   phone: string;
@@ -23,9 +22,7 @@ interface SendOTPRequest {
 interface RateLimitRecord {
   phone: string;
   hourly_count: number;
-  daily_count: number;
   first_hourly_request: string;
-  first_daily_request: string;
 }
 
 function generateOTP(): string {
@@ -39,60 +36,38 @@ const rateLimits = new Map<string, RateLimitRecord>();
 function checkRateLimit(phone: string): { allowed: boolean; message?: string } {
   const now = new Date();
   const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
-  const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
   let record = rateLimits.get(phone);
 
   if (!record) {
-    // First request from this phone
     record = {
       phone,
       hourly_count: 0,
-      daily_count: 0,
       first_hourly_request: now.toISOString(),
-      first_daily_request: now.toISOString(),
     };
   }
 
-  // Reset hourly count if the first hourly request was more than an hour ago
+  // Reset hourly count if the first request was more than an hour ago
   if (new Date(record.first_hourly_request) < oneHourAgo) {
     record.hourly_count = 0;
     record.first_hourly_request = now.toISOString();
   }
 
-  // Reset daily count if the first daily request was more than a day ago
-  if (new Date(record.first_daily_request) < oneDayAgo) {
-    record.daily_count = 0;
-    record.first_daily_request = now.toISOString();
-  }
-
-  // Check limits
+  // Check limit
   if (record.hourly_count >= MAX_REQUESTS_PER_HOUR) {
     const resetTime = new Date(new Date(record.first_hourly_request).getTime() + 60 * 60 * 1000);
     const minutesLeft = Math.ceil((resetTime.getTime() - now.getTime()) / (60 * 1000));
-    console.log(`Rate limit exceeded (hourly) for phone: ${phone}. Count: ${record.hourly_count}`);
+    console.log(`Rate limit exceeded for phone: ${phone}. Count: ${record.hourly_count}`);
     return {
       allowed: false,
       message: `Too many OTP requests. Please try again in ${minutesLeft} minutes.`,
     };
   }
 
-  if (record.daily_count >= MAX_REQUESTS_PER_DAY) {
-    const resetTime = new Date(new Date(record.first_daily_request).getTime() + 24 * 60 * 60 * 1000);
-    const hoursLeft = Math.ceil((resetTime.getTime() - now.getTime()) / (60 * 60 * 1000));
-    console.log(`Rate limit exceeded (daily) for phone: ${phone}. Count: ${record.daily_count}`);
-    return {
-      allowed: false,
-      message: `Too many OTP requests. Please try again in ${hoursLeft} hours.`,
-    };
-  }
-
-  // Increment counts
   record.hourly_count++;
-  record.daily_count++;
   rateLimits.set(phone, record);
 
-  console.log(`OTP request allowed for phone: ${phone}. Hourly: ${record.hourly_count}/${MAX_REQUESTS_PER_HOUR}, Daily: ${record.daily_count}/${MAX_REQUESTS_PER_DAY}`);
+  console.log(`OTP request allowed for phone: ${phone}. Count: ${record.hourly_count}/${MAX_REQUESTS_PER_HOUR}`);
 
   return { allowed: true };
 }
