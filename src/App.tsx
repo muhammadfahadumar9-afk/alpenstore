@@ -27,6 +27,7 @@ import ResetPassword from "./pages/ResetPassword";
 import Account from "./pages/Account";
 import OrderHistory from "./pages/OrderHistory";
 import Checkout from "./pages/Checkout";
+import OrderConfirmation from "./pages/OrderConfirmation";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -54,6 +55,7 @@ const App = () => (
               <Route path="/account" element={<Account />} />
               <Route path="/orders" element={<OrderHistory />} />
               <Route path="/checkout" element={<Checkout />} />
+              <Route path="/order-confirmation" element={<OrderConfirmation />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="/admin/login" element={<AdminAuth />} />
               <Route path="/admin/products" element={<AdminProducts />} />

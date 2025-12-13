@@ -92,6 +92,8 @@ const Checkout = () => {
     setLoading(true);
 
     try {
+      let orderId: string | undefined;
+
       if (user) {
         // Save order to database for logged-in users
         const { data: order, error: orderError } = await supabase
@@ -109,6 +111,8 @@ const Checkout = () => {
           .single();
 
         if (orderError) throw orderError;
+
+        orderId = order.id;
 
         // Save order items
         const orderItems = items.map((item) => ({
@@ -156,21 +160,34 @@ const Checkout = () => {
 
       message += `\nPlease confirm my order. Thank you!`;
 
-      window.open(`https://wa.me/2349168877858?text=${encodeURIComponent(message)}`, "_blank");
+      // Prepare order data for confirmation page
+      const orderConfirmationData = {
+        orderId,
+        items: items.map(item => ({
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          image_url: item.image_url,
+        })),
+        totalPrice,
+        deliveryMethod,
+        phone: formData.phone,
+        address: formData.address,
+        city: formData.city,
+        notes: formData.notes,
+        whatsappMessage: message,
+        isGuest: !user,
+      };
 
       clearCart();
       toast({
         title: "Order placed!",
-        description: user 
-          ? "Your order has been saved. Please confirm on WhatsApp." 
-          : "Please complete your order on WhatsApp.",
+        description: "Redirecting to order confirmation...",
       });
 
-      if (user) {
-        navigate("/account");
-      } else {
-        navigate("/shop");
-      }
+      // Navigate to confirmation page with order data
+      navigate("/order-confirmation", { state: orderConfirmationData });
     } catch (error) {
       console.error("Error placing order:", error);
       toast({
