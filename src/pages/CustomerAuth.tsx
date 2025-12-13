@@ -65,7 +65,7 @@ const CustomerAuth = () => {
         }
 
         const { error } = await supabase.auth.signInWithPassword({
-          email: formData.email,
+          email: formData.email.toLowerCase().trim(),
           password: formData.password,
         });
 
@@ -116,12 +116,12 @@ const CustomerAuth = () => {
         const emailRedirectUrl = `${window.location.origin}/`;
 
         const { error } = await supabase.auth.signUp({
-          email: formData.email,
+          email: formData.email.toLowerCase().trim(),
           password: formData.password,
           options: {
             emailRedirectTo: emailRedirectUrl,
             data: {
-              full_name: formData.fullName,
+              full_name: formData.fullName.trim(),
             },
           },
         });

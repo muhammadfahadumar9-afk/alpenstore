@@ -32,7 +32,7 @@ export default function AdminAuth() {
 
     setIsLoading(true);
     
-    const { error } = await signIn(email, password);
+    const { error } = await signIn(email.toLowerCase().trim(), password);
     
     if (error) {
       if (error.message.includes('Invalid login credentials')) {
