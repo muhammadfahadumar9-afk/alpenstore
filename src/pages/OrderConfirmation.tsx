@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
-import { CheckCircle, MessageCircle, Package, MapPin, Phone, Clock } from "lucide-react";
+import { CheckCircle, MessageCircle, Package, MapPin, Phone, Clock, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import Layout from "@/components/layout/Layout";
+import OrderStatusTracker from "@/components/orders/OrderStatusTracker";
+import { supabase } from "@/integrations/supabase/client";
 
 interface OrderItem {
   id: string;
@@ -31,6 +33,9 @@ const OrderConfirmation = () => {
   const navigate = useNavigate();
   const [countdown, setCountdown] = useState(10);
   const [orderData, setOrderData] = useState<OrderData | null>(null);
+  const [orderStatus, setOrderStatus] = useState<string>("pending");
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const hasRedirected = useRef(false);
 
   useEffect(() => {
     const state = location.state as OrderData | null;
@@ -41,18 +46,66 @@ const OrderConfirmation = () => {
     setOrderData(state);
   }, [location.state, navigate]);
 
+  // Subscribe to real-time order status updates
   useEffect(() => {
-    if (!orderData) return;
+    if (!orderData?.orderId) return;
+
+    // Fetch initial status
+    const fetchOrderStatus = async () => {
+      const { data } = await supabase
+        .from("orders")
+        .select("status, updated_at")
+        .eq("id", orderData.orderId)
+        .maybeSingle();
+
+      if (data) {
+        setOrderStatus(data.status);
+        setLastUpdated(new Date(data.updated_at));
+      }
+    };
+
+    fetchOrderStatus();
+
+    // Subscribe to real-time updates
+    const channel = supabase
+      .channel(`order-${orderData.orderId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "orders",
+          filter: `id=eq.${orderData.orderId}`,
+        },
+        (payload) => {
+          if (payload.new && typeof payload.new === "object" && "status" in payload.new) {
+            setOrderStatus(payload.new.status as string);
+            setLastUpdated(new Date());
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [orderData?.orderId]);
+
+  // Auto redirect countdown
+  useEffect(() => {
+    if (!orderData || hasRedirected.current) return;
 
     const timer = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
-          // Auto redirect to WhatsApp
-          window.open(
-            `https://wa.me/2349168877858?text=${encodeURIComponent(orderData.whatsappMessage)}`,
-            "_blank"
-          );
+          if (!hasRedirected.current) {
+            hasRedirected.current = true;
+            window.open(
+              `https://wa.me/2349168877858?text=${encodeURIComponent(orderData.whatsappMessage)}`,
+              "_blank"
+            );
+          }
           return 0;
         }
         return prev - 1;
@@ -72,6 +125,7 @@ const OrderConfirmation = () => {
 
   const handleWhatsAppRedirect = () => {
     if (orderData) {
+      hasRedirected.current = true;
       window.open(
         `https://wa.me/2349168877858?text=${encodeURIComponent(orderData.whatsappMessage)}`,
         "_blank"
@@ -106,6 +160,27 @@ const OrderConfirmation = () => {
               </p>
             )}
           </div>
+
+          {/* Order Status Tracker - Only for logged in users with orderId */}
+          {orderData.orderId && (
+            <div className="card-alpen p-6 mb-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <RefreshCw className="h-5 w-5 text-primary" />
+                  <h2 className="text-lg font-semibold">Order Status</h2>
+                </div>
+                {lastUpdated && (
+                  <p className="text-xs text-muted-foreground">
+                    Updated: {lastUpdated.toLocaleTimeString()}
+                  </p>
+                )}
+              </div>
+              <OrderStatusTracker status={orderStatus} showBadge />
+              <p className="text-xs text-center text-muted-foreground mt-2">
+                Status updates automatically when your order progresses
+              </p>
+            </div>
+          )}
 
           {/* Order Details Card */}
           <div className="card-alpen p-6 mb-6">
@@ -208,9 +283,11 @@ const OrderConfirmation = () => {
               Confirm on WhatsApp {countdown > 0 && `(${countdown}s)`}
             </Button>
 
-            <p className="text-xs text-center text-muted-foreground mt-3">
-              Auto-redirecting in {countdown} seconds...
-            </p>
+            {countdown > 0 && (
+              <p className="text-xs text-center text-muted-foreground mt-3">
+                Auto-redirecting in {countdown} seconds...
+              </p>
+            )}
           </div>
 
           {/* Navigation Links */}
