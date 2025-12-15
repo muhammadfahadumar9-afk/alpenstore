@@ -130,15 +130,24 @@ const Checkout = () => {
         if (itemsError) throw itemsError;
       }
 
-      // Generate WhatsApp message
+      // Generate WhatsApp message with product images
+      const orderTime = new Date().toLocaleString('en-NG', { 
+        dateStyle: 'full', 
+        timeStyle: 'short' 
+      });
+
       let message = user 
         ? `Hello ALPEN STORE LTD! I've placed an order through your website.\n\n`
         : `Hello ALPEN STORE LTD! I would like to place an order:\n\n`;
 
+      message += `📅 Order Time: ${orderTime}\n\n`;
       message += `📦 ORDER DETAILS:\n`;
       items.forEach((item, index) => {
         message += `${index + 1}. ${item.name}\n`;
         message += `   Qty: ${item.quantity} × ${formatPrice(item.price)} = ${formatPrice(item.price * item.quantity)}\n`;
+        if (item.image_url) {
+          message += `   🖼️ Image: ${item.image_url}\n`;
+        }
       });
 
       message += `\n─────────────────\n`;

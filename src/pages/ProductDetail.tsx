@@ -305,7 +305,17 @@ const ProductDetail = () => {
                 </p>
                 <Button asChild variant="outline" className="w-full">
                   <a
-                    href={`https://wa.me/2349168877858?text=Hello%20ALPEN%20STORE%20LTD!%20I%20would%20like%20to%20order%20${encodeURIComponent(product.name)}%20(${formatPrice(product.price)})`}
+                    href={`https://wa.me/2349168877858?text=${encodeURIComponent(
+                      `Hello ALPEN STORE LTD! I would like to order:\n\n` +
+                      `📦 PRODUCT DETAILS:\n` +
+                      `• Product: ${product.name}\n` +
+                      `• Quantity: ${quantity}\n` +
+                      `• Price: ${formatPrice(product.price)}\n` +
+                      `• Total: ${formatPrice(product.price * quantity)}\n\n` +
+                      `🖼️ Product Image: ${product.image_url || 'No image available'}\n\n` +
+                      `📅 Order Time: ${new Date().toLocaleString('en-NG', { dateStyle: 'full', timeStyle: 'short' })}\n\n` +
+                      `Please confirm my order. Thank you!`
+                    )}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
