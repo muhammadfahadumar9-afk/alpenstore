@@ -12,7 +12,6 @@ const navLinks = [
   { href: "/shop", label: "Shop" },
   { href: "/gallery", label: "Gallery" },
   { href: "/contact", label: "Contact" },
-  { href: "/admin", label: "Admin" },
 ];
 
 const Header = () => {
