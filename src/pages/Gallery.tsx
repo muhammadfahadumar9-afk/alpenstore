@@ -55,6 +55,7 @@ const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
   const [uploadedImages, setUploadedImages] = useState<GalleryImage[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeCategory, setActiveCategory] = useState<string>("All");
 
   useEffect(() => {
     fetchUploadedImages();
@@ -87,6 +88,14 @@ const Gallery = () => {
   // Combine static and uploaded images
   const allImages = [...uploadedImages, ...staticGalleryImages];
 
+  // Get unique categories
+  const categories = ["All", ...Array.from(new Set(allImages.map(img => img.category)))];
+
+  // Filter images by category
+  const filteredImages = activeCategory === "All" 
+    ? allImages 
+    : allImages.filter(img => img.category === activeCategory);
+
   return (
     <Layout>
       {/* Hero Section */}
@@ -103,6 +112,32 @@ const Gallery = () => {
         </div>
       </section>
 
+      {/* Category Filters */}
+      <section className="py-6 border-b border-border">
+        <div className="container-alpen">
+          <div className="flex flex-wrap justify-center gap-2">
+            {categories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setActiveCategory(category)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                  activeCategory === category
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                }`}
+              >
+                {category}
+                {activeCategory !== category && (
+                  <span className="ml-1.5 text-xs opacity-60">
+                    ({category === "All" ? allImages.length : allImages.filter(img => img.category === category).length})
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Gallery Grid */}
       <section className="section-padding">
         <div className="container-alpen">
@@ -112,9 +147,13 @@ const Gallery = () => {
                 <Skeleton key={i} className="aspect-[4/3] rounded-lg" />
               ))}
             </div>
+          ) : filteredImages.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">No images found in this category.</p>
+            </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {allImages.map((image, index) => (
+              {filteredImages.map((image, index) => (
                 <button
                   key={index}
                   onClick={() => setSelectedImage(image)}
