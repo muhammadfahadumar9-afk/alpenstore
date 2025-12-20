@@ -151,12 +151,13 @@ const Gallery = () => {
       {/* Lightbox */}
       {selectedImage && (
         <div
-          className="fixed inset-0 z-50 bg-foreground/90 flex items-center justify-center p-4 animate-fade-in"
+          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
           onClick={() => setSelectedImage(null)}
+          style={{ animation: 'fadeIn 300ms ease-out forwards' }}
         >
           <button
             onClick={() => setSelectedImage(null)}
-            className="absolute top-4 right-4 p-2 bg-background/10 rounded-full text-background hover:bg-background/20 transition-colors z-10"
+            className="absolute top-4 right-4 p-2 bg-white/10 rounded-full text-white hover:bg-white/20 transition-colors z-10"
             aria-label="Close"
           >
             <X className="h-6 w-6" />
@@ -165,15 +166,16 @@ const Gallery = () => {
             <img
               src={selectedImage.src}
               alt={selectedImage.alt}
-              className="max-w-full max-h-[70vh] object-contain rounded-lg animate-scale-in"
+              className="max-w-full max-h-[70vh] object-contain rounded-lg"
+              style={{ animation: 'scaleIn 300ms ease-out forwards' }}
             />
-            <div className="mt-4 text-center text-background max-w-lg">
+            <div className="mt-4 text-center text-white max-w-lg">
               <span className="text-xs font-medium bg-primary/80 px-3 py-1 rounded-full mb-2 inline-block">
                 {selectedImage.category}
               </span>
               <h3 className="text-xl font-semibold mb-2">{selectedImage.alt}</h3>
               {selectedImage.description && (
-                <p className="text-background/80">{selectedImage.description}</p>
+                <p className="text-white/80">{selectedImage.description}</p>
               )}
             </div>
           </div>
