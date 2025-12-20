@@ -28,31 +28,32 @@ interface GalleryImage {
   src: string;
   alt: string;
   category: string;
+  description?: string;
 }
 
 const staticGalleryImages: GalleryImage[] = [
-  { src: storeCollage, alt: "Alpen Stores Collection", category: "Our Store" },
-  { src: welcomeSign, alt: "Welcome to Alpen Stores", category: "Our Store" },
-  { src: storeTeam, alt: "Our Team at Alpen Stores", category: "Our Team" },
-  { src: storeEntrance, alt: "Alpen Store Entrance", category: "Our Store" },
-  { src: plazaBuilding, alt: "Sale Mai Gwanjo Plaza", category: "Our Locations" },
-  { src: plazaSignage, alt: "Alpen Stores Ltd Signage", category: "Our Locations" },
-  { src: ceoPortrait, alt: "CEO Portrait", category: "Leadership" },
-  { src: mainBuilding, alt: "Alpen Store Ltd Main Building", category: "Our Locations" },
-  { src: ceoMeeting, alt: "CEO at Work", category: "Leadership" },
-  { src: leadershipMeeting1, alt: "Leadership Board Meeting", category: "Leadership" },
-  { src: leadershipMeeting2, alt: "Leadership Discussion", category: "Leadership" },
-  { src: teamAwardCeremony, alt: "Team Award Ceremony", category: "Our Team" },
-  { src: laYuqawam, alt: "La Yuqawam Tobacco Blaze by Rasasi", category: "Arabian Perfumes" },
-  { src: oud24Hours, alt: "Oud 24 Hours perfume set", category: "Arabian Perfumes" },
-  { src: samaaAlOud, alt: "Samaa al Oud by Almas Perfumes", category: "Arabian Perfumes" },
-  { src: dirhamOud, alt: "Dirham Oud perfume", category: "Arabian Perfumes" },
-  { src: vitalOud, alt: "Vital Oud Eau de Parfum", category: "Arabian Perfumes" },
-  { src: blueMoon, alt: "Blue Moon luxury perfume", category: "Arabian Perfumes" },
+  { src: storeCollage, alt: "Alpen Stores Collection", category: "Our Store", description: "A beautiful display of our premium perfume collection" },
+  { src: welcomeSign, alt: "Welcome to Alpen Stores", category: "Our Store", description: "Welcoming customers to an aromatic experience" },
+  { src: storeTeam, alt: "Our Team at Alpen Stores", category: "Our Team", description: "Our dedicated team ready to serve you" },
+  { src: storeEntrance, alt: "Alpen Store Entrance", category: "Our Store", description: "The elegant entrance to Alpen Stores" },
+  { src: plazaBuilding, alt: "Sale Mai Gwanjo Plaza", category: "Our Locations", description: "Our flagship location at Sale Mai Gwanjo Plaza" },
+  { src: plazaSignage, alt: "Alpen Stores Ltd Signage", category: "Our Locations", description: "Proudly displaying the Alpen Stores brand" },
+  { src: ceoPortrait, alt: "CEO Portrait", category: "Leadership", description: "Our visionary CEO leading Alpen Stores" },
+  { src: mainBuilding, alt: "Alpen Store Ltd Main Building", category: "Our Locations", description: "Our main headquarters and showroom" },
+  { src: ceoMeeting, alt: "CEO at Work", category: "Leadership", description: "Strategic planning session with leadership" },
+  { src: leadershipMeeting1, alt: "Leadership Board Meeting", category: "Leadership", description: "Board members discussing company growth" },
+  { src: leadershipMeeting2, alt: "Leadership Discussion", category: "Leadership", description: "Collaborative decision-making at the highest level" },
+  { src: teamAwardCeremony, alt: "Team Award Ceremony", category: "Our Team", description: "Celebrating excellence and dedication" },
+  { src: laYuqawam, alt: "La Yuqawam Tobacco Blaze by Rasasi", category: "Arabian Perfumes", description: "A bold blend of tobacco and oriental notes" },
+  { src: oud24Hours, alt: "Oud 24 Hours perfume set", category: "Arabian Perfumes", description: "Long-lasting oud fragrance for all occasions" },
+  { src: samaaAlOud, alt: "Samaa al Oud by Almas Perfumes", category: "Arabian Perfumes", description: "Pure Arabian oud with heavenly notes" },
+  { src: dirhamOud, alt: "Dirham Oud perfume", category: "Arabian Perfumes", description: "Luxurious oud at an accessible price" },
+  { src: vitalOud, alt: "Vital Oud Eau de Parfum", category: "Arabian Perfumes", description: "Energizing oud with fresh undertones" },
+  { src: blueMoon, alt: "Blue Moon luxury perfume", category: "Arabian Perfumes", description: "A mysterious and captivating fragrance" },
 ];
 
 const Gallery = () => {
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
   const [uploadedImages, setUploadedImages] = useState<GalleryImage[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -117,8 +118,8 @@ const Gallery = () => {
               {allImages.map((image, index) => (
                 <button
                   key={index}
-                  onClick={() => setSelectedImage(image.src)}
-                  className={`card-alpen overflow-hidden cursor-pointer hover:scale-[1.02] transition-transform ${
+                  onClick={() => setSelectedImage(image)}
+                  className={`card-alpen overflow-hidden cursor-pointer hover:scale-[1.02] transition-transform text-left ${
                     index % 3 === 1 ? "sm:row-span-2" : ""
                   }`}
                 >
@@ -128,11 +129,15 @@ const Gallery = () => {
                       alt={image.alt}
                       className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity">
-                      <div className="absolute bottom-4 left-4 text-background">
-                        <span className="text-xs font-medium bg-primary/80 px-3 py-1 rounded-full">
+                    <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent opacity-0 hover:opacity-100 transition-opacity">
+                      <div className="absolute bottom-0 left-0 right-0 p-4 text-background">
+                        <span className="text-xs font-medium bg-primary/80 px-3 py-1 rounded-full mb-2 inline-block">
                           {image.category}
                         </span>
+                        <h3 className="font-semibold text-sm mb-1">{image.alt}</h3>
+                        {image.description && (
+                          <p className="text-xs text-background/80 line-clamp-2">{image.description}</p>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -151,17 +156,27 @@ const Gallery = () => {
         >
           <button
             onClick={() => setSelectedImage(null)}
-            className="absolute top-4 right-4 p-2 bg-background/10 rounded-full text-background hover:bg-background/20 transition-colors"
+            className="absolute top-4 right-4 p-2 bg-background/10 rounded-full text-background hover:bg-background/20 transition-colors z-10"
             aria-label="Close"
           >
             <X className="h-6 w-6" />
           </button>
-          <img
-            src={selectedImage}
-            alt="Gallery image"
-            className="max-w-full max-h-[90vh] object-contain rounded-lg animate-scale-in"
-            onClick={(e) => e.stopPropagation()}
-          />
+          <div className="max-w-4xl w-full flex flex-col items-center" onClick={(e) => e.stopPropagation()}>
+            <img
+              src={selectedImage.src}
+              alt={selectedImage.alt}
+              className="max-w-full max-h-[70vh] object-contain rounded-lg animate-scale-in"
+            />
+            <div className="mt-4 text-center text-background max-w-lg">
+              <span className="text-xs font-medium bg-primary/80 px-3 py-1 rounded-full mb-2 inline-block">
+                {selectedImage.category}
+              </span>
+              <h3 className="text-xl font-semibold mb-2">{selectedImage.alt}</h3>
+              {selectedImage.description && (
+                <p className="text-background/80">{selectedImage.description}</p>
+              )}
+            </div>
+          </div>
         </div>
       )}
 
