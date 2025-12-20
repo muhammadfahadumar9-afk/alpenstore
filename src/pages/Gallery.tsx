@@ -1,7 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { Search, X } from "lucide-react";
 import Layout from "@/components/layout/Layout";
 import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Input } from "@/components/ui/input";
 import ZoomableLightbox from "@/components/gallery/ZoomableLightbox";
 // Import gallery images (static)
 import laYuqawam from "@/assets/gallery/la-yuqawam.png";
@@ -56,6 +58,7 @@ const Gallery = () => {
   const [uploadedImages, setUploadedImages] = useState<GalleryImage[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState<string>("All");
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   useEffect(() => {
     fetchUploadedImages();
@@ -91,10 +94,23 @@ const Gallery = () => {
   // Get unique categories
   const categories = ["All", ...Array.from(new Set(allImages.map(img => img.category)))];
 
-  // Filter images by category
-  const filteredImages = activeCategory === "All" 
-    ? allImages 
-    : allImages.filter(img => img.category === activeCategory);
+  // Filter images by category and search query
+  const filteredImages = useMemo(() => {
+    let images = activeCategory === "All" 
+      ? allImages 
+      : allImages.filter(img => img.category === activeCategory);
+    
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase().trim();
+      images = images.filter(img => 
+        img.alt.toLowerCase().includes(query) ||
+        img.category.toLowerCase().includes(query) ||
+        (img.description && img.description.toLowerCase().includes(query))
+      );
+    }
+    
+    return images;
+  }, [allImages, activeCategory, searchQuery]);
 
   return (
     <Layout>
@@ -112,9 +128,31 @@ const Gallery = () => {
         </div>
       </section>
 
-      {/* Category Filters */}
+      {/* Search and Category Filters */}
       <section className="py-6 border-b border-border">
-        <div className="container-alpen">
+        <div className="container-alpen space-y-4">
+          {/* Search Bar */}
+          <div className="max-w-md mx-auto relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              type="text"
+              placeholder="Search by name or description..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 pr-10 bg-background"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                aria-label="Clear search"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+          
+          {/* Category Filters */}
           <div className="flex flex-wrap justify-center gap-2">
             {categories.map((category) => (
               <button
@@ -149,7 +187,17 @@ const Gallery = () => {
             </div>
           ) : filteredImages.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-muted-foreground">No images found in this category.</p>
+              <p className="text-muted-foreground">
+                {searchQuery ? `No images found for "${searchQuery}"` : "No images found in this category."}
+              </p>
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="mt-2 text-primary hover:underline text-sm"
+                >
+                  Clear search
+                </button>
+              )}
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
