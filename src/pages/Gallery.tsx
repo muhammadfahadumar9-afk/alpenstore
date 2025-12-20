@@ -20,6 +20,9 @@ import plazaSignage from "@/assets/gallery/plaza-signage.jpeg";
 import ceoPortrait from "@/assets/gallery/ceo-portrait.jpeg";
 import mainBuilding from "@/assets/gallery/main-building.jpeg";
 import ceoMeeting from "@/assets/gallery/ceo-meeting.jpeg";
+import leadershipMeeting1 from "@/assets/gallery/leadership-meeting-1.png";
+import leadershipMeeting2 from "@/assets/gallery/leadership-meeting-2.png";
+import teamAwardCeremony from "@/assets/gallery/team-award-ceremony.png";
 
 interface GalleryImage {
   src: string;
@@ -37,6 +40,9 @@ const staticGalleryImages: GalleryImage[] = [
   { src: ceoPortrait, alt: "CEO Portrait", category: "Leadership" },
   { src: mainBuilding, alt: "Alpen Store Ltd Main Building", category: "Our Locations" },
   { src: ceoMeeting, alt: "CEO at Work", category: "Leadership" },
+  { src: leadershipMeeting1, alt: "Leadership Board Meeting", category: "Leadership" },
+  { src: leadershipMeeting2, alt: "Leadership Discussion", category: "Leadership" },
+  { src: teamAwardCeremony, alt: "Team Award Ceremony", category: "Our Team" },
   { src: laYuqawam, alt: "La Yuqawam Tobacco Blaze by Rasasi", category: "Arabian Perfumes" },
   { src: oud24Hours, alt: "Oud 24 Hours perfume set", category: "Arabian Perfumes" },
   { src: samaaAlOud, alt: "Samaa al Oud by Almas Perfumes", category: "Arabian Perfumes" },
