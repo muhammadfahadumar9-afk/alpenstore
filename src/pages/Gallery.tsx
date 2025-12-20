@@ -11,6 +11,15 @@ import samaaAlOud from "@/assets/gallery/samaa-al-oud.jpeg";
 import dirhamOud from "@/assets/gallery/dirham-oud.jpeg";
 import vitalOud from "@/assets/gallery/vital-oud.png";
 import blueMoon from "@/assets/gallery/blue-moon.png";
+import storeCollage from "@/assets/gallery/store-collage.jpeg";
+import welcomeSign from "@/assets/gallery/welcome-sign.jpeg";
+import storeTeam from "@/assets/gallery/store-team.jpeg";
+import storeEntrance from "@/assets/gallery/store-entrance.jpeg";
+import plazaBuilding from "@/assets/gallery/plaza-building.jpeg";
+import plazaSignage from "@/assets/gallery/plaza-signage.jpeg";
+import ceoPortrait from "@/assets/gallery/ceo-portrait.jpeg";
+import mainBuilding from "@/assets/gallery/main-building.jpeg";
+import ceoMeeting from "@/assets/gallery/ceo-meeting.jpeg";
 
 interface GalleryImage {
   src: string;
@@ -19,6 +28,15 @@ interface GalleryImage {
 }
 
 const staticGalleryImages: GalleryImage[] = [
+  { src: storeCollage, alt: "Alpen Stores Collection", category: "Our Store" },
+  { src: welcomeSign, alt: "Welcome to Alpen Stores", category: "Our Store" },
+  { src: storeTeam, alt: "Our Team at Alpen Stores", category: "Our Team" },
+  { src: storeEntrance, alt: "Alpen Store Entrance", category: "Our Store" },
+  { src: plazaBuilding, alt: "Sale Mai Gwanjo Plaza", category: "Our Locations" },
+  { src: plazaSignage, alt: "Alpen Stores Ltd Signage", category: "Our Locations" },
+  { src: ceoPortrait, alt: "CEO Portrait", category: "Leadership" },
+  { src: mainBuilding, alt: "Alpen Store Ltd Main Building", category: "Our Locations" },
+  { src: ceoMeeting, alt: "CEO at Work", category: "Leadership" },
   { src: laYuqawam, alt: "La Yuqawam Tobacco Blaze by Rasasi", category: "Arabian Perfumes" },
   { src: oud24Hours, alt: "Oud 24 Hours perfume set", category: "Arabian Perfumes" },
   { src: samaaAlOud, alt: "Samaa al Oud by Almas Perfumes", category: "Arabian Perfumes" },
