@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
-import { X } from "lucide-react";
 import Layout from "@/components/layout/Layout";
 import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
-
+import ZoomableLightbox from "@/components/gallery/ZoomableLightbox";
 // Import gallery images (static)
 import laYuqawam from "@/assets/gallery/la-yuqawam.png";
 import oud24Hours from "@/assets/gallery/oud-24-hours.png";
@@ -148,38 +147,12 @@ const Gallery = () => {
         </div>
       </section>
 
-      {/* Lightbox */}
+      {/* Lightbox with Zoom */}
       {selectedImage && (
-        <div
-          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
-          onClick={() => setSelectedImage(null)}
-          style={{ animation: 'fadeIn 300ms ease-out forwards' }}
-        >
-          <button
-            onClick={() => setSelectedImage(null)}
-            className="absolute top-4 right-4 p-2 bg-white/10 rounded-full text-white hover:bg-white/20 transition-colors z-10"
-            aria-label="Close"
-          >
-            <X className="h-6 w-6" />
-          </button>
-          <div className="max-w-4xl w-full flex flex-col items-center" onClick={(e) => e.stopPropagation()}>
-            <img
-              src={selectedImage.src}
-              alt={selectedImage.alt}
-              className="max-w-full max-h-[70vh] object-contain rounded-lg"
-              style={{ animation: 'scaleIn 300ms ease-out forwards' }}
-            />
-            <div className="mt-4 text-center text-white max-w-lg">
-              <span className="text-xs font-medium bg-primary/80 px-3 py-1 rounded-full mb-2 inline-block">
-                {selectedImage.category}
-              </span>
-              <h3 className="text-xl font-semibold mb-2">{selectedImage.alt}</h3>
-              {selectedImage.description && (
-                <p className="text-white/80">{selectedImage.description}</p>
-              )}
-            </div>
-          </div>
-        </div>
+        <ZoomableLightbox
+          image={selectedImage}
+          onClose={() => setSelectedImage(null)}
+        />
       )}
 
       {/* Instagram CTA */}
