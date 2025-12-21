@@ -67,7 +67,7 @@ const Gallery = () => {
   const fetchUploadedImages = async () => {
     try {
       const { data, error } = await supabase.storage
-        .from('product-images')
+        .from('gallery-images')
         .list('', { limit: 100, sortBy: { column: 'created_at', order: 'desc' } });
 
       if (error) throw error;
@@ -75,7 +75,7 @@ const Gallery = () => {
       const imageList = (data || [])
         .filter(file => file.name !== '.emptyFolderPlaceholder')
         .map(file => ({
-          src: supabase.storage.from('product-images').getPublicUrl(file.name).data.publicUrl,
+          src: supabase.storage.from('gallery-images').getPublicUrl(file.name).data.publicUrl,
           alt: file.name.replace(/^\d+-/, '').replace(/\.[^/.]+$/, '').replace(/-/g, ' '),
           category: "Uploaded"
         }));

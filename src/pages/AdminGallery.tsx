@@ -45,7 +45,7 @@ export default function AdminGallery() {
   const fetchImages = async () => {
     try {
       const { data, error } = await supabase.storage
-        .from('product-images')
+        .from('gallery-images')
         .list('', { limit: 100, sortBy: { column: 'created_at', order: 'desc' } });
 
       if (error) throw error;
@@ -54,7 +54,7 @@ export default function AdminGallery() {
         .filter(file => file.name !== '.emptyFolderPlaceholder')
         .map(file => ({
           name: file.name,
-          url: supabase.storage.from('product-images').getPublicUrl(file.name).data.publicUrl,
+          url: supabase.storage.from('gallery-images').getPublicUrl(file.name).data.publicUrl,
           created_at: file.created_at || ''
         }));
 
@@ -80,7 +80,7 @@ export default function AdminGallery() {
     try {
       const fileName = `${Date.now()}-${file.name}`;
       const { error } = await supabase.storage
-        .from('product-images')
+        .from('gallery-images')
         .upload(fileName, file);
 
       if (error) throw error;
@@ -100,7 +100,7 @@ export default function AdminGallery() {
 
     try {
       const { error } = await supabase.storage
-        .from('product-images')
+        .from('gallery-images')
         .remove([fileName]);
 
       if (error) throw error;
