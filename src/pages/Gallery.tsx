@@ -5,25 +5,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import ZoomableLightbox from "@/components/gallery/ZoomableLightbox";
-// Import gallery images (static)
-import laYuqawam from "@/assets/gallery/la-yuqawam.png";
-import oud24Hours from "@/assets/gallery/oud-24-hours.png";
-import samaaAlOud from "@/assets/gallery/samaa-al-oud.jpeg";
-import dirhamOud from "@/assets/gallery/dirham-oud.jpeg";
-import vitalOud from "@/assets/gallery/vital-oud.png";
-import blueMoon from "@/assets/gallery/blue-moon.png";
-import storeCollage from "@/assets/gallery/store-collage.jpeg";
-import welcomeSign from "@/assets/gallery/welcome-sign.jpeg";
-import storeTeam from "@/assets/gallery/store-team.jpeg";
-import storeEntrance from "@/assets/gallery/store-entrance.jpeg";
-import plazaBuilding from "@/assets/gallery/plaza-building.jpeg";
-import plazaSignage from "@/assets/gallery/plaza-signage.jpeg";
-import ceoPortrait from "@/assets/gallery/ceo-portrait.jpeg";
-import mainBuilding from "@/assets/gallery/main-building.jpeg";
-import ceoMeeting from "@/assets/gallery/ceo-meeting.jpeg";
-import leadershipMeeting1 from "@/assets/gallery/leadership-meeting-1.png";
-import leadershipMeeting2 from "@/assets/gallery/leadership-meeting-2.png";
-import teamAwardCeremony from "@/assets/gallery/team-award-ceremony.png";
 
 interface GalleryImage {
   src: string;
@@ -31,27 +12,6 @@ interface GalleryImage {
   category: string;
   description?: string;
 }
-
-const staticGalleryImages: GalleryImage[] = [
-  { src: storeCollage, alt: "Alpen Stores Collection", category: "Our Store", description: "A beautiful display of our premium perfume collection" },
-  { src: welcomeSign, alt: "Welcome to Alpen Stores", category: "Our Store", description: "Welcoming customers to an aromatic experience" },
-  { src: storeTeam, alt: "Our Team at Alpen Stores", category: "Our Team", description: "Our dedicated team ready to serve you" },
-  { src: storeEntrance, alt: "Alpen Store Entrance", category: "Our Store", description: "The elegant entrance to Alpen Stores" },
-  { src: plazaBuilding, alt: "Sale Mai Gwanjo Plaza", category: "Our Locations", description: "Our flagship location at Sale Mai Gwanjo Plaza" },
-  { src: plazaSignage, alt: "Alpen Stores Ltd Signage", category: "Our Locations", description: "Proudly displaying the Alpen Stores brand" },
-  { src: ceoPortrait, alt: "CEO Portrait", category: "Leadership", description: "Our visionary CEO leading Alpen Stores" },
-  { src: mainBuilding, alt: "Alpen Store Ltd Main Building", category: "Our Locations", description: "Our main headquarters and showroom" },
-  { src: ceoMeeting, alt: "CEO at Work", category: "Leadership", description: "Strategic planning session with leadership" },
-  { src: leadershipMeeting1, alt: "Leadership Board Meeting", category: "Leadership", description: "Board members discussing company growth" },
-  { src: leadershipMeeting2, alt: "Leadership Discussion", category: "Leadership", description: "Collaborative decision-making at the highest level" },
-  { src: teamAwardCeremony, alt: "Team Award Ceremony", category: "Our Team", description: "Celebrating excellence and dedication" },
-  { src: laYuqawam, alt: "La Yuqawam Tobacco Blaze by Rasasi", category: "Arabian Perfumes", description: "A bold blend of tobacco and oriental notes" },
-  { src: oud24Hours, alt: "Oud 24 Hours perfume set", category: "Arabian Perfumes", description: "Long-lasting oud fragrance for all occasions" },
-  { src: samaaAlOud, alt: "Samaa al Oud by Almas Perfumes", category: "Arabian Perfumes", description: "Pure Arabian oud with heavenly notes" },
-  { src: dirhamOud, alt: "Dirham Oud perfume", category: "Arabian Perfumes", description: "Luxurious oud at an accessible price" },
-  { src: vitalOud, alt: "Vital Oud Eau de Parfum", category: "Arabian Perfumes", description: "Energizing oud with fresh undertones" },
-  { src: blueMoon, alt: "Blue Moon luxury perfume", category: "Arabian Perfumes", description: "A mysterious and captivating fragrance" },
-];
 
 const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
@@ -88,8 +48,8 @@ const Gallery = () => {
     }
   };
 
-  // Combine static and uploaded images
-  const allImages = [...uploadedImages, ...staticGalleryImages];
+  // Use only uploaded images
+  const allImages = uploadedImages;
 
   // Get unique categories
   const categories = ["All", ...Array.from(new Set(allImages.map(img => img.category)))];
