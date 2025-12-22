@@ -124,16 +124,17 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    // Check if user exists with this phone number
+    // Check if user exists with this phone number (check both formats)
+    const originalPhone = phone.replace(/\s+/g, "");
     const { data: profile, error: profileError } = await supabase
       .from("profiles")
       .select("user_id")
-      .eq("phone", normalizedPhone)
-      .single();
+      .or(`phone.eq.${normalizedPhone},phone.eq.${originalPhone}`)
+      .maybeSingle();
 
     if (profileError || !profile) {
       // Return generic message for security (don't reveal if phone exists)
-      console.log(`No profile found for phone: ${normalizedPhone} (security: returning generic message)`);
+      console.log(`No profile found for phone: ${normalizedPhone} or ${originalPhone} (security: returning generic message)`);
       return new Response(
         JSON.stringify({ success: true, message: "If this phone number is registered, you will receive an OTP" }),
         { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
