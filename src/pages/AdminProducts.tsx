@@ -32,7 +32,7 @@ const categories = [
   { value: 'perfumes', label: 'Arabian Perfumes' },
   { value: 'wellness', label: 'Islamic Wellness' },
   { value: 'cosmetics', label: 'Cosmetics & Beauty' },
-  { value: 'gifts', label: 'Luxury Gift Sets' },
+  { value: 'dates', label: 'Dates' },
 ];
 
 const PRODUCTS_PER_PAGE = 50;
