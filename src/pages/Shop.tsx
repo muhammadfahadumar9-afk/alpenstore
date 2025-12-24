@@ -32,10 +32,10 @@ const categoryMap: Record<string, string> = {
   perfumes: "Arabian Perfumes",
   wellness: "Islamic Wellness",
   cosmetics: "Cosmetics & Beauty",
-  gifts: "Luxury Gift Sets",
+  dates: "Dates",
 };
 
-const categories = ["All", "Arabian Perfumes", "Islamic Wellness", "Cosmetics & Beauty", "Luxury Gift Sets"];
+const categories = ["All", "Arabian Perfumes", "Islamic Wellness", "Cosmetics & Beauty", "Dates"];
 
 const PRODUCTS_PER_PAGE = 24;
 
