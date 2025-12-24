@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Layout from "@/components/layout/Layout";
+import RamadanBanner from "@/components/banners/RamadanBanner";
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/contexts/CartContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -169,6 +170,9 @@ const Shop = () => {
 
   return (
     <Layout>
+      {/* Ramadan Promotion Banner */}
+      <RamadanBanner />
+
       {/* Hero Section */}
       <section className="py-16 bg-gradient-to-b from-accent to-background">
         <div className="container-alpen">
