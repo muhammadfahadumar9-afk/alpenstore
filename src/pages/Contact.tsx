@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import Layout from "@/components/layout/Layout";
 import { useToast } from "@/hooks/use-toast";
+import logo from "@/assets/alpenstore-logo.png";
 
 const branches = [
   {
@@ -90,6 +91,7 @@ ${formData.message.trim()}`;
       <section className="py-16 bg-gradient-to-b from-accent to-background">
         <div className="container-alpen">
           <div className="max-w-3xl mx-auto text-center animate-slide-up">
+            <img src={logo} alt="ALPEN STORE LTD" className="h-16 w-auto mx-auto mb-6" />
             <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4">
               Contact <span className="text-primary">Us</span>
             </h1>
