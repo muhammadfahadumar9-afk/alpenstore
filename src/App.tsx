@@ -21,6 +21,7 @@ import AdminUsers from "./pages/AdminUsers";
 import AdminGallery from "./pages/AdminGallery";
 import AdminPages from "./pages/AdminPages";
 import AdminSettings from "./pages/AdminSettings";
+import AdminDocumentation from "./pages/AdminDocumentation";
 import CustomerAuth from "./pages/CustomerAuth";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
@@ -66,6 +67,7 @@ const App = () => (
               <Route path="/admin/gallery" element={<AdminGallery />} />
               <Route path="/admin/pages" element={<AdminPages />} />
               <Route path="/admin/settings" element={<AdminSettings />} />
+              <Route path="/admin/documentation" element={<AdminDocumentation />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
