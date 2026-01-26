@@ -12,7 +12,8 @@ import {
   Image, 
   LogOut,
   ShieldCheck,
-  ShoppingBag
+  ShoppingBag,
+  BookOpen
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -53,6 +54,7 @@ export default function Admin() {
     { title: 'Pages', description: 'Edit website pages', icon: FileText, href: '/admin/pages' },
     { title: 'Gallery', description: 'Manage product images', icon: Image, href: '/admin/gallery' },
     { title: 'Settings', description: 'Configure site settings', icon: Settings, href: '/admin/settings' },
+    { title: 'Documentation', description: 'Private admin guide', icon: BookOpen, href: '/admin/documentation' },
   ];
 
   return (
