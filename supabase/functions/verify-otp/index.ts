@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { compare } from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -76,8 +77,9 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    // Verify OTP matches
-    if (otpRecord.otp_hash !== otp) {
+    // Verify OTP matches using bcrypt comparison
+    const isValidOtp = await compare(otp, otpRecord.otp_hash);
+    if (!isValidOtp) {
       // Increment attempts
       await supabase
         .from("password_reset_otps")

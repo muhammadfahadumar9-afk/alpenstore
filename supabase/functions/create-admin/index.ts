@@ -15,9 +15,9 @@ serve(async (req) => {
   try {
     const { email, password, setupKey } = await req.json();
     
-    // Security: Only allow setup with correct key
-    const SETUP_KEY = Deno.env.get('ADMIN_SETUP_KEY') || 'alpenstore-initial-setup-2024';
-    if (setupKey !== SETUP_KEY) {
+    // Security: Only allow setup with correct key (no default fallback for security)
+    const SETUP_KEY = Deno.env.get('ADMIN_SETUP_KEY');
+    if (!SETUP_KEY || setupKey !== SETUP_KEY) {
       console.error('Invalid setup key provided');
       return new Response(
         JSON.stringify({ error: 'Unauthorized' }),

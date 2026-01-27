@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { hash } from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -145,12 +146,15 @@ const handler = async (req: Request): Promise<Response> => {
     const otp = generateOTP();
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
-    // Store OTP in database
+    // Hash OTP before storage for security
+    const hashedOtp = await hash(otp);
+
+    // Store hashed OTP in database
     const { error: upsertError } = await supabase
       .from("password_reset_otps")
       .upsert({
         phone: normalizedPhone,
-        otp_hash: otp, // In production, hash this
+        otp_hash: hashedOtp,
         expires_at: expiresAt.toISOString(),
         attempts: 0,
         used: false,
