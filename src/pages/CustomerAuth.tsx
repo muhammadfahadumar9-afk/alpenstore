@@ -9,15 +9,23 @@ import Layout from "@/components/layout/Layout";
 import { supabase } from "@/integrations/supabase/client";
 import { z } from "zod";
 
+// Strong password schema matching OTP reset requirements
+const strongPasswordSchema = z.string()
+  .min(8, "Password must be at least 8 characters")
+  .regex(/[a-z]/, "Must include a lowercase letter")
+  .regex(/[A-Z]/, "Must include an uppercase letter")
+  .regex(/[0-9]/, "Must include a number")
+  .regex(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/, "Must include a special character");
+
 const loginSchema = z.object({
   email: z.string().trim().email("Please enter a valid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  password: z.string().min(1, "Password is required"),
 });
 
 const signupSchema = z.object({
   fullName: z.string().trim().min(2, "Name must be at least 2 characters"),
   email: z.string().trim().email("Please enter a valid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  password: strongPasswordSchema,
   confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords do not match",
