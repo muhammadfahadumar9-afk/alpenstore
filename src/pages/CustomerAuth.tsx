@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import Layout from "@/components/layout/Layout";
 import { supabase } from "@/integrations/supabase/client";
 import { z } from "zod";
+import { PasswordStrengthIndicator } from "@/components/auth/PasswordStrengthIndicator";
 
 // Strong password schema matching OTP reset requirements
 const strongPasswordSchema = z.string()
@@ -261,6 +262,7 @@ const CustomerAuth = () => {
                   {errors.password && (
                     <p className="text-sm text-destructive">{errors.password}</p>
                   )}
+                  {!isLogin && <PasswordStrengthIndicator password={formData.password} />}
                 </div>
 
                 {!isLogin && (
