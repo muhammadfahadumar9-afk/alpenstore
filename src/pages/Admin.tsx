@@ -18,15 +18,15 @@ import {
 import { toast } from 'sonner';
 
 export default function Admin() {
-  const { user, isAdmin, isLoading, signOut } = useAuth();
+  const { user, isAdmin, isLoading, isAdminLoading, signOut } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isLoading && (!user || !isAdmin)) {
+    if (!isLoading && !isAdminLoading && (!user || !isAdmin)) {
       toast.error('Access denied. Admin privileges required.');
       navigate('/admin/login');
     }
-  }, [user, isAdmin, isLoading, navigate]);
+  }, [user, isAdmin, isLoading, isAdminLoading, navigate]);
 
   const handleSignOut = async () => {
     await signOut();
@@ -34,7 +34,7 @@ export default function Admin() {
     navigate('/admin/login');
   };
 
-  if (isLoading) {
+  if (isLoading || isAdminLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="animate-pulse text-muted-foreground">Loading...</div>
