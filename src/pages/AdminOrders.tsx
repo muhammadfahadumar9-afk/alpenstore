@@ -58,7 +58,7 @@ const statusOptions = [
 ];
 
 export default function AdminOrders() {
-  const { user, isAdmin, isLoading: authLoading } = useAuth();
+  const { user, isAdmin, isLoading: authLoading, isAdminLoading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [orders, setOrders] = useState<Order[]>([]);
@@ -70,10 +70,10 @@ export default function AdminOrders() {
   const [detailsOpen, setDetailsOpen] = useState(false);
 
   useEffect(() => {
-    if (!authLoading && (!user || !isAdmin)) {
+    if (!authLoading && !isAdminLoading && (!user || !isAdmin)) {
       navigate("/admin/login");
     }
-  }, [user, isAdmin, authLoading, navigate]);
+  }, [user, isAdmin, authLoading, isAdminLoading, navigate]);
 
   useEffect(() => {
     if (user && isAdmin) {

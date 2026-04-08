@@ -22,7 +22,7 @@ interface GalleryImage {
 }
 
 export default function AdminGallery() {
-  const { user, isAdmin, isLoading: authLoading } = useAuth();
+  const { user, isAdmin, isLoading: authLoading, isAdminLoading } = useAuth();
   const navigate = useNavigate();
   const [images, setImages] = useState<GalleryImage[]>([]);
   const [loading, setLoading] = useState(true);
@@ -30,11 +30,11 @@ export default function AdminGallery() {
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!authLoading && (!user || !isAdmin)) {
+    if (!authLoading && !isAdminLoading && (!user || !isAdmin)) {
       toast.error('Access denied. Admin privileges required.');
       navigate('/admin/login');
     }
-  }, [user, isAdmin, authLoading, navigate]);
+  }, [user, isAdmin, authLoading, isAdminLoading, navigate]);
 
   useEffect(() => {
     if (user && isAdmin) {
