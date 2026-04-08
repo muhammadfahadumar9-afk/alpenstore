@@ -53,15 +53,15 @@ const pages = [
 ];
 
 export default function AdminPages() {
-  const { user, isAdmin, isLoading: authLoading } = useAuth();
+  const { user, isAdmin, isLoading: authLoading, isAdminLoading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!authLoading && (!user || !isAdmin)) {
+    if (!authLoading && !isAdminLoading && (!user || !isAdmin)) {
       toast.error('Access denied. Admin privileges required.');
       navigate('/admin/login');
     }
-  }, [user, isAdmin, authLoading, navigate]);
+  }, [user, isAdmin, authLoading, isAdminLoading, navigate]);
 
   if (authLoading) {
     return (

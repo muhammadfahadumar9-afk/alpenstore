@@ -38,7 +38,7 @@ const categories = [
 const PRODUCTS_PER_PAGE = 50;
 
 export default function AdminProducts() {
-  const { user, isAdmin, isLoading, signOut } = useAuth();
+  const { user, isAdmin, isLoading, isAdminLoading, signOut } = useAuth();
   const navigate = useNavigate();
   const [products, setProducts] = useState<Product[]>([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
@@ -62,11 +62,11 @@ export default function AdminProducts() {
   });
 
   useEffect(() => {
-    if (!isLoading && (!user || !isAdmin)) {
+    if (!isLoading && !isAdminLoading && (!user || !isAdmin)) {
       toast.error('Access denied. Admin privileges required.');
       navigate('/admin/login');
     }
-  }, [user, isAdmin, isLoading, navigate]);
+  }, [user, isAdmin, isLoading, isAdminLoading, navigate]);
 
   useEffect(() => {
     if (user && isAdmin) {
