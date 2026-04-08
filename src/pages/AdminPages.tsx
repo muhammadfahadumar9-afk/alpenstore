@@ -63,7 +63,7 @@ export default function AdminPages() {
     }
   }, [user, isAdmin, authLoading, isAdminLoading, navigate]);
 
-  if (authLoading) {
+  if (authLoading || isAdminLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background to-muted">
         <header className="bg-card border-b border-border">
