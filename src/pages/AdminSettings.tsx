@@ -12,7 +12,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Separator } from '@/components/ui/separator';
 
 export default function AdminSettings() {
-  const { user, isAdmin, isLoading: authLoading } = useAuth();
+  const { user, isAdmin, isLoading: authLoading, isAdminLoading } = useAuth();
   const navigate = useNavigate();
   const [saving, setSaving] = useState(false);
   
@@ -30,11 +30,11 @@ export default function AdminSettings() {
   });
 
   useEffect(() => {
-    if (!authLoading && (!user || !isAdmin)) {
+    if (!authLoading && !isAdminLoading && (!user || !isAdmin)) {
       toast.error('Access denied. Admin privileges required.');
       navigate('/admin/login');
     }
-  }, [user, isAdmin, authLoading, navigate]);
+  }, [user, isAdmin, authLoading, isAdminLoading, navigate]);
 
   const handleSave = async () => {
     setSaving(true);
