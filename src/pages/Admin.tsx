@@ -170,9 +170,9 @@ export default function Admin() {
                   <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${stat.color}`}>
                     <stat.icon className="w-5 h-5" />
                   </div>
-                  <div className="min-w-0">
-                    <p className="text-xs text-muted-foreground truncate">{stat.title}</p>
-                    <p className="text-lg font-bold truncate">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs text-muted-foreground">{stat.title}</p>
+                    <p className="text-base font-bold break-all leading-tight">
                       {loadingStats ? '...' : stat.value}
                     </p>
                   </div>
