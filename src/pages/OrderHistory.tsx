@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import { Package, Clock, Truck, CheckCircle, XCircle, ChevronDown, ChevronUp, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -51,6 +52,35 @@ const OrderHistory = () => {
   useEffect(() => {
     if (user) {
       fetchOrders();
+
+      // Subscribe to real-time order updates
+      const channel = supabase
+        .channel('user-orders')
+        .on(
+          'postgres_changes',
+          {
+            event: 'UPDATE',
+            schema: 'public',
+            table: 'orders',
+            filter: `user_id=eq.${user.id}`,
+          },
+          (payload) => {
+            if (payload.new && typeof payload.new === 'object') {
+              setOrders((prev) =>
+                prev.map((order) =>
+                  order.id === (payload.new as any).id
+                    ? { ...order, ...(payload.new as any) }
+                    : order
+                )
+              );
+            }
+          }
+        )
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
     }
   }, [user]);
 
@@ -81,6 +111,26 @@ const OrderHistory = () => {
       console.error("Error fetching orders:", error);
     } finally {
       setLoading(false);
+    }
+  };
+  const cancelOrder = async (orderId: string) => {
+    try {
+      const { error } = await supabase
+        .from("orders")
+        .update({ status: "cancelled" })
+        .eq("id", orderId);
+
+      if (error) throw error;
+
+      setOrders((prev) =>
+        prev.map((order) =>
+          order.id === orderId ? { ...order, status: "cancelled" } : order
+        )
+      );
+      toast.success("Order cancelled successfully");
+    } catch (error) {
+      console.error("Error cancelling order:", error);
+      toast.error("Failed to cancel order. Please try again.");
     }
   };
 
@@ -320,6 +370,16 @@ const OrderHistory = () => {
                             Contact Support
                           </a>
                         </Button>
+                        {order.status === "pending" && (
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => cancelOrder(order.id)}
+                          >
+                            <XCircle className="w-4 h-4 mr-1" />
+                            Cancel Order
+                          </Button>
+                        )}
                       </div>
                     </div>
                   )}
