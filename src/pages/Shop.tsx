@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Layout from "@/components/layout/Layout";
-import RamadanBanner from "@/components/banners/RamadanBanner";
+
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/contexts/CartContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -170,8 +170,6 @@ const Shop = () => {
 
   return (
     <Layout>
-      {/* Ramadan Promotion Banner */}
-      <RamadanBanner />
 
       {/* Hero Section */}
       <section className="py-16 bg-gradient-to-b from-accent to-background">
@@ -366,7 +364,7 @@ const Shop = () => {
           <div className="text-center max-w-2xl mx-auto">
             <h2 className="text-2xl font-serif font-bold mb-4">Secure Payment & Delivery</h2>
             <p className="text-muted-foreground mb-6">
-              Pay securely online or choose cash on delivery. Free shipping on orders above ₦20,000.
+              Pay securely online or choose cash on delivery.
               Pickup available at all our 4 branches.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
