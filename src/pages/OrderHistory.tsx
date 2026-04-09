@@ -370,6 +370,16 @@ const OrderHistory = () => {
                             Contact Support
                           </a>
                         </Button>
+                        {order.status === "pending" && (
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => cancelOrder(order.id)}
+                          >
+                            <XCircle className="w-4 h-4 mr-1" />
+                            Cancel Order
+                          </Button>
+                        )}
                       </div>
                     </div>
                   )}
