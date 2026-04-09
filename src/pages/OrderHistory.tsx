@@ -113,8 +113,28 @@ const OrderHistory = () => {
       setLoading(false);
     }
   };
+  const cancelOrder = async (orderId: string) => {
+    try {
+      const { error } = await supabase
+        .from("orders")
+        .update({ status: "cancelled" })
+        .eq("id", orderId);
 
-  const formatPrice = (price: number) => {
+      if (error) throw error;
+
+      setOrders((prev) =>
+        prev.map((order) =>
+          order.id === orderId ? { ...order, status: "cancelled" } : order
+        )
+      );
+      toast.success("Order cancelled successfully");
+    } catch (error) {
+      console.error("Error cancelling order:", error);
+      toast.error("Failed to cancel order. Please try again.");
+    }
+  };
+
+
     return new Intl.NumberFormat("en-NG", {
       style: "currency",
       currency: "NGN",
