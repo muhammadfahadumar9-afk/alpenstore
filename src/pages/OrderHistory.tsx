@@ -51,6 +51,35 @@ const OrderHistory = () => {
   useEffect(() => {
     if (user) {
       fetchOrders();
+
+      // Subscribe to real-time order updates
+      const channel = supabase
+        .channel('user-orders')
+        .on(
+          'postgres_changes',
+          {
+            event: 'UPDATE',
+            schema: 'public',
+            table: 'orders',
+            filter: `user_id=eq.${user.id}`,
+          },
+          (payload) => {
+            if (payload.new && typeof payload.new === 'object') {
+              setOrders((prev) =>
+                prev.map((order) =>
+                  order.id === (payload.new as any).id
+                    ? { ...order, ...(payload.new as any) }
+                    : order
+                )
+              );
+            }
+          }
+        )
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
     }
   }, [user]);
 
