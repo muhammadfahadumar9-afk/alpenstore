@@ -116,7 +116,6 @@ export default function Admin() {
   })).reverse();
 
   const statCards = [
-    { title: 'Total Revenue', value: formatCurrency(stats.totalRevenue), icon: DollarSign, color: 'text-green-600 bg-green-100' },
     { title: 'Total Orders', value: stats.totalOrders.toString(), icon: ShoppingBag, color: 'text-blue-600 bg-blue-100' },
     { title: 'Pending Orders', value: stats.pendingOrders.toString(), icon: TrendingUp, color: 'text-yellow-600 bg-yellow-100' },
     { title: 'Total Products', value: stats.totalProducts.toString(), icon: Package, color: 'text-purple-600 bg-purple-100' },
