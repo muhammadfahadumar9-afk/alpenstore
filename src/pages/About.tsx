@@ -1,7 +1,35 @@
 import { Link } from "react-router-dom";
-import { Award, Users, Heart, Target } from "lucide-react";
+import { Award, Users, Heart, Target, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import Layout from "@/components/layout/Layout";
+
+const branchManagers = [
+  {
+    name: "Ahmad Suleiman",
+    branch: "Main Branch – Kwari Market",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
+    bio: "Leading our flagship store with 8+ years of experience in premium fragrances.",
+  },
+  {
+    name: "Ibrahim Musa",
+    branch: "Hajj Camp Market",
+    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face",
+    bio: "Specializes in Islamic wellness products and customer relations.",
+  },
+  {
+    name: "Abubakar Yusuf",
+    branch: "Zoo Road Branch",
+    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face",
+    bio: "Expert in cosmetics and beauty products with a focus on customer satisfaction.",
+  },
+  {
+    name: "Usman Abdullahi",
+    branch: "Audu Bako Way Branch",
+    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&h=200&fit=crop&crop=face",
+    bio: "Brings premium retail experience and deep knowledge of Arabian perfumes.",
+  },
+];
 
 const values = [
   {
