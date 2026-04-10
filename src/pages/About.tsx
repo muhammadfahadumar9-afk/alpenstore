@@ -1,7 +1,35 @@
 import { Link } from "react-router-dom";
-import { Award, Users, Heart, Target } from "lucide-react";
+import { Award, Users, Heart, Target, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import Layout from "@/components/layout/Layout";
+
+const branchManagers = [
+  {
+    name: "Ahmad Suleiman",
+    branch: "Main Branch – Kwari Market",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
+    bio: "Leading our flagship store with 8+ years of experience in premium fragrances.",
+  },
+  {
+    name: "Ibrahim Musa",
+    branch: "Hajj Camp Market",
+    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face",
+    bio: "Specializes in Islamic wellness products and customer relations.",
+  },
+  {
+    name: "Abubakar Yusuf",
+    branch: "Zoo Road Branch",
+    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face",
+    bio: "Expert in cosmetics and beauty products with a focus on customer satisfaction.",
+  },
+  {
+    name: "Usman Abdullahi",
+    branch: "Audu Bako Way Branch",
+    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&h=200&fit=crop&crop=face",
+    bio: "Brings premium retail experience and deep knowledge of Arabian perfumes.",
+  },
+];
 
 const values = [
   {
@@ -125,8 +153,44 @@ const About = () => {
         </div>
       </section>
 
-      {/* Timeline Section */}
+      {/* Branch Managers Section */}
       <section className="section-padding">
+        <div className="container-alpen">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4">
+              Our <span className="text-primary">Branch Managers</span>
+            </h2>
+            <p className="text-muted-foreground">
+              Meet the dedicated leaders managing our branches across Kano.
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {branchManagers.map((manager) => (
+              <div
+                key={manager.name}
+                className="card-alpen p-6 text-center group hover:border-primary/50 hover:shadow-lg transition-all duration-300"
+              >
+                <Avatar className="w-24 h-24 mx-auto mb-4 ring-2 ring-primary/20 group-hover:ring-primary/50 transition-all">
+                  <AvatarImage src={manager.image} alt={manager.name} />
+                  <AvatarFallback className="text-lg font-serif bg-primary/10 text-primary">
+                    {manager.name.split(" ").map(n => n[0]).join("")}
+                  </AvatarFallback>
+                </Avatar>
+                <h3 className="font-serif text-lg font-semibold mb-1">{manager.name}</h3>
+                <div className="flex items-center justify-center gap-1 text-primary text-sm font-medium mb-3">
+                  <MapPin className="h-3.5 w-3.5" />
+                  {manager.branch}
+                </div>
+                <p className="text-sm text-muted-foreground">{manager.bio}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Timeline Section */}
+      <section className="section-padding bg-muted">
         <div className="container-alpen">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4">
