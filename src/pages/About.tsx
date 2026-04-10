@@ -7,7 +7,7 @@ import Layout from "@/components/layout/Layout";
 const branchManagers = [
   {
     name: "Ahmad Suleiman",
-    branch: "Main Branch – Kwari Market",
+    branch: "Main Branch – No C08 Gwarzo Road, Along Kabuga, Behind F.C.E, Kano",
     image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
     bio: "Leading our flagship store with 8+ years of experience in premium fragrances.",
   },
