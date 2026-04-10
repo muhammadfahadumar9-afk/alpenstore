@@ -153,8 +153,44 @@ const About = () => {
         </div>
       </section>
 
-      {/* Timeline Section */}
+      {/* Branch Managers Section */}
       <section className="section-padding">
+        <div className="container-alpen">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4">
+              Our <span className="text-primary">Branch Managers</span>
+            </h2>
+            <p className="text-muted-foreground">
+              Meet the dedicated leaders managing our branches across Kano.
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {branchManagers.map((manager) => (
+              <div
+                key={manager.name}
+                className="card-alpen p-6 text-center group hover:border-primary/50 hover:shadow-lg transition-all duration-300"
+              >
+                <Avatar className="w-24 h-24 mx-auto mb-4 ring-2 ring-primary/20 group-hover:ring-primary/50 transition-all">
+                  <AvatarImage src={manager.image} alt={manager.name} />
+                  <AvatarFallback className="text-lg font-serif bg-primary/10 text-primary">
+                    {manager.name.split(" ").map(n => n[0]).join("")}
+                  </AvatarFallback>
+                </Avatar>
+                <h3 className="font-serif text-lg font-semibold mb-1">{manager.name}</h3>
+                <div className="flex items-center justify-center gap-1 text-primary text-sm font-medium mb-3">
+                  <MapPin className="h-3.5 w-3.5" />
+                  {manager.branch}
+                </div>
+                <p className="text-sm text-muted-foreground">{manager.bio}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Timeline Section */}
+      <section className="section-padding bg-muted">
         <div className="container-alpen">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4">
