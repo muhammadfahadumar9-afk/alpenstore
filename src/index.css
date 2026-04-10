@@ -42,6 +42,10 @@
     --alpen-green-dark: 145 88% 20%;
     --alpen-cream: 40 30% 97%;
     --alpen-gold: 38 80% 50%;
+    --luxury-cream: 40 33% 96%;
+    --luxury-gold: 38 55% 55%;
+    --luxury-charcoal: 0 0% 10%;
+    --luxury-slate: 215 14% 34%;
 
     /* Shadows */
     --shadow-soft: 0 4px 20px -4px hsl(0 0% 0% / 0.08);

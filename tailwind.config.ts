@@ -54,6 +54,12 @@ export default {
           cream: "hsl(var(--alpen-cream))",
           gold: "hsl(var(--alpen-gold))",
         },
+        luxury: {
+          cream: "hsl(var(--luxury-cream))",
+          gold: "hsl(var(--luxury-gold))",
+          charcoal: "hsl(var(--luxury-charcoal))",
+          slate: "hsl(var(--luxury-slate))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
