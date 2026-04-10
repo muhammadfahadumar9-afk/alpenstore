@@ -3,6 +3,8 @@ import { Award, Users, Heart, Target, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import Layout from "@/components/layout/Layout";
+import CeoBio from "@/components/about/CeoBio";
+import BoardOfDirectors from "@/components/about/BoardOfDirectors";
 
 const branchManagers = [
   {
@@ -80,6 +82,12 @@ const About = () => {
           </div>
         </div>
       </section>
+
+      {/* CEO Biography */}
+      <CeoBio />
+
+      {/* Board of Directors */}
+      <BoardOfDirectors />
 
       {/* Story Section */}
       <section className="section-padding">
