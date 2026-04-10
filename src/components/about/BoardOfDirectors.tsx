@@ -9,6 +9,31 @@ const boardMembers = [
     name: "Hajiya Fatima Abdullahi",
     title: "Director of Finance",
     image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=500&fit=crop&crop=face",
+    bio: "Manages financial strategy and sustainable growth with prudence.",
+  },
+  {
+    name: "Malam Abubakar Sadiq",
+    title: "Director of Procurement",
+    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=500&fit=crop&crop=face",
+    bio: "Sources authentic products from trusted suppliers across the Middle East.",
+  },
+  {
+    name: "Hajiya Amina Bello",
+    title: "Director of Marketing",
+    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=500&fit=crop&crop=face",
+    bio: "Drives brand growth and customer engagement across all channels.",
+  },
+  {
+    name: "Alhaji Kabiru Danladi",
+    title: "Director of Strategy",
+    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=500&fit=crop&crop=face",
+    bio: "Leads long-term planning and business expansion initiatives.",
+  },
+  },
+  {
+    name: "Hajiya Fatima Abdullahi",
+    title: "Director of Finance",
+    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=500&fit=crop&crop=face",
     bio: "Manages financial strategy and sustainable growth, guiding the company's expansion with prudence.",
   },
   {
