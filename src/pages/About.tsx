@@ -83,6 +83,12 @@ const About = () => {
         </div>
       </section>
 
+      {/* CEO Biography */}
+      <CeoBio />
+
+      {/* Board of Directors */}
+      <BoardOfDirectors />
+
       {/* Story Section */}
       <section className="section-padding">
         <div className="container-alpen">
