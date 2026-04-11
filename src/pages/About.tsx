@@ -100,7 +100,7 @@ const About = () => {
               </h2>
               <div className="space-y-4 text-muted-foreground leading-relaxed">
                 <p>
-                  ALPEN STORE LTD is a premium retail brand in Kano, Nigeria with over 10 years of experience 
+                  ALPEN STORE LTD is a premium retail brand in Kano, Nigeria with over 20 years of experience 
                   in Arabian perfumes, Islamic wellness, and high-quality cosmetics.
                 </p>
                 <p>
