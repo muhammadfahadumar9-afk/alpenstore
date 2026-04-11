@@ -6,31 +6,28 @@ import Layout from "@/components/layout/Layout";
 import CeoBio from "@/components/about/CeoBio";
 import BoardOfDirectors from "@/components/about/BoardOfDirectors";
 import OurLocations from "@/components/about/OurLocations";
+import ahmadImg from "@/assets/managers/ahmad-kabiru.jpg";
+import mukhtarImg from "@/assets/managers/mukhtar-jibril.jpg";
+import umarImg from "@/assets/managers/umar-abdullahi.jpg";
 
 const branchManagers = [
   {
-    name: "Ahmad Suleiman",
-    branch: "Main Branch – No C08 Gwarzo Road, Along Kabuga, Behind F.C.E, Kano",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
-    bio: "Leading our flagship store with 8+ years of experience in premium fragrances.",
-  },
-  {
-    name: "Ibrahim Musa",
+    name: "Ahmad Kabiru Sani",
     branch: "Hajj Camp Market",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face",
-    bio: "Specializes in Islamic wellness products and customer relations.",
+    image: ahmadImg,
+    bio: "Manages our Hajj Camp Market branch with dedication and expertise in premium fragrances.",
   },
   {
-    name: "Abubakar Yusuf",
+    name: "Mukhtar Jibril Hassan",
     branch: "Zoo Road Branch",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face",
-    bio: "Expert in cosmetics and beauty products with a focus on customer satisfaction.",
+    image: mukhtarImg,
+    bio: "Leads our Zoo Road branch with a focus on customer satisfaction and quality service.",
   },
   {
-    name: "Usman Abdullahi",
+    name: "Umar Abdullahi Hassan",
     branch: "Audu Bako Way Branch",
-    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&h=200&fit=crop&crop=face",
-    bio: "Brings premium retail experience and deep knowledge of Arabian perfumes.",
+    image: umarImg,
+    bio: "Oversees our Audu Bako Way branch with deep knowledge of Arabian perfumes and cosmetics.",
   },
 ];
 
