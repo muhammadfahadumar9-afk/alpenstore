@@ -90,6 +90,9 @@ const About = () => {
       {/* Board of Directors */}
       <BoardOfDirectors />
 
+      {/* Our Locations */}
+      <OurLocations />
+
       {/* Story Section */}
       <section className="section-padding">
         <div className="container-alpen">
