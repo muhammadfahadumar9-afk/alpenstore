@@ -125,7 +125,7 @@ const About = () => {
                 />
               </div>
               <div className="absolute -bottom-6 -left-6 bg-primary text-primary-foreground p-6 rounded-xl shadow-lg">
-                <p className="text-4xl font-serif font-bold">10+</p>
+                <p className="text-4xl font-serif font-bold">20+</p>
                 <p className="text-sm">Years of Trust</p>
               </div>
             </div>
