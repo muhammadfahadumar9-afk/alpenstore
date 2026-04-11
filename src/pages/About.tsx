@@ -5,6 +5,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import Layout from "@/components/layout/Layout";
 import CeoBio from "@/components/about/CeoBio";
 import BoardOfDirectors from "@/components/about/BoardOfDirectors";
+import OurLocations from "@/components/about/OurLocations";
 
 const branchManagers = [
   {
@@ -88,6 +89,9 @@ const About = () => {
 
       {/* Board of Directors */}
       <BoardOfDirectors />
+
+      {/* Our Locations */}
+      <OurLocations />
 
       {/* Story Section */}
       <section className="section-padding">
