@@ -33,9 +33,9 @@ const CeoBio = () => {
             <div className="space-y-4 text-luxury-slate leading-relaxed antialiased">
               <p>
                 With a lifelong passion for the art of Arabian perfumery and a deep commitment 
-                to excellence, Alhaji Muhammad Suleiman founded ALPEN STORE LTD over a decade 
-                ago with a singular vision: to bring the finest authentic fragrances and Islamic 
-                wellness products to the people of Kano and beyond.
+                 to excellence, Alhaji Muhammad Suleiman founded ALPEN STORE LTD over two decades 
+                 ago with a singular vision: to bring the finest authentic fragrances and Islamic 
+                 wellness products to the people of Kano and beyond.
               </p>
               <p>
                 Under his visionary leadership, the company has grown from a single storefront 
