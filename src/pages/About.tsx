@@ -100,8 +100,7 @@ const About = () => {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
               <h2 className="text-3xl md:text-4xl font-serif font-bold">
-                From Humble Beginnings</h2>
-
+                From Humble Beginnings
               </h2>
               <div className="space-y-4 text-muted-foreground leading-relaxed">
                 <p>
