@@ -5,6 +5,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import Layout from "@/components/layout/Layout";
 import CeoBio from "@/components/about/CeoBio";
 import BoardOfDirectors from "@/components/about/BoardOfDirectors";
+import ManagementTeam from "@/components/about/ManagementTeam";
 import OurLocations from "@/components/about/OurLocations";
 import ahmadImg from "@/assets/managers/ahmad-kabiru.jpg";
 import mukhtarImg from "@/assets/managers/mukhtar-jibril.jpg";
@@ -87,6 +88,9 @@ const About = () => {
       {/* Board of Directors */}
       <BoardOfDirectors />
 
+      {/* Management Team */}
+      <ManagementTeam />
+
       {/* Our Locations */}
       <OurLocations />
 
@@ -96,7 +100,7 @@ const About = () => {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
               <h2 className="text-3xl md:text-4xl font-serif font-bold">
-                From Humble Beginnings to <span className="text-primary">4 Branches</span>
+                From Humble Beginnings
               </h2>
               <div className="space-y-4 text-muted-foreground leading-relaxed">
                 <p>
@@ -117,15 +121,8 @@ const About = () => {
               </Button>
             </div>
             <div className="relative">
-              <div className="aspect-square rounded-2xl overflow-hidden shadow-card">
-                <img
-                  src="https://images.unsplash.com/photo-1615634260167-c8cdede054de?w=600&h=600&fit=crop"
-                  alt="ALPEN STORE LTD premium products"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="absolute -bottom-6 -left-6 bg-primary text-primary-foreground p-6 rounded-xl shadow-lg">
-                <p className="text-4xl font-serif font-bold">20+</p>
+              <div className="bg-primary text-primary-foreground p-8 rounded-xl shadow-lg text-center">
+                <p className="text-5xl font-serif font-bold mb-2">20+</p>
                 <p className="text-sm">Years of Trust</p>
               </div>
             </div>
