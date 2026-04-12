@@ -3,23 +3,23 @@ import { MapPin } from "lucide-react";
 const branches = [
   {
     name: "Head Office",
-    address: "C18 Gwarzo Road, Kabuga, Kano",
-    mapsUrl: "https://maps.google.com/?q=C18+Gwarzo+Road+Kabuga+Kano+Nigeria",
+    address: "No CO8 Gwarzo Road, Along Kabuga, Behind F.C.E, Kano.",
+    mapsUrl: "https://maps.google.com/?q=Gwarzo+Road+Kabuga+Kano+Nigeria",
   },
   {
     name: "Branch 1",
-    address: "Hajj Camp Market, Kano",
+    address: "No 3 Sale Mai Gwnjo Plaza, Hajj Camp Market, Kano.",
     mapsUrl: "https://maps.google.com/?q=Hajj+Camp+Market+Kano",
   },
   {
     name: "Branch 2",
-    address: "Ado Bayero Mall, Kano",
-    mapsUrl: "https://maps.google.com/?q=Ado+Bayero+Mall+Kano",
+    address: "No 6 Zoo Road, Ado Bayero Mall, Kano.",
+    mapsUrl: "https://maps.google.com/?q=Ado+Bayero+Mall+Zoo+Road+Kano",
   },
   {
     name: "Branch 3",
-    address: "Audu Baki Way, Kano",
-    mapsUrl: "https://maps.google.com/?q=Audu+Baki+Way+Kano",
+    address: "No 1 Audu Bako Way, Kano.",
+    mapsUrl: "https://maps.google.com/?q=Audu+Bako+Way+Kano",
   },
 ];
 
