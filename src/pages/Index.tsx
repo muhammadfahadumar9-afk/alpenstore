@@ -14,7 +14,7 @@ const features = [
   { icon: Shield, title: "100% Original", description: "Guaranteed authentic products" },
   { icon: MapPin, title: "4 Branches", description: "Convenient locations across Kano" },
   { icon: Truck, title: "Nationwide Delivery", description: "We deliver across Nigeria" },
-  { icon: Clock, title: "Cash on Delivery", description: "Pay when you receive your order" },
+  { icon: Clock, title: "Paid Delivery", description: "Delivery fee discussed via WhatsApp" },
 ];
 
 const testimonials = [
