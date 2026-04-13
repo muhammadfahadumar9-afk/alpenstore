@@ -26,7 +26,7 @@ export default function AdminSettings() {
     instagram: '@alpenstores',
     facebook: '@alpenstores',
     tiktok: '@alpenstores',
-    aboutText: 'ALPEN STORE LTD is a premium retail brand based in Kano, Nigeria with 10+ years of experience selling Arabian perfumes, Islamic wellness products, and cosmetics.',
+    aboutText: 'ALPEN STORE LTD is a premium retail brand based in Kano, Nigeria with 20+ years of experience selling Arabian perfumes, Islamic wellness products, and cosmetics.',
   });
 
   useEffect(() => {

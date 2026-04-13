@@ -10,7 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const features = [
-  { icon: Star, title: "10+ Years Trusted", description: "Serving Kano with authentic products" },
+  { icon: Star, title: "20+ Years Trusted", description: "Serving Kano with authentic products" },
   { icon: Shield, title: "100% Original", description: "Guaranteed authentic products" },
   { icon: MapPin, title: "4 Branches", description: "Convenient locations across Kano" },
   { icon: Truck, title: "Nationwide Delivery", description: "We deliver across Nigeria" },

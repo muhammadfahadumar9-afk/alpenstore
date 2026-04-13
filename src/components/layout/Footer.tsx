@@ -21,7 +21,7 @@ const Footer = () => {
               <span className="font-serif text-xl font-bold">ALPEN STORE LTD</span>
             </div>
             <p className="text-background/70 text-sm leading-relaxed">
-              10+ years serving Kano with authentic Arabian perfumes, Islamic wellness and premium beauty products.
+              20+ years serving Kano with authentic Arabian perfumes, Islamic wellness and premium beauty products.
             </p>
             <div className="flex gap-4">
               <a
