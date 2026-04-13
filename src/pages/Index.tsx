@@ -84,7 +84,7 @@ const Index = () => {
             </h1>
             <p className="text-lg text-background/80 leading-relaxed">
               Discover authentic Arabian scents, halal wellness products, and premium cosmetics. 
-              Serving Kano with quality and trust for over a decade.
+              Serving Kano with quality and trust for over two decades.
             </p>
             <div className="flex flex-wrap gap-4 pt-4">
               <Button asChild variant="hero" size="xl">

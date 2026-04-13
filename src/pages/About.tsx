@@ -70,7 +70,7 @@ const About = () => {
               About <span className="text-primary">ALPEN STORE LTD</span>
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              A decade of excellence in Arabian perfumes, Islamic wellness, and premium beauty products.
+              Two decades of excellence in Arabian perfumes, Islamic wellness, and premium beauty products.
             </p>
           </div>
         </div>
