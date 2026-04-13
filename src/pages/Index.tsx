@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useState, useEffect, useCallback } from "react";
 import { ArrowRight, Star, Truck, Shield, MapPin, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout/Layout";
@@ -23,6 +24,9 @@ const testimonials = [
 ];
 
 const Index = () => {
+  const [currentPage, setCurrentPage] = useState(0);
+  const [fade, setFade] = useState(true);
+
   const { data: collectionProducts, isLoading: collectionsLoading } = useQuery({
     queryKey: ["collection-products"],
     queryFn: async () => {
@@ -31,11 +35,30 @@ const Index = () => {
         .select("*")
         .eq("in_stock", true)
         .order("created_at", { ascending: false })
-        .limit(8);
+        .limit(20);
       if (error) throw error;
       return data;
     },
   });
+
+  const totalPages = collectionProducts ? Math.ceil(collectionProducts.length / 4) : 1;
+
+  const rotateProducts = useCallback(() => {
+    if (totalPages <= 1) return;
+    setFade(false);
+    setTimeout(() => {
+      setCurrentPage((prev) => (prev + 1) % totalPages);
+      setFade(true);
+    }, 400);
+  }, [totalPages]);
+
+  useEffect(() => {
+    if (totalPages <= 1) return;
+    const interval = setInterval(rotateProducts, 12000);
+    return () => clearInterval(interval);
+  }, [rotateProducts, totalPages]);
+
+  const visibleProducts = collectionProducts?.slice(currentPage * 4, currentPage * 4 + 4) || [];
 
   return (
     <Layout>
@@ -90,8 +113,8 @@ const Index = () => {
           </div>
 
           {collectionsLoading ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-              {[...Array(8)].map((_, i) => (
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[...Array(4)].map((_, i) => (
                 <div key={i} className="card-alpen">
                   <Skeleton className="aspect-square" />
                   <div className="p-4 space-y-2">
@@ -101,41 +124,54 @@ const Index = () => {
                 </div>
               ))}
             </div>
-          ) : collectionProducts && collectionProducts.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-              {collectionProducts.map((product) => (
-                <Link
-                  key={product.id}
-                  to={`/shop/${product.id}`}
-                  className="card-alpen group hover:scale-[1.02] transition-transform"
-                >
-                  <div className="aspect-square overflow-hidden bg-accent">
-                    {product.image_url ? (
-                      <img
-                        src={product.image_url}
-                        alt={product.name}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-muted-foreground text-sm">
-                        No Image
-                      </div>
-                    )}
-                  </div>
-                  <div className="p-4">
-                    <p className="text-xs text-primary font-medium uppercase tracking-wider mb-1">
-                      {product.category}
-                    </p>
-                    <h3 className="font-serif text-sm sm:text-base font-semibold mb-1 group-hover:text-primary transition-colors line-clamp-1">
-                      {product.name}
-                    </h3>
-                    <p className="text-sm sm:text-base font-bold text-primary">
-                      ₦{Number(product.price).toLocaleString()}
-                    </p>
-                  </div>
-                </Link>
-              ))}
-            </div>
+          ) : visibleProducts.length > 0 ? (
+            <>
+              <div className={`grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 transition-opacity duration-400 ${fade ? 'opacity-100' : 'opacity-0'}`}>
+                {visibleProducts.map((product) => (
+                  <Link
+                    key={product.id}
+                    to={`/shop/${product.id}`}
+                    className="card-alpen group hover:scale-[1.02] transition-transform"
+                  >
+                    <div className="aspect-square overflow-hidden bg-accent">
+                      {product.image_url ? (
+                        <img
+                          src={product.image_url}
+                          alt={product.name}
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-muted-foreground text-sm">
+                          No Image
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-4">
+                      <p className="text-xs text-primary font-medium uppercase tracking-wider mb-1">
+                        {product.category}
+                      </p>
+                      <h3 className="font-serif text-sm sm:text-base font-semibold mb-1 group-hover:text-primary transition-colors line-clamp-1">
+                        {product.name}
+                      </h3>
+                      <p className="text-sm sm:text-base font-bold text-primary">
+                        ₦{Number(product.price).toLocaleString()}
+                      </p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+              {totalPages > 1 && (
+                <div className="flex justify-center gap-2 mt-6">
+                  {[...Array(totalPages)].map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => { setFade(false); setTimeout(() => { setCurrentPage(i); setFade(true); }, 400); }}
+                      className={`w-2.5 h-2.5 rounded-full transition-all ${i === currentPage ? 'bg-primary w-6' : 'bg-primary/30'}`}
+                    />
+                  ))}
+                </div>
+              )}
+            </>
           ) : (
             <p className="text-center text-muted-foreground py-8">No products available yet.</p>
           )}
