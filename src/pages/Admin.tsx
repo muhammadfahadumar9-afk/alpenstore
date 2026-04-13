@@ -126,8 +126,9 @@ export default function Admin() {
     { title: 'Products', description: 'Manage your product catalog', icon: Package, href: '/admin/products' },
     { title: 'Orders', description: 'View and manage orders', icon: ShoppingBag, href: '/admin/orders' },
     { title: 'Users', description: 'Manage user accounts', icon: Users, href: '/admin/users' },
-    { title: 'Pages', description: 'Edit website pages', icon: FileText, href: '/admin/pages' },
-    { title: 'Gallery', description: 'Manage product images', icon: Image, href: '/admin/gallery' },
+    { title: 'About Us', description: 'Edit About page content & team', icon: FileText, href: '/admin/about' },
+    { title: 'Home Page', description: 'Edit homepage content', icon: LayoutDashboard, href: '/admin/homepage' },
+    { title: 'Gallery', description: 'Manage gallery images', icon: Image, href: '/admin/gallery' },
     { title: 'Settings', description: 'Configure site settings', icon: Settings, href: '/admin/settings' },
     { title: 'Documentation', description: 'Private admin guide', icon: BookOpen, href: '/admin/documentation' },
   ];
