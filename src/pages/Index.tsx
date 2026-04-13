@@ -10,7 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const features = [
-  { icon: Star, title: "10+ Years Trusted", description: "Serving Kano with authentic products" },
+  { icon: Star, title: "20+ Years Trusted", description: "Serving Kano with authentic products" },
   { icon: Shield, title: "100% Original", description: "Guaranteed authentic products" },
   { icon: MapPin, title: "4 Branches", description: "Convenient locations across Kano" },
   { icon: Truck, title: "Nationwide Delivery", description: "We deliver across Nigeria" },
@@ -76,7 +76,7 @@ const Index = () => {
         <div className="container-alpen relative z-10 py-20">
           <div className="max-w-2xl space-y-6 animate-slide-up">
             <span className="inline-block px-4 py-2 bg-primary/20 text-primary-foreground rounded-full text-sm font-medium backdrop-blur-sm border border-primary/30">
-              10+ Years of Excellence
+              20+ Years of Excellence
             </span>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-background leading-tight">
               ALPEN STORE LTD
