@@ -36,12 +36,12 @@ interface ContentBlock {
 }
 
 const pages = [
-  { title: 'Home Page', description: 'Main landing page with hero and featured products', icon: Home, href: '/' },
-  { title: 'About Us', description: 'Company story and values', icon: Info, href: '/about' },
-  { title: 'Shop', description: 'Product catalog with filters', icon: ShoppingBag, href: '/shop' },
-  { title: 'Gallery', description: 'Product image showcase', icon: Image, href: '/gallery' },
-  { title: 'Contact', description: 'Contact form and branch locations', icon: Phone, href: '/contact' },
-  { title: 'Privacy Policy', description: 'Data handling and refund policy', icon: Shield, href: '/privacy' },
+  { title: 'Home Page', description: 'Main landing page with hero and featured products', icon: Home, href: '/', key: 'home' },
+  { title: 'About Us', description: 'Company story, team & values', icon: Info, href: '/about', key: 'about' },
+  { title: 'Shop', description: 'Product catalog with filters', icon: ShoppingBag, href: '/shop', key: 'shop' },
+  { title: 'Gallery', description: 'Product image showcase', icon: Image, href: '/gallery', key: 'gallery' },
+  { title: 'Contact', description: 'Contact form and branch locations', icon: Phone, href: '/contact', key: 'contact' },
+  { title: 'Privacy Policy', description: 'Data handling and refund policy', icon: Shield, href: '/privacy', key: 'privacy' },
 ];
 
 const SECTIONS = [
