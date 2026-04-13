@@ -20,8 +20,6 @@ import AdminOrders from "./pages/AdminOrders";
 import AdminUsers from "./pages/AdminUsers";
 import AdminGallery from "./pages/AdminGallery";
 import AdminPages from "./pages/AdminPages";
-import AdminAbout from "./pages/AdminAbout";
-import AdminHomepage from "./pages/AdminHomepage";
 import AdminSettings from "./pages/AdminSettings";
 import AdminDocumentation from "./pages/AdminDocumentation";
 import CustomerAuth from "./pages/CustomerAuth";
@@ -68,8 +66,6 @@ const App = () => (
               <Route path="/admin/users" element={<AdminUsers />} />
               <Route path="/admin/gallery" element={<AdminGallery />} />
               <Route path="/admin/pages" element={<AdminPages />} />
-              <Route path="/admin/about" element={<AdminAbout />} />
-              <Route path="/admin/homepage" element={<AdminHomepage />} />
               <Route path="/admin/settings" element={<AdminSettings />} />
               <Route path="/admin/documentation" element={<AdminDocumentation />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
