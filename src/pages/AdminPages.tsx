@@ -63,6 +63,8 @@ export default function AdminPages() {
   const [contentDialogOpen, setContentDialogOpen] = useState(false);
   const [contentPageKey, setContentPageKey] = useState('about');
   const [selectedPage, setSelectedPage] = useState<string | null>(null);
+  
+  const getContentForPage = (pageKey: string) => allContent.filter(c => c.page_key === pageKey);
 
   useEffect(() => {
     if (!authLoading && !isAdminLoading && (!user || !isAdmin)) {
@@ -224,17 +226,12 @@ export default function AdminPages() {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="overview">All Pages</TabsTrigger>
-            <TabsTrigger value="about">About Us</TabsTrigger>
-            <TabsTrigger value="home">Home Page</TabsTrigger>
-          </TabsList>
-
-          {/* Overview Tab */}
-          <TabsContent value="overview">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {pages.map((page) => (
+        {/* Page Cards with Edit */}
+        {!selectedPage ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {pages.map((page) => {
+              const pageContent = getContentForPage(page.key);
+              return (
                 <Card key={page.title} className="hover:shadow-lg transition-shadow">
                   <CardHeader>
                     <div className="flex items-center gap-3">
@@ -247,7 +244,10 @@ export default function AdminPages() {
                       </div>
                     </div>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="space-y-2">
+                    <Button variant="default" className="w-full" onClick={() => setSelectedPage(page.key)}>
+                      <Edit2 className="w-4 h-4 mr-2" /> Manage Content ({page.key === 'about' ? members.length + pageContent.length : pageContent.length})
+                    </Button>
                     <Button variant="outline" className="w-full" asChild>
                       <Link to={page.href} target="_blank">
                         <ExternalLink className="w-4 h-4 mr-2" /> View Page
@@ -255,88 +255,94 @@ export default function AdminPages() {
                     </Button>
                   </CardContent>
                 </Card>
-              ))}
+              );
+            })}
+          </div>
+        ) : (
+          <div className="space-y-8">
+            {/* Back button and page title */}
+            <div className="flex items-center gap-3">
+              <Button variant="ghost" size="icon" onClick={() => setSelectedPage(null)}>
+                <ArrowLeft className="w-5 h-5" />
+              </Button>
+              <h2 className="text-xl font-serif font-semibold">
+                {pages.find(p => p.key === selectedPage)?.title} — Content
+              </h2>
             </div>
-          </TabsContent>
 
-          {/* About Us Tab */}
-          <TabsContent value="about" className="space-y-8">
-            {/* Team Members */}
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-serif font-semibold">Team Members</h2>
-                <Dialog open={memberDialogOpen} onOpenChange={setMemberDialogOpen}>
-                  <DialogTrigger asChild>
-                    <Button onClick={() => setEditingMember({ section: 'management', display_order: 0 })}>
-                      <Plus className="w-4 h-4 mr-2" /> Add Member
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-md">
-                    <DialogHeader><DialogTitle>{editingMember?.id ? 'Edit' : 'Add'} Team Member</DialogTitle></DialogHeader>
-                    <div className="space-y-4">
-                      <div><Label>Name *</Label><Input value={editingMember?.name || ''} onChange={e => setEditingMember(prev => ({ ...prev, name: e.target.value }))} /></div>
-                      <div><Label>Section</Label>
-                        <Select value={editingMember?.section || 'management'} onValueChange={v => setEditingMember(prev => ({ ...prev, section: v }))}>
-                          <SelectTrigger><SelectValue /></SelectTrigger>
-                          <SelectContent>{SECTIONS.map(s => <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>)}</SelectContent>
-                        </Select>
-                      </div>
-                      <div><Label>Title/Position</Label><Input value={editingMember?.title || ''} onChange={e => setEditingMember(prev => ({ ...prev, title: e.target.value }))} /></div>
-                      <div><Label>Role</Label><Input value={editingMember?.role || ''} onChange={e => setEditingMember(prev => ({ ...prev, role: e.target.value }))} /></div>
-                      {editingMember?.section === 'branch' && (
-                        <div><Label>Branch Name</Label><Input value={editingMember?.branch_name || ''} onChange={e => setEditingMember(prev => ({ ...prev, branch_name: e.target.value }))} /></div>
-                      )}
-                      <div><Label>Bio</Label><Textarea value={editingMember?.bio || ''} onChange={e => setEditingMember(prev => ({ ...prev, bio: e.target.value }))} /></div>
-                      <div><Label>Image URL</Label><Input value={editingMember?.image_url || ''} onChange={e => setEditingMember(prev => ({ ...prev, image_url: e.target.value }))} /></div>
-                      <div><Label>Display Order</Label><Input type="number" value={editingMember?.display_order || 0} onChange={e => setEditingMember(prev => ({ ...prev, display_order: parseInt(e.target.value) || 0 }))} /></div>
-                      <Button onClick={saveMember} className="w-full"><Save className="w-4 h-4 mr-2" /> Save</Button>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-              </div>
-
-              {loading ? <Skeleton className="h-32 w-full" /> : (
-                <div className="space-y-4">
-                  {SECTIONS.map(section => {
-                    const sectionMembers = members.filter(m => m.section === section.value);
-                    if (sectionMembers.length === 0) return null;
-                    return (
-                      <div key={section.value}>
-                        <h3 className="text-sm font-medium text-muted-foreground mb-2">{section.label}</h3>
-                        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                          {sectionMembers.map(member => (
-                            <Card key={member.id}>
-                              <CardContent className="p-4 flex items-center justify-between">
-                                <div className="min-w-0 flex-1">
-                                  <p className="font-semibold">{member.name}</p>
-                                  <p className="text-sm text-muted-foreground">{member.title || member.role}</p>
-                                  {member.branch_name && <p className="text-xs text-primary">{member.branch_name}</p>}
-                                </div>
-                                <div className="flex gap-1 ml-2">
-                                  <Button variant="ghost" size="icon" onClick={() => { setEditingMember(member); setMemberDialogOpen(true); }}><Edit2 className="w-4 h-4" /></Button>
-                                  <Button variant="ghost" size="icon" onClick={() => deleteMember(member.id)}><Trash2 className="w-4 h-4 text-destructive" /></Button>
-                                </div>
-                              </CardContent>
-                            </Card>
-                          ))}
+            {/* Team Members (only for About page) */}
+            {selectedPage === 'about' && (
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold">Team Members</h3>
+                  <Dialog open={memberDialogOpen} onOpenChange={setMemberDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button onClick={() => setEditingMember({ section: 'management', display_order: 0 })}>
+                        <Plus className="w-4 h-4 mr-2" /> Add Member
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-md">
+                      <DialogHeader><DialogTitle>{editingMember?.id ? 'Edit' : 'Add'} Team Member</DialogTitle></DialogHeader>
+                      <div className="space-y-4">
+                        <div><Label>Name *</Label><Input value={editingMember?.name || ''} onChange={e => setEditingMember(prev => ({ ...prev, name: e.target.value }))} /></div>
+                        <div><Label>Section</Label>
+                          <Select value={editingMember?.section || 'management'} onValueChange={v => setEditingMember(prev => ({ ...prev, section: v }))}>
+                            <SelectTrigger><SelectValue /></SelectTrigger>
+                            <SelectContent>{SECTIONS.map(s => <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>)}</SelectContent>
+                          </Select>
                         </div>
+                        <div><Label>Title/Position</Label><Input value={editingMember?.title || ''} onChange={e => setEditingMember(prev => ({ ...prev, title: e.target.value }))} /></div>
+                        <div><Label>Role</Label><Input value={editingMember?.role || ''} onChange={e => setEditingMember(prev => ({ ...prev, role: e.target.value }))} /></div>
+                        {editingMember?.section === 'branch' && (
+                          <div><Label>Branch Name</Label><Input value={editingMember?.branch_name || ''} onChange={e => setEditingMember(prev => ({ ...prev, branch_name: e.target.value }))} /></div>
+                        )}
+                        <div><Label>Bio</Label><Textarea value={editingMember?.bio || ''} onChange={e => setEditingMember(prev => ({ ...prev, bio: e.target.value }))} /></div>
+                        <div><Label>Image URL</Label><Input value={editingMember?.image_url || ''} onChange={e => setEditingMember(prev => ({ ...prev, image_url: e.target.value }))} /></div>
+                        <div><Label>Display Order</Label><Input type="number" value={editingMember?.display_order || 0} onChange={e => setEditingMember(prev => ({ ...prev, display_order: parseInt(e.target.value) || 0 }))} /></div>
+                        <Button onClick={saveMember} className="w-full"><Save className="w-4 h-4 mr-2" /> Save</Button>
                       </div>
-                    );
-                  })}
-                  {members.length === 0 && <p className="text-muted-foreground text-center py-8">No team members yet. Add your first member above.</p>}
+                    </DialogContent>
+                  </Dialog>
                 </div>
-              )}
-            </div>
 
-            {/* About Content */}
-            {renderContentList(aboutContent, 'about')}
-          </TabsContent>
+                {loading ? <Skeleton className="h-32 w-full" /> : (
+                  <div className="space-y-4">
+                    {SECTIONS.map(section => {
+                      const sectionMembers = members.filter(m => m.section === section.value);
+                      if (sectionMembers.length === 0) return null;
+                      return (
+                        <div key={section.value}>
+                          <h4 className="text-sm font-medium text-muted-foreground mb-2">{section.label}</h4>
+                          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                            {sectionMembers.map(member => (
+                              <Card key={member.id}>
+                                <CardContent className="p-4 flex items-center justify-between">
+                                  <div className="min-w-0 flex-1">
+                                    <p className="font-semibold">{member.name}</p>
+                                    <p className="text-sm text-muted-foreground">{member.title || member.role}</p>
+                                    {member.branch_name && <p className="text-xs text-primary">{member.branch_name}</p>}
+                                  </div>
+                                  <div className="flex gap-1 ml-2">
+                                    <Button variant="ghost" size="icon" onClick={() => { setEditingMember(member); setMemberDialogOpen(true); }}><Edit2 className="w-4 h-4" /></Button>
+                                    <Button variant="ghost" size="icon" onClick={() => deleteMember(member.id)}><Trash2 className="w-4 h-4 text-destructive" /></Button>
+                                  </div>
+                                </CardContent>
+                              </Card>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                    {members.length === 0 && <p className="text-muted-foreground text-center py-8">No team members yet. Add your first member above.</p>}
+                  </div>
+                )}
+              </div>
+            )}
 
-          {/* Home Page Tab */}
-          <TabsContent value="home">
-            {renderContentList(homeContent, 'home')}
-          </TabsContent>
-        </Tabs>
+            {/* Content Blocks for selected page */}
+            {renderContentList(getContentForPage(selectedPage), selectedPage)}
+          </div>
+        )}
       </main>
     </div>
   );
