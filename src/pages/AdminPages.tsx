@@ -55,14 +55,14 @@ export default function AdminPages() {
   const { user, isAdmin, isLoading: authLoading, isAdminLoading } = useAuth();
   const navigate = useNavigate();
   const [members, setMembers] = useState<TeamMember[]>([]);
-  const [aboutContent, setAboutContent] = useState<ContentBlock[]>([]);
-  const [homeContent, setHomeContent] = useState<ContentBlock[]>([]);
+  const [allContent, setAllContent] = useState<ContentBlock[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingMember, setEditingMember] = useState<Partial<TeamMember> | null>(null);
   const [editingContent, setEditingContent] = useState<Partial<ContentBlock> | null>(null);
   const [memberDialogOpen, setMemberDialogOpen] = useState(false);
   const [contentDialogOpen, setContentDialogOpen] = useState(false);
   const [contentPageKey, setContentPageKey] = useState('about');
+  const [activeTab, setActiveTab] = useState('overview');
 
   useEffect(() => {
     if (!authLoading && !isAdminLoading && (!user || !isAdmin)) {
