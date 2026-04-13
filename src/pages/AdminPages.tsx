@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { ArrowLeft, FileText, Home, Info, ShoppingBag, Image, Phone, Shield, ExternalLink, Plus, Trash2, Edit2, Save, Users } from 'lucide-react';
+import { ArrowLeft, FileText, Home, Info, ShoppingBag, Image, Phone, Shield, ExternalLink, Plus, Trash2, Edit2, Save } from 'lucide-react';
 import { toast } from 'sonner';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -62,7 +62,7 @@ export default function AdminPages() {
   const [memberDialogOpen, setMemberDialogOpen] = useState(false);
   const [contentDialogOpen, setContentDialogOpen] = useState(false);
   const [contentPageKey, setContentPageKey] = useState('about');
-  const [activeTab, setActiveTab] = useState('overview');
+  const [selectedPage, setSelectedPage] = useState<string | null>(null);
 
   useEffect(() => {
     if (!authLoading && !isAdminLoading && (!user || !isAdmin)) {
@@ -77,14 +77,12 @@ export default function AdminPages() {
 
   const fetchData = async () => {
     setLoading(true);
-    const [membersRes, aboutRes, homeRes] = await Promise.all([
+    const [membersRes, contentRes] = await Promise.all([
       supabase.from('team_members').select('*').order('display_order'),
-      supabase.from('site_content').select('*').eq('page_key', 'about').order('display_order'),
-      supabase.from('site_content').select('*').eq('page_key', 'home').order('display_order'),
+      supabase.from('site_content').select('*').order('display_order'),
     ]);
     if (membersRes.data) setMembers(membersRes.data);
-    if (aboutRes.data) setAboutContent(aboutRes.data);
-    if (homeRes.data) setHomeContent(homeRes.data);
+    if (contentRes.data) setAllContent(contentRes.data);
     setLoading(false);
   };
 
