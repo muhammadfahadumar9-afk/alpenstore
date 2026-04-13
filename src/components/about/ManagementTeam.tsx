@@ -25,6 +25,18 @@ const managementTeam = [
     image: "",
     bio: "Sources premium authentic products from trusted global suppliers.",
   },
+  {
+    name: "Aisha Bello",
+    title: "Marketing Manager",
+    image: "",
+    bio: "Leads brand strategy and digital marketing initiatives across all channels.",
+  },
+  {
+    name: "Ibrahim Musa",
+    title: "Finance Manager",
+    image: "",
+    bio: "Oversees financial planning, budgeting, and fiscal growth strategies.",
+  },
 ];
 
 const ManagementTeam = () => {
