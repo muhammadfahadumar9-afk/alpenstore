@@ -86,6 +86,9 @@ const About = () => {
       <ManagementTeam />
 
 
+      {/* Our Locations */}
+      <OurLocations />
+
       {/* Values Section */}
       <section className="section-padding bg-muted">
         <div className="container-alpen">
@@ -150,9 +153,6 @@ const About = () => {
           </div>
         </div>
       </section>
-
-      {/* Our Locations */}
-      <OurLocations />
 
 
       {/* CTA Section */}
