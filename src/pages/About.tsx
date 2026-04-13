@@ -86,38 +86,6 @@ const About = () => {
       <ManagementTeam />
 
 
-      {/* Our Locations */}
-      <OurLocations />
-
-      {/* Values Section */}
-      <section className="section-padding bg-muted">
-        <div className="container-alpen">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4">
-              Our <span className="text-primary">Values</span>
-            </h2>
-            <p className="text-muted-foreground">
-              The principles that guide everything we do at ALPEN STORE LTD.
-            </p>
-          </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {values.map((value, index) => (
-              <div
-                key={value.title}
-                className="card-alpen p-6 text-center"
-              >
-                <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 text-primary mb-4">
-                  <value.icon className="h-6 w-6" />
-                </div>
-                <h3 className="font-serif text-lg font-semibold mb-2">{value.title}</h3>
-                <p className="text-sm text-muted-foreground">{value.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Branch Managers Section */}
       <section className="section-padding">
         <div className="container-alpen">
@@ -148,6 +116,38 @@ const About = () => {
                   {manager.branch}
                 </div>
                 <p className="text-sm text-muted-foreground">{manager.bio}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Our Locations */}
+      <OurLocations />
+
+      {/* Values Section */}
+      <section className="section-padding bg-muted">
+        <div className="container-alpen">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4">
+              Our <span className="text-primary">Values</span>
+            </h2>
+            <p className="text-muted-foreground">
+              The principles that guide everything we do at ALPEN STORE LTD.
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {values.map((value, index) => (
+              <div
+                key={value.title}
+                className="card-alpen p-6 text-center"
+              >
+                <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 text-primary mb-4">
+                  <value.icon className="h-6 w-6" />
+                </div>
+                <h3 className="font-serif text-lg font-semibold mb-2">{value.title}</h3>
+                <p className="text-sm text-muted-foreground">{value.description}</p>
               </div>
             ))}
           </div>
