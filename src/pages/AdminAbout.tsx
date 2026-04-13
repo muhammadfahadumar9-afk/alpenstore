@@ -3,13 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { ArrowLeft, Plus, Trash2, Edit2, Save, Users } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { ArrowLeft, Plus, Trash2, Edit2, Save, Users, Crown, Briefcase, MapPin, UserCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -35,10 +35,10 @@ interface ContentBlock {
 }
 
 const SECTIONS = [
-  { value: 'ceo', label: 'CEO' },
-  { value: 'board', label: 'Board of Directors' },
-  { value: 'management', label: 'Management Team' },
-  { value: 'branch', label: 'Branch Manager' },
+  { value: 'ceo', label: 'CEO', icon: Crown, description: 'Chief Executive Officer' },
+  { value: 'board', label: 'Board of Directors', icon: Users, description: 'Board members' },
+  { value: 'management', label: 'Management Team', icon: Briefcase, description: 'Management staff' },
+  { value: 'branch', label: 'Branch Managers', icon: MapPin, description: 'Branch managers' },
 ];
 
 export default function AdminAbout() {
@@ -72,6 +72,16 @@ export default function AdminAbout() {
     if (membersRes.data) setMembers(membersRes.data);
     if (contentRes.data) setContentBlocks(contentRes.data);
     setLoading(false);
+  };
+
+  const openAddMember = (section: string) => {
+    setEditingMember({ section, display_order: 0 });
+    setMemberDialogOpen(true);
+  };
+
+  const openEditMember = (member: TeamMember) => {
+    setEditingMember(member);
+    setMemberDialogOpen(true);
   };
 
   const saveMember = async () => {
@@ -159,124 +169,155 @@ export default function AdminAbout() {
           </div>
           <div>
             <h1 className="text-xl font-serif font-semibold">About Us Management</h1>
-            <p className="text-sm text-muted-foreground">Manage team members & page content</p>
+            <p className="text-sm text-muted-foreground">{members.length} team members</p>
           </div>
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8 space-y-8">
-        {/* Team Members */}
-        <div>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-serif font-semibold">Team Members</h2>
-            <Dialog open={memberDialogOpen} onOpenChange={setMemberDialogOpen}>
-              <DialogTrigger asChild>
-                <Button onClick={() => setEditingMember({ section: 'management', display_order: 0 })}>
-                  <Plus className="w-4 h-4 mr-2" /> Add Member
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-md">
-                <DialogHeader><DialogTitle>{editingMember?.id ? 'Edit' : 'Add'} Team Member</DialogTitle></DialogHeader>
-                <div className="space-y-4">
-                  <div><Label>Name *</Label><Input value={editingMember?.name || ''} onChange={e => setEditingMember(prev => ({ ...prev, name: e.target.value }))} /></div>
-                  <div><Label>Section</Label>
-                    <Select value={editingMember?.section || 'management'} onValueChange={v => setEditingMember(prev => ({ ...prev, section: v }))}>
-                      <SelectTrigger><SelectValue /></SelectTrigger>
-                      <SelectContent>{SECTIONS.map(s => <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>)}</SelectContent>
-                    </Select>
+      <main className="container mx-auto px-4 py-8 space-y-6">
+        {/* Each section gets its own card with its own Add button */}
+        {SECTIONS.map(section => {
+          const sectionMembers = members.filter(m => m.section === section.value);
+          const SectionIcon = section.icon;
+          return (
+            <Card key={section.value}>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                    <SectionIcon className="w-5 h-5 text-primary" />
                   </div>
-                  <div><Label>Title/Position</Label><Input value={editingMember?.title || ''} onChange={e => setEditingMember(prev => ({ ...prev, title: e.target.value }))} /></div>
-                  <div><Label>Role</Label><Input value={editingMember?.role || ''} onChange={e => setEditingMember(prev => ({ ...prev, role: e.target.value }))} /></div>
-                  {editingMember?.section === 'branch' && (
-                    <div><Label>Branch Name</Label><Input value={editingMember?.branch_name || ''} onChange={e => setEditingMember(prev => ({ ...prev, branch_name: e.target.value }))} /></div>
-                  )}
-                  <div><Label>Bio</Label><Textarea value={editingMember?.bio || ''} onChange={e => setEditingMember(prev => ({ ...prev, bio: e.target.value }))} /></div>
-                  <div><Label>Image URL</Label><Input value={editingMember?.image_url || ''} onChange={e => setEditingMember(prev => ({ ...prev, image_url: e.target.value }))} /></div>
-                  <div><Label>Display Order</Label><Input type="number" value={editingMember?.display_order || 0} onChange={e => setEditingMember(prev => ({ ...prev, display_order: parseInt(e.target.value) || 0 }))} /></div>
-                  <Button onClick={saveMember} className="w-full"><Save className="w-4 h-4 mr-2" /> Save</Button>
+                  <div>
+                    <CardTitle className="text-lg">{section.label}</CardTitle>
+                    <p className="text-sm text-muted-foreground">{sectionMembers.length} member{sectionMembers.length !== 1 ? 's' : ''}</p>
+                  </div>
                 </div>
-              </DialogContent>
-            </Dialog>
-          </div>
-
-          {loading ? <Skeleton className="h-32 w-full" /> : (
-            <div className="space-y-4">
-              {SECTIONS.map(section => {
-                const sectionMembers = members.filter(m => m.section === section.value);
-                if (sectionMembers.length === 0) return null;
-                return (
-                  <div key={section.value}>
-                    <h3 className="text-sm font-medium text-muted-foreground mb-2">{section.label}</h3>
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                      {sectionMembers.map(member => (
-                        <Card key={member.id}>
-                          <CardContent className="p-4 flex items-center justify-between">
-                            <div className="min-w-0 flex-1">
-                              <p className="font-semibold">{member.name}</p>
-                              <p className="text-sm text-muted-foreground">{member.title || member.role}</p>
-                              {member.branch_name && <p className="text-xs text-primary">{member.branch_name}</p>}
-                            </div>
-                            <div className="flex gap-1 ml-2">
-                              <Button variant="ghost" size="icon" onClick={() => { setEditingMember(member); setMemberDialogOpen(true); }}><Edit2 className="w-4 h-4" /></Button>
-                              <Button variant="ghost" size="icon" onClick={() => deleteMember(member.id)}><Trash2 className="w-4 h-4 text-destructive" /></Button>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
+                <Button size="sm" onClick={() => openAddMember(section.value)}>
+                  <Plus className="w-4 h-4 mr-1" /> Add
+                </Button>
+              </CardHeader>
+              <CardContent>
+                {loading ? (
+                  <Skeleton className="h-16 w-full" />
+                ) : sectionMembers.length === 0 ? (
+                  <p className="text-sm text-muted-foreground text-center py-6">
+                    No {section.label.toLowerCase()} added yet. Click "Add" to add one.
+                  </p>
+                ) : (
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {sectionMembers.map(member => (
+                      <div key={member.id} className="relative group border rounded-lg overflow-hidden">
+                        {member.image_url && (
+                          <div className="aspect-[4/3] overflow-hidden bg-muted">
+                            <img src={member.image_url} alt={member.name} className="w-full h-full object-cover" />
+                          </div>
+                        )}
+                        <div className="p-3">
+                          <p className="font-semibold text-sm">{member.name}</p>
+                          <p className="text-xs text-muted-foreground">{member.title || member.role}</p>
+                          {member.branch_name && <p className="text-xs text-primary mt-0.5">{member.branch_name}</p>}
+                        </div>
+                        <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Button size="icon" variant="secondary" className="h-8 w-8" onClick={() => openEditMember(member)}>
+                            <Edit2 className="w-3.5 h-3.5" />
+                          </Button>
+                          <Button size="icon" variant="destructive" className="h-8 w-8" onClick={() => deleteMember(member.id)}>
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                );
-              })}
-              {members.length === 0 && <p className="text-muted-foreground text-center py-8">No team members yet. Add your first member above.</p>}
+                )}
+              </CardContent>
+            </Card>
+          );
+        })}
+
+        {/* Page Content Blocks */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                <UserCircle className="w-5 h-5 text-primary" />
+              </div>
+              <div>
+                <CardTitle className="text-lg">Page Content</CardTitle>
+                <p className="text-sm text-muted-foreground">{contentBlocks.length} content block{contentBlocks.length !== 1 ? 's' : ''}</p>
+              </div>
             </div>
-          )}
-        </div>
-
-        {/* Content Blocks */}
-        <div>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-serif font-semibold">Page Content</h2>
-            <Dialog open={contentDialogOpen} onOpenChange={setContentDialogOpen}>
-              <DialogTrigger asChild>
-                <Button variant="outline" onClick={() => setEditingContent({ display_order: 0 })}>
-                  <Plus className="w-4 h-4 mr-2" /> Add Content Block
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-md">
-                <DialogHeader><DialogTitle>{editingContent?.id ? 'Edit' : 'Add'} Content Block</DialogTitle></DialogHeader>
-                <div className="space-y-4">
-                  <div><Label>Section Key *</Label><Input value={editingContent?.section_key || ''} onChange={e => setEditingContent(prev => ({ ...prev, section_key: e.target.value }))} placeholder="e.g. hero, story, values" disabled={!!editingContent?.id} /></div>
-                  <div><Label>Title</Label><Input value={editingContent?.title || ''} onChange={e => setEditingContent(prev => ({ ...prev, title: e.target.value }))} /></div>
-                  <div><Label>Content</Label><Textarea rows={5} value={editingContent?.content || ''} onChange={e => setEditingContent(prev => ({ ...prev, content: e.target.value }))} /></div>
-                  <div><Label>Display Order</Label><Input type="number" value={editingContent?.display_order || 0} onChange={e => setEditingContent(prev => ({ ...prev, display_order: parseInt(e.target.value) || 0 }))} /></div>
-                  <Button onClick={saveContent} className="w-full"><Save className="w-4 h-4 mr-2" /> Save</Button>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </div>
-
-          {loading ? <Skeleton className="h-32 w-full" /> : contentBlocks.length === 0 ? (
-            <p className="text-muted-foreground text-center py-8">No content blocks yet.</p>
-          ) : (
-            <div className="grid gap-3">
-              {contentBlocks.map(block => (
-                <Card key={block.id}>
-                  <CardContent className="p-4 flex items-center justify-between">
+            <Button size="sm" variant="outline" onClick={() => { setEditingContent({ display_order: 0 }); setContentDialogOpen(true); }}>
+              <Plus className="w-4 h-4 mr-1" /> Add
+            </Button>
+          </CardHeader>
+          <CardContent>
+            {loading ? (
+              <Skeleton className="h-16 w-full" />
+            ) : contentBlocks.length === 0 ? (
+              <p className="text-sm text-muted-foreground text-center py-6">No content blocks yet. Click "Add" to create one.</p>
+            ) : (
+              <div className="grid gap-3">
+                {contentBlocks.map(block => (
+                  <div key={block.id} className="flex items-center justify-between border rounded-lg p-3">
                     <div className="min-w-0 flex-1">
-                      <p className="font-semibold">{block.title || block.section_key}</p>
-                      <p className="text-sm text-muted-foreground line-clamp-2">{block.content}</p>
+                      <p className="font-semibold text-sm">{block.title || block.section_key}</p>
+                      <p className="text-xs text-muted-foreground line-clamp-2">{block.content}</p>
                     </div>
                     <div className="flex gap-1 ml-2">
-                      <Button variant="ghost" size="icon" onClick={() => { setEditingContent(block); setContentDialogOpen(true); }}><Edit2 className="w-4 h-4" /></Button>
-                      <Button variant="ghost" size="icon" onClick={() => deleteContent(block.id)}><Trash2 className="w-4 h-4 text-destructive" /></Button>
+                      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setEditingContent(block); setContentDialogOpen(true); }}>
+                        <Edit2 className="w-3.5 h-3.5" />
+                      </Button>
+                      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => deleteContent(block.id)}>
+                        <Trash2 className="w-3.5 h-3.5 text-destructive" />
+                      </Button>
                     </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          )}
-        </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </main>
+
+      {/* Member Dialog */}
+      <Dialog open={memberDialogOpen} onOpenChange={setMemberDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>{editingMember?.id ? 'Edit' : 'Add'} {SECTIONS.find(s => s.value === editingMember?.section)?.label || 'Team Member'}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div><Label>Name *</Label><Input value={editingMember?.name || ''} onChange={e => setEditingMember(prev => ({ ...prev, name: e.target.value }))} /></div>
+            <div><Label>Section</Label>
+              <Select value={editingMember?.section || 'management'} onValueChange={v => setEditingMember(prev => ({ ...prev, section: v }))}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>{SECTIONS.map(s => <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>)}</SelectContent>
+              </Select>
+            </div>
+            <div><Label>Title/Position</Label><Input value={editingMember?.title || ''} onChange={e => setEditingMember(prev => ({ ...prev, title: e.target.value }))} /></div>
+            <div><Label>Role</Label><Input value={editingMember?.role || ''} onChange={e => setEditingMember(prev => ({ ...prev, role: e.target.value }))} /></div>
+            {editingMember?.section === 'branch' && (
+              <div><Label>Branch Name</Label><Input value={editingMember?.branch_name || ''} onChange={e => setEditingMember(prev => ({ ...prev, branch_name: e.target.value }))} /></div>
+            )}
+            <div><Label>Bio</Label><Textarea value={editingMember?.bio || ''} onChange={e => setEditingMember(prev => ({ ...prev, bio: e.target.value }))} /></div>
+            <div><Label>Image URL</Label><Input value={editingMember?.image_url || ''} onChange={e => setEditingMember(prev => ({ ...prev, image_url: e.target.value }))} /></div>
+            <div><Label>Display Order</Label><Input type="number" value={editingMember?.display_order || 0} onChange={e => setEditingMember(prev => ({ ...prev, display_order: parseInt(e.target.value) || 0 }))} /></div>
+            <Button onClick={saveMember} className="w-full"><Save className="w-4 h-4 mr-2" /> Save</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Content Dialog */}
+      <Dialog open={contentDialogOpen} onOpenChange={setContentDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader><DialogTitle>{editingContent?.id ? 'Edit' : 'Add'} Content Block</DialogTitle></DialogHeader>
+          <div className="space-y-4">
+            <div><Label>Section Key *</Label><Input value={editingContent?.section_key || ''} onChange={e => setEditingContent(prev => ({ ...prev, section_key: e.target.value }))} placeholder="e.g. hero, story, values" disabled={!!editingContent?.id} /></div>
+            <div><Label>Title</Label><Input value={editingContent?.title || ''} onChange={e => setEditingContent(prev => ({ ...prev, title: e.target.value }))} /></div>
+            <div><Label>Content</Label><Textarea rows={5} value={editingContent?.content || ''} onChange={e => setEditingContent(prev => ({ ...prev, content: e.target.value }))} /></div>
+            <div><Label>Display Order</Label><Input type="number" value={editingContent?.display_order || 0} onChange={e => setEditingContent(prev => ({ ...prev, display_order: parseInt(e.target.value) || 0 }))} /></div>
+            <Button onClick={saveContent} className="w-full"><Save className="w-4 h-4 mr-2" /> Save</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
