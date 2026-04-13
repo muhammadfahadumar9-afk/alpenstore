@@ -268,6 +268,81 @@ export type Database = {
           },
         ]
       }
+      site_content: {
+        Row: {
+          content: string | null
+          created_at: string
+          display_order: number
+          id: string
+          page_key: string
+          section_key: string
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string
+          display_order?: number
+          id?: string
+          page_key: string
+          section_key: string
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          content?: string | null
+          created_at?: string
+          display_order?: number
+          id?: string
+          page_key?: string
+          section_key?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      team_members: {
+        Row: {
+          bio: string | null
+          branch_name: string | null
+          created_at: string
+          display_order: number
+          id: string
+          image_url: string | null
+          name: string
+          role: string | null
+          section: string
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          bio?: string | null
+          branch_name?: string | null
+          created_at?: string
+          display_order?: number
+          id?: string
+          image_url?: string | null
+          name: string
+          role?: string | null
+          section?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          bio?: string | null
+          branch_name?: string | null
+          created_at?: string
+          display_order?: number
+          id?: string
+          image_url?: string | null
+          name?: string
+          role?: string | null
+          section?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
