@@ -4,28 +4,9 @@ import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout/Layout";
 import FeaturedProducts from "@/components/FeaturedProducts";
 import heroImage from "@/assets/hero-perfumes.jpg";
-const categories = [
-  {
-    title: "Arabian Perfumes",
-    description: "Authentic oud, musk, and exotic fragrances",
-    image: "https://images.unsplash.com/photo-1541643600914-78b084683601?w=400&h=400&fit=crop",
-  },
-  {
-    title: "Islamic Wellness",
-    description: "Halal wellness and spiritual care products",
-    image: "https://images.unsplash.com/photo-1600428877878-1a0fd85beda8?w=400&h=400&fit=crop",
-  },
-  {
-    title: "Cosmetics & Beauty",
-    description: "Premium skincare and beauty essentials",
-    image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&h=400&fit=crop",
-  },
-  {
-    title: "Luxury Gift Sets",
-    description: "Curated collections for special occasions",
-    image: "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&h=400&fit=crop",
-  },
-];
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const features = [
   { icon: Star, title: "10+ Years Trusted", description: "Serving Kano with authentic products" },
@@ -42,6 +23,20 @@ const testimonials = [
 ];
 
 const Index = () => {
+  const { data: collectionProducts, isLoading: collectionsLoading } = useQuery({
+    queryKey: ["collection-products"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .eq("in_stock", true)
+        .order("created_at", { ascending: false })
+        .limit(8);
+      if (error) throw error;
+      return data;
+    },
+  });
+
   return (
     <Layout>
       {/* Hero Section */}
@@ -82,40 +77,75 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Categories Section */}
+      {/* Explore Our Collection - Real Products */}
       <section className="section-padding bg-muted">
         <div className="container-alpen">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4">
-              Explore Our <span className="text-primary">Collections</span>
+              Explore Our <span className="text-primary">Collection</span>
             </h2>
             <p className="text-muted-foreground">
               From rare Arabian oud to premium beauty products, discover our carefully curated selection.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {categories.map((category, index) => (
-              <Link
-                key={category.title}
-                to="/shop"
-                className="card-alpen group hover:scale-[1.02] transition-transform"
-              >
-                <div className="aspect-square overflow-hidden">
-                  <img
-                    src={category.image}
-                    alt={category.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
+          {collectionsLoading ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="card-alpen">
+                  <Skeleton className="aspect-square" />
+                  <div className="p-4 space-y-2">
+                    <Skeleton className="h-4 w-3/4" />
+                    <Skeleton className="h-4 w-1/2" />
+                  </div>
                 </div>
-                <div className="p-6">
-                  <h3 className="font-serif text-lg font-semibold mb-2 group-hover:text-primary transition-colors">
-                    {category.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground">{category.description}</p>
-                </div>
+              ))}
+            </div>
+          ) : collectionProducts && collectionProducts.length > 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+              {collectionProducts.map((product) => (
+                <Link
+                  key={product.id}
+                  to={`/shop/${product.id}`}
+                  className="card-alpen group hover:scale-[1.02] transition-transform"
+                >
+                  <div className="aspect-square overflow-hidden bg-accent">
+                    {product.image_url ? (
+                      <img
+                        src={product.image_url}
+                        alt={product.name}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-muted-foreground text-sm">
+                        No Image
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-4">
+                    <p className="text-xs text-primary font-medium uppercase tracking-wider mb-1">
+                      {product.category}
+                    </p>
+                    <h3 className="font-serif text-sm sm:text-base font-semibold mb-1 group-hover:text-primary transition-colors line-clamp-1">
+                      {product.name}
+                    </h3>
+                    <p className="text-sm sm:text-base font-bold text-primary">
+                      ₦{Number(product.price).toLocaleString()}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <p className="text-center text-muted-foreground py-8">No products available yet.</p>
+          )}
+
+          <div className="text-center mt-10">
+            <Button asChild variant="default" size="lg">
+              <Link to="/shop">
+                View All Products <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
-            ))}
+            </Button>
           </div>
         </div>
       </section>
