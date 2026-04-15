@@ -122,6 +122,7 @@ export default function AdminAbout() {
       ? await supabase.from('site_content').update({
           title: editingContent.title,
           content: editingContent.content,
+          image_url: editingContent.image_url,
           display_order: editingContent.display_order || 0,
         }).eq('id', editingContent.id)
       : await supabase.from('site_content').insert({
@@ -129,6 +130,7 @@ export default function AdminAbout() {
           section_key: editingContent.section_key,
           title: editingContent.title,
           content: editingContent.content,
+          image_url: editingContent.image_url,
           display_order: editingContent.display_order || 0,
         });
     if (error) { toast.error('Failed to save'); return; }
@@ -323,6 +325,14 @@ export default function AdminAbout() {
             <div><Label>Title</Label><Input value={editingContent?.title || ''} onChange={e => setEditingContent(prev => ({ ...prev, title: e.target.value }))} /></div>
             <div><Label>Content</Label><Textarea rows={5} value={editingContent?.content || ''} onChange={e => setEditingContent(prev => ({ ...prev, content: e.target.value }))} /></div>
             <div><Label>Display Order</Label><Input type="number" value={editingContent?.display_order || 0} onChange={e => setEditingContent(prev => ({ ...prev, display_order: parseInt(e.target.value) || 0 }))} /></div>
+            <div>
+              <Label>Image</Label>
+              <ImageUploader
+                currentUrl={editingContent?.image_url || null}
+                onImageChange={(url) => setEditingContent(prev => ({ ...prev, image_url: url }))}
+                folder="about"
+              />
+            </div>
             <Button onClick={saveContent} className="w-full"><Save className="w-4 h-4 mr-2" /> Save</Button>
           </div>
         </DialogContent>
