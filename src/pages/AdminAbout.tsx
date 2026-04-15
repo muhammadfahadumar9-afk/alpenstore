@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ArrowLeft, Plus, Trash2, Edit2, Save, Users, Crown, Briefcase, MapPin, UserCircle } from 'lucide-react';
+import ImageUploader from '@/components/admin/ImageUploader';
 import { toast } from 'sonner';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -298,7 +299,14 @@ export default function AdminAbout() {
               <div><Label>Branch Name</Label><Input value={editingMember?.branch_name || ''} onChange={e => setEditingMember(prev => ({ ...prev, branch_name: e.target.value }))} /></div>
             )}
             <div><Label>Bio</Label><Textarea value={editingMember?.bio || ''} onChange={e => setEditingMember(prev => ({ ...prev, bio: e.target.value }))} /></div>
-            <div><Label>Image URL</Label><Input value={editingMember?.image_url || ''} onChange={e => setEditingMember(prev => ({ ...prev, image_url: e.target.value }))} /></div>
+            <div>
+              <Label>Photo</Label>
+              <ImageUploader
+                currentUrl={editingMember?.image_url || null}
+                onImageChange={(url) => setEditingMember(prev => ({ ...prev, image_url: url }))}
+                folder="about"
+              />
+            </div>
             <div><Label>Display Order</Label><Input type="number" value={editingMember?.display_order || 0} onChange={e => setEditingMember(prev => ({ ...prev, display_order: parseInt(e.target.value) || 0 }))} /></div>
             <Button onClick={saveMember} className="w-full"><Save className="w-4 h-4 mr-2" /> Save</Button>
           </div>
