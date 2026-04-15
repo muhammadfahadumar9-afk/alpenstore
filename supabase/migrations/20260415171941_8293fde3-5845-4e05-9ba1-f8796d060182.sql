@@ -1,0 +1,1 @@
+ALTER TABLE public.site_content ADD COLUMN image_url text;

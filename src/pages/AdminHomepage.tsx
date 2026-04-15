@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ArrowLeft, Plus, Trash2, Edit2, Save, Home, Star, Layout, MessageSquare, Truck } from 'lucide-react';
+import ImageUploader from '@/components/admin/ImageUploader';
 import { toast } from 'sonner';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -18,6 +19,7 @@ interface ContentBlock {
   section_key: string;
   title: string | null;
   content: string | null;
+  image_url: string | null;
   display_order: number;
 }
 
@@ -67,6 +69,7 @@ export default function AdminHomepage() {
       ? await supabase.from('site_content').update({
           title: editingContent.title,
           content: editingContent.content,
+          image_url: editingContent.image_url,
           display_order: editingContent.display_order || 0,
         }).eq('id', editingContent.id)
       : await supabase.from('site_content').insert({
@@ -74,6 +77,7 @@ export default function AdminHomepage() {
           section_key: editingContent.section_key,
           title: editingContent.title,
           content: editingContent.content,
+          image_url: editingContent.image_url,
           display_order: editingContent.display_order || 0,
         });
     if (error) { toast.error('Failed to save'); return; }
@@ -223,6 +227,14 @@ export default function AdminHomepage() {
             <div><Label>Title</Label><Input value={editingContent?.title || ''} onChange={e => setEditingContent(prev => ({ ...prev, title: e.target.value }))} /></div>
             <div><Label>Content</Label><Textarea rows={5} value={editingContent?.content || ''} onChange={e => setEditingContent(prev => ({ ...prev, content: e.target.value }))} /></div>
             <div><Label>Display Order</Label><Input type="number" value={editingContent?.display_order || 0} onChange={e => setEditingContent(prev => ({ ...prev, display_order: parseInt(e.target.value) || 0 }))} /></div>
+            <div>
+              <Label>Image</Label>
+              <ImageUploader
+                currentUrl={editingContent?.image_url || null}
+                onImageChange={(url) => setEditingContent(prev => ({ ...prev, image_url: url }))}
+                folder="home"
+              />
+            </div>
             <Button onClick={saveContent} className="w-full"><Save className="w-4 h-4 mr-2" /> Save</Button>
           </div>
         </DialogContent>

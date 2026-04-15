@@ -274,6 +274,7 @@ export type Database = {
           created_at: string
           display_order: number
           id: string
+          image_url: string | null
           page_key: string
           section_key: string
           title: string | null
@@ -284,6 +285,7 @@ export type Database = {
           created_at?: string
           display_order?: number
           id?: string
+          image_url?: string | null
           page_key: string
           section_key: string
           title?: string | null
@@ -294,6 +296,7 @@ export type Database = {
           created_at?: string
           display_order?: number
           id?: string
+          image_url?: string | null
           page_key?: string
           section_key?: string
           title?: string | null
