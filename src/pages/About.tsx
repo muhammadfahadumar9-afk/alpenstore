@@ -60,6 +60,7 @@ const About = () => {
   return (
     <Layout>
       {/* Hero Section */}
+      {/* Hero Section */}
       <section className="relative py-20 bg-gradient-to-b from-accent to-background">
         <div className="container-alpen">
           <div className="max-w-3xl mx-auto text-center animate-slide-up">
@@ -70,8 +71,48 @@ const About = () => {
               About <span className="text-primary">ALPEN STORE LTD</span>
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              Two decades of excellence in Arabian perfumes, Islamic wellness, and premium beauty products.
+              A dynamic retail company committed to delivering premium fragrances, Islamic lifestyle products, and everyday essentials.
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Our Story Section */}
+      <section className="section-padding">
+        <div className="container-alpen">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4">
+                Our <span className="text-primary">Story</span>
+              </h2>
+            </div>
+            <div className="space-y-5 text-muted-foreground leading-relaxed text-base md:text-lg">
+              <p>
+                Founded in 2000 by Alhaji Umar Sale, Alpen began as a single retail outlet in Kano, Nigeria, with a clear vision: to build a world-class brand known for quality, trust, and customer satisfaction. Over the years, the company has grown steadily, expanding into multiple strategically located branches while maintaining its commitment to excellence.
+              </p>
+              <p>
+                At Alpen, we focus on creating a refined retail experience where quality meets authenticity. Every product we offer is carefully selected to meet high standards, ensuring our customers receive value, reliability, and satisfaction with every purchase.
+              </p>
+              <p>
+                Today, Alpen Store Limited continues to evolve with a forward-looking approach, positioning itself as a trusted retail brand in the fragrance and lifestyle industry, with ambitions to expand beyond its current reach.
+              </p>
+            </div>
+
+            {/* Core Principles */}
+            <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[
+                { title: "Excellence in Standards", desc: "We maintain high operational and product standards across all locations." },
+                { title: "Clean & Hygienic Environment", desc: "We prioritize cleanliness and proper product handling to ensure customer confidence." },
+                { title: "Community & Responsibility", desc: "We are guided by a strong culture of charity and giving back to society." },
+                { title: "People & Culture", desc: "Our team reflects professionalism, uniqueness, and punctuality in service delivery." },
+                { title: "Customer-Centered Relationships", desc: "We believe in building long-term relationships based on trust, respect, and consistency." },
+              ].map((principle) => (
+                <div key={principle.title} className="card-alpen p-6">
+                  <h3 className="font-serif text-lg font-semibold mb-2 text-primary">{principle.title}</h3>
+                  <p className="text-sm text-muted-foreground">{principle.desc}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
