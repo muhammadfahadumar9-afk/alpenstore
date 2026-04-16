@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Award, Users, Heart, Target, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,11 +8,12 @@ import CeoBio from "@/components/about/CeoBio";
 import BoardOfDirectors from "@/components/about/BoardOfDirectors";
 import ManagementTeam from "@/components/about/ManagementTeam";
 import OurLocations from "@/components/about/OurLocations";
+import { supabase } from "@/integrations/supabase/client";
 import ahmadImg from "@/assets/managers/ahmad-kabiru.jpg";
 import mukhtarImg from "@/assets/managers/mukhtar-jibril.jpg";
 import umarImg from "@/assets/managers/umar-abdullahi.jpg";
 
-const branchManagers = [
+const staticBranchManagers = [
   {
     name: "Ahmad Kabiru Sani",
     branch: "Hajj Camp Market",
@@ -57,6 +59,30 @@ const values = [
 
 
 const About = () => {
+  const [dbBranchManagers, setDbBranchManagers] = useState<any[]>([]);
+
+  useEffect(() => {
+    supabase
+      .from("team_members")
+      .select("*")
+      .eq("section", "branch")
+      .order("display_order")
+      .then(({ data }) => {
+        if (data) setDbBranchManagers(data);
+      });
+  }, []);
+
+  // Merge DB branch managers (first) with static ones
+  const allBranchManagers = [
+    ...dbBranchManagers.map((m) => ({
+      name: m.name,
+      branch: m.branch_name || m.title || "",
+      image: m.image_url || "",
+      bio: m.bio || "",
+    })),
+    ...staticBranchManagers,
+  ];
+
   return (
     <Layout>
       {/* Hero Section */}
@@ -140,7 +166,7 @@ const About = () => {
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {branchManagers.map((manager) => (
+            {allBranchManagers.map((manager) => (
               <div
                 key={manager.name}
                 className="card-alpen p-6 text-center group hover:border-primary/50 hover:shadow-lg transition-all duration-300"
