@@ -28,33 +28,30 @@ const CeoBio = () => {
               Founder &amp; CEO
             </p>
             <h2 className="text-3xl md:text-4xl font-serif font-bold text-luxury-charcoal mb-6">
-              Alhaji Muhammad Suleiman
+              ALH. UMAR SALE
             </h2>
+            <p className="text-sm text-muted-foreground mb-6">CEO, Alpen Store Limited</p>
             <div className="space-y-4 text-luxury-slate leading-relaxed antialiased">
               <p>
-                With a lifelong passion for the art of Arabian perfumery and a deep commitment 
-                 to excellence, Alhaji Muhammad Suleiman founded ALPEN STORE LTD over two decades 
-                 ago with a singular vision: to bring the finest authentic fragrances and Islamic 
-                 wellness products to the people of Kano and beyond.
+                With over two decades of experience in the retail and fragrance industry, Alhaji Umar Sale founded Alpen Store Limited with a clear vision: to make quality perfumes and lifestyle essentials accessible, while maintaining the highest standards of trust, authenticity, and customer experience.
               </p>
               <p>
-                Under his visionary leadership, the company has grown from a single storefront 
-                into a respected multi-branch enterprise, earning the trust and loyalty of 
-                thousands of customers across Northern Nigeria.
+                His journey began in Kano, Nigeria, where he built the foundation of the business from a single store in 2000. Through consistency, discipline, and a deep understanding of customer needs, he expanded Alpen into a growing retail brand with multiple branches, known for reliability and excellence.
               </p>
               <p>
-                His philosophy is simple — quality without compromise, honesty in every 
-                transaction, and a relentless pursuit of customer satisfaction. Today, 
-                ALPEN STORE LTD stands as a testament to that philosophy.
+                Today, he continues to guide the company's direction, ensuring that every product reflects quality, every space reflects cleanliness, and every customer interaction reflects respect and care.
               </p>
+              <blockquote className="border-l-4 border-luxury-gold pl-4 py-2 italic text-luxury-charcoal mt-6">
+                "We don't just sell perfumes; we deliver confidence, identity, and lasting impressions."
+              </blockquote>
             </div>
             {/* Signature area */}
             <div className="mt-8 pt-6 border-t border-border">
               <p className="font-serif text-xl italic text-luxury-charcoal">
-                Alhaji M. Suleiman
+                Alhaji Umar Sale
               </p>
               <p className="text-xs text-muted-foreground mt-1 uppercase tracking-widest">
-                Founder &amp; Chief Executive Officer
+                Founder &amp; CEO, Alpen Store Limited
               </p>
             </div>
           </div>
