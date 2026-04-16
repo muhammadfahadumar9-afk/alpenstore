@@ -2,47 +2,8 @@ import { useEffect, useState } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { supabase } from "@/integrations/supabase/client";
 
-const staticMembers = [
-  {
-    name: "Alhaji Muhammad Suleiman",
-    title: "Chief Executive Officer",
-    image: "",
-    bio: "Visionary founder leading ALPEN STORE LTD with over two decades of excellence.",
-  },
-  {
-    name: "Yakubu Ibrahim",
-    title: "Operations Manager",
-    image: "",
-    bio: "Ensures seamless day-to-day operations across all branches.",
-  },
-  {
-    name: "Fatima Abubakar",
-    title: "Sales Director",
-    image: "",
-    bio: "Drives revenue growth and builds lasting customer relationships.",
-  },
-  {
-    name: "Suleiman Garba",
-    title: "Procurement Manager",
-    image: "",
-    bio: "Sources premium authentic products from trusted global suppliers.",
-  },
-  {
-    name: "Aisha Bello",
-    title: "Marketing Manager",
-    image: "",
-    bio: "Leads brand strategy and digital marketing initiatives across all channels.",
-  },
-  {
-    name: "Ibrahim Musa",
-    title: "Finance Manager",
-    image: "",
-    bio: "Oversees financial planning, budgeting, and fiscal growth strategies.",
-  },
-];
-
 const ManagementTeam = () => {
-  const [dbMembers, setDbMembers] = useState<any[]>([]);
+  const [members, setMembers] = useState<any[]>([]);
 
   useEffect(() => {
     supabase
@@ -51,20 +12,16 @@ const ManagementTeam = () => {
       .eq("section", "management")
       .order("display_order")
       .then(({ data }) => {
-        if (data) setDbMembers(data);
+        if (data) setMembers(data);
       });
   }, []);
 
-  const allMembers = [
-    ...staticMembers.map((m) => ({ ...m, source: "static" })),
-    ...dbMembers.map((m) => ({
-      name: m.name,
-      title: m.title || m.role || "",
-      image: m.image_url || "",
-      bio: m.bio || "",
-      source: "db",
-    })),
-  ];
+  const allMembers = members.map((m) => ({
+    name: m.name,
+    title: m.title || m.role || "",
+    image: m.image_url || "",
+    bio: m.bio || "",
+  }));
 
   return (
     <section className="section-padding bg-muted">
