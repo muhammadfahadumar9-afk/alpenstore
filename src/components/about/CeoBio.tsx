@@ -25,7 +25,7 @@ const CeoBio = () => {
           {/* Right Column - Bio Content */}
           <div className="bg-card rounded-xl p-8 md:p-10 border-l-[5px] border-luxury-gold shadow-soft">
             <p className="text-xs font-sans uppercase tracking-[0.25em] text-luxury-gold font-semibold mb-3">
-              Founder &amp; CEO
+              Message from the CEO
             </p>
             <h2 className="text-3xl md:text-4xl font-serif font-bold text-luxury-charcoal mb-6">
               ALH. UMAR SALE
