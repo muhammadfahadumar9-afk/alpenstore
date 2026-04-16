@@ -25,24 +25,18 @@ const CeoBio = () => {
           {/* Right Column - Bio Content */}
           <div className="bg-card rounded-xl p-8 md:p-10 border-l-[5px] border-luxury-gold shadow-soft">
             <p className="text-xs font-sans uppercase tracking-[0.25em] text-luxury-gold font-semibold mb-3">
-              Founder &amp; CEO
+              Message from the CEO
             </p>
             <h2 className="text-3xl md:text-4xl font-serif font-bold text-luxury-charcoal mb-6">
               ALH. UMAR SALE
             </h2>
             <p className="text-sm text-muted-foreground mb-6">CEO, Alpen Store Limited</p>
             <div className="space-y-4 text-luxury-slate leading-relaxed antialiased">
-              <p>
-                With over two decades of experience in the retail and fragrance industry, Alhaji Umar Sale founded Alpen Store Limited with a clear vision: to make quality perfumes and lifestyle essentials accessible, while maintaining the highest standards of trust, authenticity, and customer experience.
-              </p>
-              <p>
-                His journey began in Kano, Nigeria, where he built the foundation of the business from a single store in 2000. Through consistency, discipline, and a deep understanding of customer needs, he expanded Alpen into a growing retail brand with multiple branches, known for reliability and excellence.
-              </p>
-              <p>
-                Today, he continues to guide the company's direction, ensuring that every product reflects quality, every space reflects cleanliness, and every customer interaction reflects respect and care.
-              </p>
-              <blockquote className="border-l-4 border-luxury-gold pl-4 py-2 italic text-luxury-charcoal mt-6">
-                "We don't just sell perfumes; we deliver confidence, identity, and lasting impressions."
+              <blockquote className="border-l-4 border-luxury-gold pl-4 py-2 italic text-luxury-charcoal">
+                "At Alpen Store Limited, we are driven by a commitment to excellence, integrity, and continuous growth. What started as a single store has grown into a trusted brand because of our dedication to quality and our respect for the people we serve.
+              </blockquote>
+              <blockquote className="border-l-4 border-luxury-gold pl-4 py-2 italic text-luxury-charcoal">
+                We remain focused on delivering value to our customers, empowering our team, and contributing positively to our community. Our vision is to build Alpen into a globally recognized brand while staying true to our core principles."
               </blockquote>
             </div>
             {/* Signature area */}
