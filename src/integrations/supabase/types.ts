@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_setup_rate_limits: {
+        Row: {
+          attempts: number
+          first_attempt: string
+          function_name: string
+          id: string
+          ip_address: string
+          last_attempt: string
+        }
+        Insert: {
+          attempts?: number
+          first_attempt?: string
+          function_name: string
+          id?: string
+          ip_address: string
+          last_attempt?: string
+        }
+        Update: {
+          attempts?: number
+          first_attempt?: string
+          function_name?: string
+          id?: string
+          ip_address?: string
+          last_attempt?: string
+        }
+        Relationships: []
+      }
       order_items: {
         Row: {
           created_at: string
