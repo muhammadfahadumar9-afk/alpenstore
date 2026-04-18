@@ -50,7 +50,7 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
 
       if (error) throw error;
 
-      setReviews(data || []);
+      setReviews((data as any) || []);
       
       // Calculate average rating
       if (data && data.length > 0) {
