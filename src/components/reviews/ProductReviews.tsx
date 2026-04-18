@@ -54,7 +54,7 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
       
       // Calculate average rating
       if (data && data.length > 0) {
-        const avg = data.reduce((sum, r) => sum + r.rating, 0) / data.length;
+        const avg = (data as any[]).reduce((sum, r) => sum + r.rating, 0) / data.length;
         setAverageRating(Math.round(avg * 10) / 10);
         setTotalReviews(data.length);
       } else {
