@@ -146,9 +146,6 @@ const About = () => {
       {/* CEO Biography */}
       <CeoBio />
 
-      {/* Board of Directors */}
-      <BoardOfDirectors />
-
       {/* Management Team */}
       <ManagementTeam />
 
