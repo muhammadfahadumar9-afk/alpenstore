@@ -53,9 +53,9 @@ const OrderHistory = () => {
     if (user) {
       fetchOrders();
 
-      // Subscribe to real-time order updates
+      // Subscribe to real-time order updates on a user-scoped private channel
       const channel = supabase
-        .channel('user-orders')
+        .channel(`user-orders:${user.id}`, { config: { private: true } })
         .on(
           'postgres_changes',
           {
