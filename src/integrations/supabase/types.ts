@@ -372,7 +372,44 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      reviews_public: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          product_id: string | null
+          rating: number | null
+          review_text: string | null
+          reviewer_name: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string | null
+          product_id?: string | null
+          rating?: number | null
+          review_text?: string | null
+          reviewer_name?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string | null
+          product_id?: string | null
+          rating?: number | null
+          review_text?: string | null
+          reviewer_name?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       has_purchased_product: {
