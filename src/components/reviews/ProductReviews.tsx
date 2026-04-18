@@ -43,7 +43,7 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
     setIsLoading(true);
     try {
       const { data, error } = await supabase
-        .from("reviews")
+        .from("reviews_public" as any)
         .select("id, rating, review_text, reviewer_name, created_at")
         .eq("product_id", productId)
         .order("created_at", { ascending: false });
