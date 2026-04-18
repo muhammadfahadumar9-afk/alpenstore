@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import Layout from "@/components/layout/Layout";
 import CeoBio from "@/components/about/CeoBio";
-import BoardOfDirectors from "@/components/about/BoardOfDirectors";
+
 import ManagementTeam from "@/components/about/ManagementTeam";
 import OurLocations from "@/components/about/OurLocations";
 import { supabase } from "@/integrations/supabase/client";
@@ -145,9 +145,6 @@ const About = () => {
 
       {/* CEO Biography */}
       <CeoBio />
-
-      {/* Board of Directors */}
-      <BoardOfDirectors />
 
       {/* Management Team */}
       <ManagementTeam />
