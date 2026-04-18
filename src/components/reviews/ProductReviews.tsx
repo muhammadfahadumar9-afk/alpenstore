@@ -43,18 +43,18 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
     setIsLoading(true);
     try {
       const { data, error } = await supabase
-        .from("reviews")
+        .from("reviews_public" as any)
         .select("id, rating, review_text, reviewer_name, created_at")
         .eq("product_id", productId)
         .order("created_at", { ascending: false });
 
       if (error) throw error;
 
-      setReviews(data || []);
+      setReviews((data as any) || []);
       
       // Calculate average rating
       if (data && data.length > 0) {
-        const avg = data.reduce((sum, r) => sum + r.rating, 0) / data.length;
+        const avg = (data as any[]).reduce((sum, r) => sum + r.rating, 0) / data.length;
         setAverageRating(Math.round(avg * 10) / 10);
         setTotalReviews(data.length);
       } else {
