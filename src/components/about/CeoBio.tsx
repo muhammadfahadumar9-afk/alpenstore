@@ -13,8 +13,8 @@ const CeoBio = () => {
               <div className="relative rounded-lg overflow-hidden shadow-card">
                 <AspectRatio ratio={3 / 4}>
                   <img
-                    src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=600&h=800&fit=crop&crop=face"
-                    alt="CEO of ALPEN STORE LTD"
+                    src="https://spmnuwaeesqszsxklyxn.supabase.co/storage/v1/object/public/page-images/ceo/saluhu-ceo.jpg"
+                    alt="Alhaji Umar Sale, CEO of ALPEN STORE LTD"
                     className="w-full h-full object-cover"
                   />
                 </AspectRatio>
