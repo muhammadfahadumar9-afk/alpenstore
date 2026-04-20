@@ -32,6 +32,11 @@ import Checkout from "./pages/Checkout";
 import OrderConfirmation from "./pages/OrderConfirmation";
 import NotFound from "./pages/NotFound";
 import Documentation from "./pages/Documentation";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
+import AdminBlog from "./pages/AdminBlog";
+import AdminBlogEditor from "./pages/AdminBlogEditor";
+import AdminBlogTaxonomy from "./pages/AdminBlogTaxonomy";
 
 const queryClient = new QueryClient();
 
@@ -60,7 +65,16 @@ const App = () => (
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/order-confirmation" element={<OrderConfirmation />} />
               <Route path="/documentation" element={<Documentation />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/category/:slug" element={<Blog />} />
+              <Route path="/blog/tag/:slug" element={<Blog />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/admin" element={<Admin />} />
+              <Route path="/admin/blog" element={<AdminBlog />} />
+              <Route path="/admin/blog/new" element={<AdminBlogEditor />} />
+              <Route path="/admin/blog/:id/edit" element={<AdminBlogEditor />} />
+              <Route path="/admin/blog/categories" element={<AdminBlogTaxonomy />} />
+              <Route path="/admin/blog/tags" element={<AdminBlogTaxonomy />} />
               <Route path="/admin/login" element={<AdminAuth />} />
               <Route path="/admin/products" element={<AdminProducts />} />
               <Route path="/admin/orders" element={<AdminOrders />} />
