@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import Layout from "@/components/layout/Layout";
 import SeoHead from "@/components/blog/SeoHead";
 import CommentsSection from "@/components/blog/CommentsSection";
+import ShareButtons from "@/components/blog/ShareButtons";
 import { sanitizeHtml, formatDate, readingTime } from "@/lib/blog";
 import { Calendar, Clock, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -154,6 +155,12 @@ export default function BlogPost() {
         <div
           className="prose prose-lg max-w-none prose-headings:font-serif prose-headings:text-foreground prose-a:text-primary prose-img:rounded-lg"
           dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.content) }}
+        />
+
+        <ShareButtons
+          title={post.title}
+          url={url}
+          description={post.meta_description || post.excerpt || undefined}
         />
 
         {tags.length > 0 && (
