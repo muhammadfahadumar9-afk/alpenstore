@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -17,8 +18,15 @@ export default function AdminAuth() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!authLoading && !isAdminLoading && user && isAdmin) {
+    if (authLoading || isAdminLoading) return;
+    if (user && isAdmin) {
       navigate('/admin');
+    } else if (user && !isAdmin) {
+      // Logged in but not an admin — sign out and inform
+      supabase.auth.signOut().then(() => {
+        toast.error('This account does not have admin access.');
+        setIsLoading(false);
+      });
     }
   }, [user, isAdmin, isAdminLoading, authLoading, navigate]);
 
@@ -45,6 +53,7 @@ export default function AdminAuth() {
     }
 
     toast.success('Login successful');
+    setIsLoading(false);
     // Navigation will happen via useEffect when isAdmin updates
   };
 
