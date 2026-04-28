@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -43,6 +43,8 @@ const PRODUCTS_PER_PAGE = 50;
 export default function AdminProducts() {
   const { user, isAdmin, isLoading, isAdminLoading, signOut } = useAuth();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const categoryFilter = searchParams.get('category') || 'all';
   const [products, setProducts] = useState<Product[]>([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -109,10 +111,13 @@ export default function AdminProducts() {
 
   const totalPages = Math.ceil(totalCount / PRODUCTS_PER_PAGE);
 
-  const filteredProducts = products.filter(product =>
-    product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (product.description?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false)
-  );
+  const filteredProducts = products.filter(product => {
+    const matchesSearch =
+      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (product.description?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false);
+    const matchesCategory = categoryFilter === 'all' || product.category === categoryFilter;
+    return matchesSearch && matchesCategory;
+  });
 
   const handleSignOut = async () => {
     await signOut();
