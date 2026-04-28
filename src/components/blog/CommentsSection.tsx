@@ -25,19 +25,25 @@ export default function CommentsSection({ postId }: { postId: string }) {
 
   const load = async () => {
     setLoading(true);
-    // Anonymous visitors are not allowed to read user_id (privacy).
-    // Only request it when the viewer is signed in.
-    const columns = user
-      ? "id, user_id, author_name, content, created_at"
-      : "id, author_name, content, created_at";
-    const { data } = await supabase
-      .from("blog_comments")
-      .select(columns)
-      .eq("post_id", postId)
-      .order("created_at", { ascending: false });
-    setComments(
-      (data || []).map((c: any) => ({ user_id: null, ...c })) as Comment[]
-    );
+    // Anonymous visitors read from a privacy-safe public view (no user_id).
+    // Logged-in users read from the base table so we can show "delete own" controls.
+    if (user) {
+      const { data } = await supabase
+        .from("blog_comments")
+        .select("id, user_id, author_name, content, created_at")
+        .eq("post_id", postId)
+        .order("created_at", { ascending: false });
+      setComments((data || []) as Comment[]);
+    } else {
+      const { data } = await supabase
+        .from("blog_comments_public" as any)
+        .select("id, author_name, content, created_at")
+        .eq("post_id", postId)
+        .order("created_at", { ascending: false });
+      setComments(
+        (data || []).map((c: any) => ({ ...c, user_id: null })) as Comment[]
+      );
+    }
     setLoading(false);
   };
 
