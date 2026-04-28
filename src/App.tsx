@@ -23,6 +23,7 @@ import AdminAbout from "./pages/AdminAbout";
 import AdminHomepage from "./pages/AdminHomepage";
 import AdminSettings from "./pages/AdminSettings";
 import AdminDocumentation from "./pages/AdminDocumentation";
+import AdminSecurity from "./pages/AdminSecurity";
 import CustomerAuth from "./pages/CustomerAuth";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
@@ -84,6 +85,7 @@ const App = () => (
               <Route path="/admin/homepage" element={<AdminHomepage />} />
               <Route path="/admin/settings" element={<AdminSettings />} />
               <Route path="/admin/documentation" element={<AdminDocumentation />} />
+              <Route path="/admin/security" element={<AdminSecurity />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

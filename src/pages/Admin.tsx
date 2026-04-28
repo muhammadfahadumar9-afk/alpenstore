@@ -132,6 +132,7 @@ export default function Admin() {
     { title: 'Gallery', description: 'Manage gallery images', icon: Image, href: '/admin/gallery' },
     { title: 'Settings', description: 'Configure site settings', icon: Settings, href: '/admin/settings' },
     { title: 'Documentation', description: 'Private admin guide', icon: BookOpen, href: '/admin/documentation' },
+    { title: 'Security & Privacy', description: 'Data protection checklist', icon: ShieldCheck, href: '/admin/security' },
   ];
 
   return (
