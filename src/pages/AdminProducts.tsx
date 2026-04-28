@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -302,6 +303,13 @@ export default function AdminProducts() {
               <p className="text-muted-foreground">
                 Add, edit, and manage your product catalog
               </p>
+              <div className="mt-3 flex flex-wrap gap-2" aria-label="Product categories">
+                {categories.map((cat) => (
+                  <Badge key={cat.value} variant="secondary" className="rounded-md">
+                    {cat.label}
+                  </Badge>
+                ))}
+              </div>
             </div>
           </div>
 
