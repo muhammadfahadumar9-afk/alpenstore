@@ -33,6 +33,8 @@ const categories = [
   { value: 'wellness', label: 'Islamic Wellness' },
   { value: 'cosmetics', label: 'Cosmetics & Beauty' },
   { value: 'dates', label: 'Dates' },
+  { value: 'spices', label: 'Spices' },
+  { value: 'arabian-oud', label: 'Arabian Oud' },
 ];
 
 const PRODUCTS_PER_PAGE = 50;

@@ -34,9 +34,11 @@ const categoryMap: Record<string, string> = {
   wellness: "Islamic Wellness",
   cosmetics: "Cosmetics & Beauty",
   dates: "Dates",
+  spices: "Spices",
+  "arabian-oud": "Arabian Oud",
 };
 
-const categories = ["All", "Arabian Perfumes", "Islamic Wellness", "Cosmetics & Beauty", "Dates"];
+const categories = ["All", "Arabian Perfumes", "Islamic Wellness", "Cosmetics & Beauty", "Dates", "Spices", "Arabian Oud"];
 
 const PRODUCTS_PER_PAGE = 24;
 
