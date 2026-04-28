@@ -23,6 +23,12 @@ import {
   AlertTriangle,
   CheckCircle2,
   FileWarning,
+  BookOpen,
+  Server,
+  ScrollText,
+  Bug,
+  Network,
+  Package,
 } from "lucide-react";
 import { toast } from "sonner";
 
