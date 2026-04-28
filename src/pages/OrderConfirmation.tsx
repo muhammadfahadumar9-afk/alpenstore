@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import Layout from "@/components/layout/Layout";
 import OrderStatusTracker from "@/components/orders/OrderStatusTracker";
+import DeliveryFeeNotice from "@/components/checkout/DeliveryFeeNotice";
 import { supabase } from "@/integrations/supabase/client";
 
 interface OrderItem {
@@ -289,6 +290,13 @@ const OrderConfirmation = () => {
               </p>
             )}
           </div>
+
+          {/* Delivery fee reminder */}
+          {orderData.deliveryMethod === "delivery" && (
+            <div className="mt-6">
+              <DeliveryFeeNotice />
+            </div>
+          )}
 
           {/* Navigation Links */}
           <div className="flex flex-col sm:flex-row gap-3 mt-6">

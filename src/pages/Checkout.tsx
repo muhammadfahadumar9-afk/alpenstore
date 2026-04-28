@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import Layout from "@/components/layout/Layout";
+import DeliveryFeeNotice from "@/components/checkout/DeliveryFeeNotice";
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/contexts/CartContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -261,7 +262,7 @@ const Checkout = () => {
                       <div>
                         <p className="font-medium">Home Delivery</p>
                         <p className="text-sm text-muted-foreground">
-                          Free on orders above ₦20,000
+                          Delivery fee discussed via WhatsApp
                         </p>
                       </div>
                     </Label>
@@ -395,11 +396,7 @@ const Checkout = () => {
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Delivery</span>
                   <span className="text-muted-foreground">
-                    {deliveryMethod === "pickup"
-                      ? "Free (Pickup)"
-                      : totalPrice >= 20000
-                      ? "Free"
-                      : "TBD"}
+                    {deliveryMethod === "pickup" ? "Free (Pickup)" : "Via WhatsApp"}
                   </span>
                 </div>
                 <Separator className="my-2" />
@@ -412,6 +409,12 @@ const Checkout = () => {
               <p className="text-xs text-muted-foreground text-center mt-4">
                 Your order will be confirmed via WhatsApp
               </p>
+
+              {deliveryMethod === "delivery" && (
+                <div className="mt-6">
+                  <DeliveryFeeNotice />
+                </div>
+              )}
             </div>
           </div>
         </div>
