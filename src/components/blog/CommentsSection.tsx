@@ -10,7 +10,7 @@ import { formatDate } from "@/lib/blog";
 
 interface Comment {
   id: string;
-  user_id: string;
+  user_id: string | null;
   author_name: string;
   content: string;
   created_at: string;
@@ -25,19 +25,26 @@ export default function CommentsSection({ postId }: { postId: string }) {
 
   const load = async () => {
     setLoading(true);
+    // Anonymous visitors are not allowed to read user_id (privacy).
+    // Only request it when the viewer is signed in.
+    const columns = user
+      ? "id, user_id, author_name, content, created_at"
+      : "id, author_name, content, created_at";
     const { data } = await supabase
       .from("blog_comments")
-      .select("id, user_id, author_name, content, created_at")
+      .select(columns)
       .eq("post_id", postId)
       .order("created_at", { ascending: false });
-    setComments(data || []);
+    setComments(
+      (data || []).map((c: any) => ({ user_id: null, ...c })) as Comment[]
+    );
     setLoading(false);
   };
 
   useEffect(() => {
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [postId]);
+  }, [postId, user?.id]);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
