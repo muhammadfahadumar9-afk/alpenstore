@@ -20,13 +20,16 @@ export default function AdminAuth() {
   useEffect(() => {
     if (authLoading || isAdminLoading) return;
     if (user && isAdmin) {
-      navigate('/admin');
+      setIsLoading(false);
+      navigate('/admin', { replace: true });
     } else if (user && !isAdmin) {
       // Logged in but not an admin — sign out and inform
       supabase.auth.signOut().then(() => {
         toast.error('This account does not have admin access.');
         setIsLoading(false);
       });
+    } else {
+      setIsLoading(false);
     }
   }, [user, isAdmin, isAdminLoading, authLoading, navigate]);
 
@@ -40,21 +43,29 @@ export default function AdminAuth() {
 
     setIsLoading(true);
     
-    const { error } = await signIn(email.toLowerCase().trim(), password);
-    
-    if (error) {
-      if (error.message.includes('Invalid login credentials')) {
-        toast.error('Invalid email or password');
-      } else {
+    try {
+      const { error } = await signIn(email, password);
+      
+      if (error) {
+        if (error.message.includes('Invalid login credentials')) {
+          toast.error('Invalid email or password');
+        } else {
+          toast.error(error.message);
+        }
+        setIsLoading(false);
+        return;
+      }
+
+      toast.success('Login successful');
+      // Navigation will happen via useEffect when isAdmin updates
+    } catch (error) {
+      if (error instanceof Error) {
         toast.error(error.message);
+      } else {
+        toast.error('Unable to sign in. Please try again.');
       }
       setIsLoading(false);
-      return;
     }
-
-    toast.success('Login successful');
-    setIsLoading(false);
-    // Navigation will happen via useEffect when isAdmin updates
   };
 
   if (authLoading) {
