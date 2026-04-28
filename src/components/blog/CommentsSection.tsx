@@ -10,7 +10,7 @@ import { formatDate } from "@/lib/blog";
 
 interface Comment {
   id: string;
-  user_id: string;
+  user_id: string | null;
   author_name: string;
   content: string;
   created_at: string;
@@ -25,19 +25,32 @@ export default function CommentsSection({ postId }: { postId: string }) {
 
   const load = async () => {
     setLoading(true);
-    const { data } = await supabase
-      .from("blog_comments")
-      .select("id, user_id, author_name, content, created_at")
-      .eq("post_id", postId)
-      .order("created_at", { ascending: false });
-    setComments(data || []);
+    // Anonymous visitors read from a privacy-safe public view (no user_id).
+    // Logged-in users read from the base table so we can show "delete own" controls.
+    if (user) {
+      const { data } = await supabase
+        .from("blog_comments")
+        .select("id, user_id, author_name, content, created_at")
+        .eq("post_id", postId)
+        .order("created_at", { ascending: false });
+      setComments((data || []) as Comment[]);
+    } else {
+      const { data } = await supabase
+        .from("blog_comments_public" as any)
+        .select("id, author_name, content, created_at")
+        .eq("post_id", postId)
+        .order("created_at", { ascending: false });
+      setComments(
+        (data || []).map((c: any) => ({ ...c, user_id: null })) as Comment[]
+      );
+    }
     setLoading(false);
   };
 
   useEffect(() => {
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [postId]);
+  }, [postId, user?.id]);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
