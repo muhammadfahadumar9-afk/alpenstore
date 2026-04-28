@@ -18,7 +18,9 @@ import {
   TrendingUp,
   Eye,
   DollarSign,
-  UserCheck
+  UserCheck,
+  Sparkles,
+  Flame
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -214,6 +216,28 @@ export default function Admin() {
         )}
 
         {/* Admin Modules */}
+        <h3 className="text-lg font-semibold mb-4">Category Quick Links</h3>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-8">
+          {[
+            { label: 'Spices', value: 'spices', icon: Flame },
+            { label: 'Arabian Oud', value: 'arabian-oud', icon: Sparkles },
+            { label: 'Arabian Perfumes', value: 'perfumes', icon: Sparkles },
+            { label: 'Islamic Wellness', value: 'wellness', icon: Sparkles },
+            { label: 'Cosmetics & Beauty', value: 'cosmetics', icon: Sparkles },
+            { label: 'Dates', value: 'dates', icon: Sparkles },
+          ].map((cat) => (
+            <Button
+              key={cat.value}
+              variant="outline"
+              className="justify-start gap-2 h-auto py-3"
+              onClick={() => navigate(`/admin/products?category=${cat.value}`)}
+            >
+              <cat.icon className="w-4 h-4 text-primary shrink-0" />
+              <span className="truncate text-sm">{cat.label}</span>
+            </Button>
+          ))}
+        </div>
+
         <h3 className="text-lg font-semibold mb-4">Quick Access</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {adminModules.map((module) => (

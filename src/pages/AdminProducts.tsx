@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -43,6 +43,8 @@ const PRODUCTS_PER_PAGE = 50;
 export default function AdminProducts() {
   const { user, isAdmin, isLoading, isAdminLoading, signOut } = useAuth();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const categoryFilter = searchParams.get('category') || 'all';
   const [products, setProducts] = useState<Product[]>([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -109,10 +111,13 @@ export default function AdminProducts() {
 
   const totalPages = Math.ceil(totalCount / PRODUCTS_PER_PAGE);
 
-  const filteredProducts = products.filter(product =>
-    product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (product.description?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false)
-  );
+  const filteredProducts = products.filter(product => {
+    const matchesSearch =
+      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (product.description?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false);
+    const matchesCategory = categoryFilter === 'all' || product.category === categoryFilter;
+    return matchesSearch && matchesCategory;
+  });
 
   const handleSignOut = async () => {
     await signOut();
@@ -457,15 +462,51 @@ export default function AdminProducts() {
         <Card>
           <CardHeader>
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <CardTitle>All Products ({totalCount})</CardTitle>
-              <div className="relative w-full sm:w-64">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search products..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9"
-                />
+              <div className="flex items-center gap-2 flex-wrap">
+                <CardTitle>All Products ({totalCount})</CardTitle>
+                {categoryFilter !== 'all' && (
+                  <Badge variant="secondary" className="gap-1">
+                    {categories.find((c) => c.value === categoryFilter)?.label || categoryFilter}
+                    <button
+                      type="button"
+                      onClick={() => setSearchParams({})}
+                      className="ml-1 text-xs hover:text-destructive"
+                      aria-label="Clear category filter"
+                    >
+                      ✕
+                    </button>
+                  </Badge>
+                )}
+              </div>
+              <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                <Select
+                  value={categoryFilter}
+                  onValueChange={(value) => {
+                    if (value === 'all') setSearchParams({});
+                    else setSearchParams({ category: value });
+                  }}
+                >
+                  <SelectTrigger className="w-full sm:w-48">
+                    <SelectValue placeholder="All categories" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All categories</SelectItem>
+                    {categories.map((cat) => (
+                      <SelectItem key={cat.value} value={cat.value}>
+                        {cat.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <div className="relative w-full sm:w-64">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search products..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-9"
+                  />
+                </div>
               </div>
             </div>
           </CardHeader>
