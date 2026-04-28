@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { MapPin, MessageCircle, Truck, Store } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,8 @@ const Checkout = () => {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [deliveryMethod, setDeliveryMethod] = useState("delivery");
+  const deliveryNoticeRef = useRef<HTMLDivElement | null>(null);
+  const hasAutoScrolled = useRef(false);
   const [formData, setFormData] = useState({
     phone: "",
     address: "",
@@ -43,6 +45,22 @@ const Checkout = () => {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  // Auto-scroll the WhatsApp delivery-fee CTA into view when user picks Home Delivery
+  useEffect(() => {
+    if (deliveryMethod !== "delivery") {
+      hasAutoScrolled.current = false;
+      return;
+    }
+    if (hasAutoScrolled.current) return;
+    const el = deliveryNoticeRef.current;
+    if (!el) return;
+    const t = window.setTimeout(() => {
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+      hasAutoScrolled.current = true;
+    }, 150);
+    return () => window.clearTimeout(t);
+  }, [deliveryMethod]);
 
   const fetchProfile = async (userId: string) => {
     const { data } = await supabase
@@ -411,7 +429,7 @@ const Checkout = () => {
               </p>
 
               {deliveryMethod === "delivery" && (
-                <div className="mt-6">
+                <div ref={deliveryNoticeRef} className="mt-6 scroll-mt-24">
                   <DeliveryFeeNotice />
                 </div>
               )}
