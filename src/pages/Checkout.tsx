@@ -429,7 +429,7 @@ const Checkout = () => {
               </p>
 
               {deliveryMethod === "delivery" && (
-                <div className="mt-6">
+                <div ref={deliveryNoticeRef} className="mt-6 scroll-mt-24">
                   <DeliveryFeeNotice />
                 </div>
               )}
