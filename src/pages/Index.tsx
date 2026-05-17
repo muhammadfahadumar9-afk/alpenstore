@@ -34,6 +34,7 @@ const Index = () => {
         .from("products")
         .select("*")
         .eq("in_stock", true)
+        .is("deleted_at", null)
         .order("created_at", { ascending: false })
         .limit(20);
       if (error) throw error;

@@ -69,7 +69,8 @@ const Shop = () => {
       // Get total count first
       const { count, error: countError } = await supabase
         .from('products')
-        .select('*', { count: 'exact', head: true });
+        .select('*', { count: 'exact', head: true })
+        .is('deleted_at', null);
 
       if (countError) throw countError;
       setTotalCount(count || 0);
@@ -78,6 +79,7 @@ const Shop = () => {
       const { data, error } = await supabase
         .from('products')
         .select('*')
+        .is('deleted_at', null)
         .order('featured', { ascending: false })
         .order('created_at', { ascending: false })
         .range(offset, offset + PRODUCTS_PER_PAGE - 1);
