@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { z } from "zod";
 import { PasswordStrengthIndicator } from "@/components/auth/PasswordStrengthIndicator";
+import { logLoginAttempt } from "@/lib/auditLog";
 
 // Strong password schema matching OTP reset requirements
 const strongPasswordSchema = z.string()
@@ -80,6 +81,11 @@ const CustomerAuth = () => {
         });
 
         if (error) {
+          logLoginAttempt({
+            email: formData.email,
+            success: false,
+            failureReason: error.message,
+          });
           if (error.message.includes("Invalid login credentials")) {
             toast({
               title: "Login failed",
@@ -97,6 +103,7 @@ const CustomerAuth = () => {
           return;
         }
 
+        logLoginAttempt({ email: formData.email, success: true });
         toast({
           title: "Welcome back!",
           description: "You have successfully logged in.",

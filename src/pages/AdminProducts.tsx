@@ -86,7 +86,8 @@ export default function AdminProducts() {
       // Get total count
       const { count, error: countError } = await supabase
         .from('products')
-        .select('*', { count: 'exact', head: true });
+        .select('*', { count: 'exact', head: true })
+        .is('deleted_at', null);
 
       if (countError) throw countError;
       setTotalCount(count || 0);
@@ -96,6 +97,7 @@ export default function AdminProducts() {
       const { data, error } = await supabase
         .from('products')
         .select('*')
+        .is('deleted_at', null)
         .order('created_at', { ascending: false })
         .range(offset, offset + PRODUCTS_PER_PAGE - 1);
 
@@ -249,11 +251,11 @@ export default function AdminProducts() {
     try {
       const { error } = await supabase
         .from('products')
-        .delete()
+        .update({ deleted_at: new Date().toISOString() })
         .eq('id', productId);
 
       if (error) throw error;
-      toast.success('Product deleted successfully');
+      toast.success('Product moved to Trash');
       fetchProducts();
     } catch (error) {
       console.error('Error deleting product:', error);

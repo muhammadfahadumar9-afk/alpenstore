@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { Eye, EyeOff, Lock } from 'lucide-react';
+import { logLoginAttempt } from '@/lib/auditLog';
 
 export default function AdminAuth() {
   const [email, setEmail] = useState('');
@@ -47,6 +48,7 @@ export default function AdminAuth() {
       const { error } = await signIn(email, password);
       
       if (error) {
+        logLoginAttempt({ email, success: false, failureReason: error.message });
         if (error.message.includes('Invalid login credentials')) {
           toast.error('Invalid email or password');
         } else {
@@ -56,6 +58,7 @@ export default function AdminAuth() {
         return;
       }
 
+      logLoginAttempt({ email, success: true });
       toast.success('Login successful');
       // Navigation will happen via useEffect when isAdmin updates
     } catch (error) {

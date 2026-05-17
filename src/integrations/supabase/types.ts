@@ -41,6 +41,45 @@ export type Database = {
         }
         Relationships: []
       }
+      audit_logs: {
+        Row: {
+          action: string
+          actor_email: string | null
+          actor_id: string | null
+          created_at: string
+          id: string
+          ip_address: string | null
+          metadata: Json | null
+          target_id: string | null
+          target_type: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          action: string
+          actor_email?: string | null
+          actor_id?: string | null
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          target_id?: string | null
+          target_type?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          action?: string
+          actor_email?: string | null
+          actor_id?: string | null
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          target_id?: string | null
+          target_type?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       blog_categories: {
         Row: {
           created_at: string
@@ -163,6 +202,7 @@ export type Database = {
           content: string
           cover_image_url: string | null
           created_at: string
+          deleted_at: string | null
           excerpt: string | null
           id: string
           meta_description: string | null
@@ -179,6 +219,7 @@ export type Database = {
           content?: string
           cover_image_url?: string | null
           created_at?: string
+          deleted_at?: string | null
           excerpt?: string | null
           id?: string
           meta_description?: string | null
@@ -195,6 +236,7 @@ export type Database = {
           content?: string
           cover_image_url?: string | null
           created_at?: string
+          deleted_at?: string | null
           excerpt?: string | null
           id?: string
           meta_description?: string | null
@@ -226,6 +268,63 @@ export type Database = {
           id?: string
           name?: string
           slug?: string
+        }
+        Relationships: []
+      }
+      ip_rules: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          ip_address: string
+          reason: string | null
+          rule_type: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          ip_address: string
+          reason?: string | null
+          rule_type: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          ip_address?: string
+          reason?: string | null
+          rule_type?: string
+        }
+        Relationships: []
+      }
+      login_attempts: {
+        Row: {
+          created_at: string
+          email: string | null
+          failure_reason: string | null
+          id: string
+          ip_address: string | null
+          success: boolean
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          failure_reason?: string | null
+          id?: string
+          ip_address?: string | null
+          success?: boolean
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          failure_reason?: string | null
+          id?: string
+          ip_address?: string | null
+          success?: boolean
+          user_agent?: string | null
         }
         Relationships: []
       }
@@ -374,6 +473,7 @@ export type Database = {
         Row: {
           category: string
           created_at: string
+          deleted_at: string | null
           description: string | null
           featured: boolean
           id: string
@@ -386,6 +486,7 @@ export type Database = {
         Insert: {
           category?: string
           created_at?: string
+          deleted_at?: string | null
           description?: string | null
           featured?: boolean
           id?: string
@@ -398,6 +499,7 @@ export type Database = {
         Update: {
           category?: string
           created_at?: string
+          deleted_at?: string | null
           description?: string | null
           featured?: boolean
           id?: string
@@ -482,6 +584,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      security_settings: {
+        Row: {
+          enforce_ip_allowlist: boolean
+          id: string
+          maintenance_message: string | null
+          maintenance_mode: boolean
+          session_timeout_minutes: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          enforce_ip_allowlist?: boolean
+          id?: string
+          maintenance_message?: string | null
+          maintenance_mode?: boolean
+          session_timeout_minutes?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          enforce_ip_allowlist?: boolean
+          id?: string
+          maintenance_message?: string | null
+          maintenance_mode?: boolean
+          session_timeout_minutes?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
       }
       site_content: {
         Row: {

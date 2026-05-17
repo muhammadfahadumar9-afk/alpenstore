@@ -52,6 +52,7 @@ const ProductDetail = () => {
         .from('products')
         .select('*')
         .eq('id', productId)
+        .is('deleted_at', null)
         .maybeSingle();
 
       if (error) throw error;
@@ -88,6 +89,7 @@ const ProductDetail = () => {
         .eq('category', category)
         .neq('id', currentId)
         .eq('in_stock', true)
+        .is('deleted_at', null)
         .limit(4);
 
       if (error) throw error;

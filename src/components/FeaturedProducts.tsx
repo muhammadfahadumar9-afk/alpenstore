@@ -14,6 +14,7 @@ const FeaturedProducts = () => {
         .select("*")
         .eq("featured", true)
         .eq("in_stock", true)
+        .is("deleted_at", null)
         .limit(4);
 
       if (error) throw error;
