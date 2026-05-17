@@ -135,6 +135,7 @@ export default function Admin() {
     { title: 'Settings', description: 'Configure site settings', icon: Settings, href: '/admin/settings' },
     { title: 'Documentation', description: 'Private admin guide', icon: BookOpen, href: '/admin/documentation' },
     { title: 'Security & Privacy', description: 'Data protection checklist', icon: ShieldCheck, href: '/admin/security' },
+    { title: 'Security Center', description: 'Live monitoring, audit logs, IP rules', icon: ShieldCheck, href: '/admin/security-center' },
   ];
 
   return (

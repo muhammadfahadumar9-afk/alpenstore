@@ -24,6 +24,8 @@ import AdminHomepage from "./pages/AdminHomepage";
 import AdminSettings from "./pages/AdminSettings";
 import AdminDocumentation from "./pages/AdminDocumentation";
 import AdminSecurity from "./pages/AdminSecurity";
+import AdminSecurityCenter from "./pages/AdminSecurityCenter";
+import MaintenanceGate from "./components/layout/MaintenanceGate";
 import CustomerAuth from "./pages/CustomerAuth";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
@@ -50,6 +52,7 @@ const App = () => (
         <CartProvider>
           <BrowserRouter>
             <CartDrawer />
+            <MaintenanceGate>
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/about" element={<About />} />
@@ -86,9 +89,11 @@ const App = () => (
               <Route path="/admin/settings" element={<AdminSettings />} />
               <Route path="/admin/documentation" element={<AdminDocumentation />} />
               <Route path="/admin/security" element={<AdminSecurity />} />
+              <Route path="/admin/security-center" element={<AdminSecurityCenter />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
+            </MaintenanceGate>
           </BrowserRouter>
         </CartProvider>
       </AuthProvider>
