@@ -56,7 +56,7 @@ export async function logAuditEvent(params: {
       action: params.action,
       target_type: params.targetType ?? null,
       target_id: params.targetId ?? null,
-      metadata: params.metadata ?? {},
+      metadata: (params.metadata ?? {}) as never,
       ip_address: ip,
       user_agent: navigator.userAgent.slice(0, 500),
     }]);
