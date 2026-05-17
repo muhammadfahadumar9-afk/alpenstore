@@ -50,7 +50,7 @@ export async function logAuditEvent(params: {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
     const ip = await getClientIp();
-    await supabase.from("audit_logs").insert({
+    await supabase.from("audit_logs").insert([{
       actor_id: user.id,
       actor_email: user.email ?? null,
       action: params.action,
@@ -59,7 +59,7 @@ export async function logAuditEvent(params: {
       metadata: params.metadata ?? {},
       ip_address: ip,
       user_agent: navigator.userAgent.slice(0, 500),
-    });
+    }]);
   } catch (err) {
     console.warn("logAuditEvent failed", err);
   }
