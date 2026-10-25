@@ -17,7 +17,7 @@ export default function MaintenanceGate({ children }: { children: ReactNode }) {
   useEffect(() => {
     let active = true;
     supabase
-      .from("security_settings")
+      .from("security_settings_public" as any)
       .select("maintenance_mode, maintenance_message")
       .limit(1)
       .maybeSingle()

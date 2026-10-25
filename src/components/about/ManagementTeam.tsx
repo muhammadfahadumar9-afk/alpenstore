@@ -7,7 +7,7 @@ const ManagementTeam = () => {
 
   useEffect(() => {
     supabase
-      .from("team_members")
+      .from("team_members_public" as any)
       .select("*")
       .eq("section", "management")
       .order("display_order")
