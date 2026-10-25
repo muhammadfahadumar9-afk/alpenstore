@@ -789,6 +789,57 @@ export type Database = {
           },
         ]
       }
+      security_settings_public: {
+        Row: {
+          maintenance_message: string | null
+          maintenance_mode: boolean | null
+        }
+        Insert: {
+          maintenance_message?: string | null
+          maintenance_mode?: boolean | null
+        }
+        Update: {
+          maintenance_message?: string | null
+          maintenance_mode?: boolean | null
+        }
+        Relationships: []
+      }
+      team_members_public: {
+        Row: {
+          bio: string | null
+          branch_name: string | null
+          display_order: number | null
+          id: string | null
+          image_url: string | null
+          name: string | null
+          role: string | null
+          section: string | null
+          title: string | null
+        }
+        Insert: {
+          bio?: string | null
+          branch_name?: string | null
+          display_order?: number | null
+          id?: string | null
+          image_url?: string | null
+          name?: string | null
+          role?: string | null
+          section?: string | null
+          title?: string | null
+        }
+        Update: {
+          bio?: string | null
+          branch_name?: string | null
+          display_order?: number | null
+          id?: string | null
+          image_url?: string | null
+          name?: string | null
+          role?: string | null
+          section?: string | null
+          title?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       has_purchased_product: {
