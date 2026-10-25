@@ -26,14 +26,25 @@ export async function logLoginAttempt(params: {
   failureReason?: string;
 }) {
   try {
-    const ip = await getClientIp();
-    await supabase.from("login_attempts").insert({
-      email: params.email.toLowerCase().trim(),
-      success: params.success,
-      failure_reason: params.failureReason ?? null,
-      ip_address: ip,
-      user_agent: navigator.userAgent.slice(0, 500),
-    });
+    // Logging goes through a rate-limited edge function; the login_attempts
+    // table is not writable directly from the browser.
+    await fetch(
+      `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/log-login-attempt`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+        body: JSON.stringify({
+          email: params.email.toLowerCase().trim(),
+          success: params.success,
+          failure_reason: params.failureReason ?? null,
+          user_agent: navigator.userAgent.slice(0, 500),
+        }),
+      }
+    );
   } catch (err) {
     // Logging should never break login flow
     console.warn("logLoginAttempt failed", err);

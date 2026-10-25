@@ -133,7 +133,7 @@ export default function CommentsSection({ postId }: { postId: string }) {
                   <p className="font-semibold text-sm">{c.author_name}</p>
                   <p className="text-xs text-muted-foreground">{formatDate(c.created_at)}</p>
                 </div>
-                {(isAdmin || user?.id === c.user_id) && (
+                {(isAdmin || (user && ownIds.includes(c.id))) && (
                   <Button
                     size="icon"
                     variant="ghost"
