@@ -19,30 +19,34 @@ interface Comment {
 export default function CommentsSection({ postId }: { postId: string }) {
   const { user, isAdmin } = useAuth();
   const [comments, setComments] = useState<Comment[]>([]);
+  const [ownIds, setOwnIds] = useState<string[]>([]);
   const [text, setText] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const load = async () => {
     setLoading(true);
-    // Anonymous visitors read from a privacy-safe public view (no user_id).
-    // Logged-in users read from the base table so we can show "delete own" controls.
+    // All visitors (anonymous and logged-in) read from a privacy-safe public
+    // view — the base table is not readable, so no one's user_id is exposed.
+    const { data } = await supabase
+      .from("blog_comments_public" as any)
+      .select("id, author_name, content, created_at")
+      .eq("post_id", postId)
+      .order("created_at", { ascending: false });
+    setComments(
+      (data || []).map((c: any) => ({ ...c, user_id: null })) as Comment[]
+    );
+
+    // Own comment ids are fetched separately via a row-scoped policy so
+    // users can still delete their own comments without exposing user_id.
     if (user) {
-      const { data } = await supabase
+      const { data: own } = await supabase
         .from("blog_comments")
-        .select("id, user_id, author_name, content, created_at")
-        .eq("post_id", postId)
-        .order("created_at", { ascending: false });
-      setComments((data || []) as Comment[]);
+        .select("id")
+        .eq("post_id", postId);
+      setOwnIds((own || []).map((c: any) => c.id));
     } else {
-      const { data } = await supabase
-        .from("blog_comments_public" as any)
-        .select("id, author_name, content, created_at")
-        .eq("post_id", postId)
-        .order("created_at", { ascending: false });
-      setComments(
-        (data || []).map((c: any) => ({ ...c, user_id: null })) as Comment[]
-      );
+      setOwnIds([]);
     }
     setLoading(false);
   };
