@@ -22,7 +22,7 @@ export default function MaintenanceGate({ children }: { children: ReactNode }) {
       .limit(1)
       .maybeSingle()
       .then(({ data }) => {
-        if (active && data) setSettings(data as Settings);
+        if (active && data) setSettings(data as unknown as Settings);
       });
 
     const channel = supabase
