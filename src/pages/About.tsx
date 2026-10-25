@@ -63,7 +63,7 @@ const About = () => {
 
   useEffect(() => {
     supabase
-      .from("team_members")
+      .from("team_members_public" as any)
       .select("*")
       .eq("section", "branch")
       .order("display_order")
